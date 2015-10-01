@@ -4,7 +4,8 @@ Source code of the VirSorter App, available on iPlant (https://de.iplantcollabor
 
 # Dependencies
 
-Install the following into a "bin" directory:
+The following required libraries can be downloaded from
+https://github.com/iPlantCollaborativeOpenSource/docker-builds/releases/download/virsorter/virsorter.bin.tgz
 
 * HMMER (http://hmmer.janelia.org/)
 * MCL (http://micans.org/mcl/)

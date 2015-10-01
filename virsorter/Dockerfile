@@ -14,7 +14,9 @@ COPY wrapper_phage_contigs_sorter_iPlant.pl /usr/local/bin/
 
 COPY Scripts /usr/local/bin/Scripts/
 
-COPY bin /usr/local/bin/
+ADD https://github.com/iPlantCollaborativeOpenSource/docker-builds/releases/download/virsorter/virsorter.bin.tgz ./
+
+RUN tar -xz -C /usr/local -f virsorter.bin.tgz && rm virsorter.bin.tgz
 
 ENTRYPOINT ["wrapper_phage_contigs_sorter_iPlant.pl"]
 
