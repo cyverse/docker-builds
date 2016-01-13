@@ -1,0 +1,10 @@
+FROM python:2.7-slim
+
+WORKDIR /root
+
+RUN mkdir config templates schemas
+COPY config config/
+COPY templates templates/
+COPY schemas schemas/
+
+VOLUME [ "/root/config", "/root/templates", "/root/schemas" ]
