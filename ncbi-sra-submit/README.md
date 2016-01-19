@@ -3,6 +3,7 @@
 #### Description and Quick Start
 
 Publish data to the NCBI Sequence Read Archive.
+See https://pods.iplantcollaborative.org/wiki/pages/viewpage.action?pageId=20351132 for a description of the individual Apps and submission workflow.
 
 #### Input File(s)
 
