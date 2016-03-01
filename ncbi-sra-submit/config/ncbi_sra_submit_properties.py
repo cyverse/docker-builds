@@ -1,8 +1,16 @@
 base_script_dir = "/root/"
 templates_dir = base_script_dir + "templates"
 schemas_dir = base_script_dir + "schemas/"
-ascp_cmd = base_script_dir + ".aspera/connect/bin/ascp"
 private_key_path = base_script_dir + ".ssh/id_rsa_ncbi"
+
+# ASCP command and default options
+ascp_cmd = [
+    base_script_dir + ".aspera/connect/bin/ascp",
+    "-k2",
+    "-L", "logs",
+    "--file-manifest-path=logs",
+    "--file-manifest=text"
+]
 
 submission_schema_path = schemas_dir + "submission.xsd"
 bioproject_schema_path = schemas_dir + "bioproject.xsd"

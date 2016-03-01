@@ -8,23 +8,16 @@ from argparse import ArgumentParser
 from subprocess import call
 
 class BioProjectReportDownloader:
-    def __init__(self, ascp_bin, private_key_path, ncbi_user, ncbi_host, ncbi_sumbit_path):
-        self.ascp_bin = ascp_bin
+    def __init__(self, ascp_cmd, private_key_path, ncbi_user, ncbi_host, ncbi_sumbit_path):
+        self.ascp_cmd = ascp_cmd
         self.private_key_path = private_key_path
         self.report_src = '{0}@{1}:{2}'.format(ncbi_user, ncbi_host, ncbi_sumbit_path)
 
     def download_report(self, sumbit_dir, download_dest):
         report_xml = '{0}/{1}/report.xml'.format(self.report_src, sumbit_dir)
 
-        ascp_cmd = [
-            self.ascp_bin,
-            "-T",
-            "-k1",
-            "-l640m",
+        ascp_cmd = self.ascp_cmd + [
             "-i", self.private_key_path,
-            "-L", "logs",
-            "--file-manifest-path=logs",
-            "--file-manifest=text",
             report_xml,
             download_dest
         ]
