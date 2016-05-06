@@ -1,0 +1,42 @@
+# Pull base image
+FROM ubuntu:14.04
+
+MAINTAINER Andre Mercer <amercer@iplantcollaborative.org>
+
+# Run updates
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install wget -y
+
+# Install Python 3
+RUN apt-get install python3 -y
+RUN apt-get install python3-pip -y
+
+# Install NCBI BLAST +
+RUN wget -P /root ftp://ftp.ncbi.nlm.nih.gov/blast/executables/LATEST/ncbi-blast-2.2.31+-x64-linux.tar.gz 
+RUN tar zxf /root/ncbi-blast-2.2.31+-x64-linux.tar.gz -C /root
+RUN mkdir /root/ncbi-blast-2.2.31+/db
+ENV PATH "/root/ncbi-blast-2.2.31+/bin:$PATH"
+ENV BLASTDB "/root/ncbi-blast-2.2.31+/db"
+
+# Install HMMER
+RUN wget -P /root http://selab.janelia.org/software/hmmer3/3.1b2/hmmer-3.1b2-linux-intel-x86_64.tar.gz
+RUN tar zxf /root/hmmer-3.1b2-linux-intel-x86_64.tar.gz -C /root
+ENV PATH "/root/hmmer-3.1b2-linux-intel-x86_64/binaries:$PATH"
+
+# Install Augustus
+RUN wget -P /root http://bioinf.uni-greifswald.de/augustus/binaries/augustus-3.2.1.tar.gz
+RUN tar zxf /root/augustus-3.2.1.tar.gz -C /root
+ENV PATH "/root/augustus-3.2.1/bin:$PATH"
+ENV AUGUSTUS_CONFIG_PATH "/root/augustus-3.2.1/config"
+
+# Install EMBOSS
+RUN wget -P /root ftp://emboss.open-bio.org/pub/EMBOSS/old/6.4.0/EMBOSS-6.4.0.tar.gz
+RUN tar zxf /root/EMBOSS-6.4.0.tar.gz -C /root
+ENV PATH "/root/EMBOSS-6.4.0/bin:$PATH"
+
+# Pull tool
+#RUN wget -P /root http://busco.ezlab.org/files/BUSCO_v1.1b1.tar.gz
+# Open tar
+#RUN tar zxf /root/BUSCO_v1.1b1.tar.gz -C /root
+

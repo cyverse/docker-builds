@@ -1,0 +1,36 @@
+{
+    "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "busco",
+            "version": "2.0",
+            "description": "Assessing genome assembly and annotation completeness with single-copy orthologs.",
+            "attribution": "Chris Friedline",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Chris Friedline",
+                "implementor_email": "cfriedline@vcu.edu",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/busco",
+                    "tag": "v2.0",
+                    "url": "https://gims.iplantcollaborative.org:5000/busco"
+                }
+            }
+        }
+    ]
+}
+
+// Notes
+//name: 
+//email: 
+//username: 
+// container name: 
+// image_id: 
