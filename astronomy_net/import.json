@@ -1,0 +1,36 @@
+{
+    "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "astrometry-0.40",
+            "version": "0.40",
+            "description": "Astrometry.net: Blind astrometric calibration of arbitrary astronomical image",
+            "attribution": "Nirav Merchant",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Nirav Merchant",
+                "implementor_email": "nirav@email.arizona.edu",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/astrometry-0.40",
+                    "tag": "v0.40",
+                    "url": "https://gims.iplantcollaborative.org:5000/astrometry-0.40"
+                }
+            }
+        }
+    ]
+}
+
+// Notes
+//name: 
+//email: 
+//username: 
+// container name: 
+// image_id: 
