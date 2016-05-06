@@ -1,0 +1,36 @@
+{
+    "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "evolinc",
+            "version": "1.0",
+            "description": "Identifies lincRNAs from an assembled transcriptome and determines the extent to which those lincRNAs are conserved in the genome and transcriptome.",
+            "attribution": "Upendra Kumar Devisetty",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Upendra Kumar Devisetty",
+                "implementor_email": "upendrakumar.devisetty@googlemail.com",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/evolinc",
+                    "tag": "v1.0",
+                    "url": "https://gims.iplantcollaborative.org:5000/evolinc"
+                }
+            }
+        }
+    ]
+}
+
+// Notes
+//name: 
+//email: 
+//username: 
+// container name: 
+// image_id: 
