@@ -1,0 +1,36 @@
+{
+    "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "aaarf",
+            "version": "1.0.1",
+            "description": "AAARF assembles pseudomolecules representing high-copy number genomic repeats from genomic sample sequence data.",
+            "attribution": "Jeremy Debarry",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Jeremy Debarry",
+                "implementor_email": "jdebarry@email.arizona.edu ",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/aaarf",
+                    "tag": "v1.0.1",
+                    "url": "https://gims.iplantcollaborative.org:5000/aaarf"
+                }
+            }
+        }
+    ]
+}
+
+// Notes
+//name: 
+//email: 
+//username: 
+// container name: 
+// image_id: 
