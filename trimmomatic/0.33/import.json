@@ -1,0 +1,37 @@
+{
+    "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "trimmomatic-wrapper",
+            "version": "0.33",
+            "description": "Trimmomatic: A flexible trimmer for Illumina Sequence Data.",
+            "attribution": "Roger Barthelson",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Roger Barthelson",
+                "implementor_email": "rogerab@email.arizona.edu",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/trimmomatic-wrapper",
+                    "tag": "v0.33",
+                    "url": "https://gims.iplantcollaborative.org:5000/trimmomatic-wrapper"
+                }
+            }
+        }
+    ]
+}
+
+// Notes
+//name: Dr. R. Veera Manikandan
+//email: drveera@cmcvellore.ac.in
+//username: drveera
+// container name: gims.iplantcollaborative.org:5000/trimmomatic-0.33
+// image_id: ddd974d363ed
+// ENTRYPOINT ["java", "-Xmx1024m", "-jar", "/root/Trimmomatic-0.33/trimmomatic-0.33.jar"]  
