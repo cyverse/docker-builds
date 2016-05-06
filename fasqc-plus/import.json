@@ -1,0 +1,36 @@
+{
+    "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "fasqc-plus",
+            "version": "0.10.1",
+            "description": "FastQC aims to provide a simple way to do some quality control checks on raw sequence data coming from high throughput sequencing pipelines. It provides a modular set of analyses which you can use to give a quick impression of whether your data has any problems of which you should be aware before doing any further analysis.",
+            "attribution": "Roger Bartelson",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Roger Bartelson",
+                "implementor_email": "rogerab@email.arizona.edu",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/fasqc-plus",
+                    "tag": "v0.10.1",
+                    "url": "https://gims.iplantcollaborative.org:5000/fasqc-plus"
+                }
+            }
+        }
+    ]
+}
+
+// Notes
+//name: 
+//email: 
+//username: 
+// container name: 
+// image_id: 
