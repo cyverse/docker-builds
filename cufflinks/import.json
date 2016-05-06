@@ -1,0 +1,29 @@
+{
+    "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "cufflinks",
+            "version": "2.2.1",
+            "description": "Tool to assembles RNAseq alignments into a parsimonious set of transcripts, then estimates the relative abundances of these transcripts based on how many reads support each one.",
+            "attribution": "Upendra Kumar Devisetty",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Upendra Kumar Devisetty",
+                "implementor_email": "upendrakumar.devisetty@googlemail.com",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/cufflinks",
+                    "tag": "v2.2.1",
+                    "url": "https://gims.iplantcollaborative.org:5000/cufflinks"
+                }
+            }
+        }
+    ]
+}
