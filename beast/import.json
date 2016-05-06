@@ -1,0 +1,35 @@
+{ "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "beast",
+            "version": "1.8.3",
+            "description": "BEAST is a cross-platform program for Bayesian analysis of molecular sequences using MCMC.",
+            "attribution": "Yonghe Xia",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Yonghe Xia",
+                "implementor_email": "l.chao04@scut.edu.cn",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/beast",
+                    "tag": "v1.8.3",
+                    "url": "https://gims.iplantcollaborative.org:5000/beast"
+                }
+            }
+        }
+    ]
+}
+
+// Notes
+//name: 
+//email: 
+//username: 
+// container name: 
+// image_id: 
