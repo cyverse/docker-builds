@@ -1,0 +1,29 @@
+{
+    "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "trinity",
+            "version": "2.2.0",
+            "description": "Trinity is a novel method for the efficient and robust de novo reconstruction of transcriptomes from RNA-seq data",
+            "attribution": "Blake Joyce",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Blake Joyce",
+                "implementor_email": "bjoyce3@gmail.com",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/trinity",
+                    "tag": "v2.2.0",
+                    "url": "https://gims.iplantcollaborative.org:5000/trinity"
+                }
+            }
+        }
+    ]
+

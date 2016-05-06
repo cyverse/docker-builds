@@ -1,0 +1,36 @@
+{
+    "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "trinity-2.0.6",
+            "version": "2.0.6",
+            "description": "Reformats reads between fasta/fastq/scarf/fasta+qual/sam, interleaved/paired, and ASCII-33/64.",
+            "attribution": "Ratan Chopra",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Ratan Chopra",
+                "implementor_email": "ratan.chopra@ars.usda.gov",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/trinity-2.0.6",
+                    "tag": "v2.0.6",
+                    "url": "https://gims.iplantcollaborative.org:5000/trinity-2.0.6"
+                }
+            }
+        }
+    ]
+}
+
+// Notes
+//name: 
+//email: 
+//username: 
+// container name: 
+// image_id: 
