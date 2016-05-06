@@ -1,0 +1,36 @@
+{
+    "tools": [
+        {
+            "location": "https://iplantcollaborative.org",
+            "name": "deseq2",
+            "version": "2.0",
+            "description": "Estimate variance-mean dependence in count data from high-throughput sequencing assays and test for differential expression based on a model using the negative binomial distribution.",
+            "attribution": "Kapeel Chougule",
+            "type": "executable",
+            "implementation": {
+                "implementor": "Kapeel Chougule",
+                "implementor_email": "kapeel@cals.arizona.edu",
+                "test": {
+                    "input_files": [
+                    ],
+                    "output_files": [
+                    ]
+                }
+            },
+            "container": {
+                "image": {
+                    "name": "gims.iplantcollaborative.org:5000/deseq2",
+                    "tag": "v2.0",
+                    "url": "https://gims.iplantcollaborative.org:5000/deseq2"
+                }
+            }
+        }
+    ]
+}
+
+// Notes
+//name: 
+//email: 
+//username: 
+// container name: 
+// image_id: 
