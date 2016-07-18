@@ -9,16 +9,21 @@ pkg-config libbz2-dev
 #libhdf5-dev pkg-config liblzma-dev apt-get install libbz2-dev curl unzip
 ADD Sailfish_align.pl /usr/bin/ 
 ADD Sailfish_align_with_gz.pl /usr/bin/
-RUN [ "chmod", "+x",  "/usr/bin/Sailfish_align.pl" ]
-RUN [ "chmod", "+x",  "/usr/bin/Sailfish_align_with_gz.pl" ] \  
-&& git clone https://github.com/kingsfordgroup/sailfish.git \
-&& cd sailfish \
-&& mkdir build \
-&& cd build \
-&& cmake -DFETCH_BOOST=TRUE .. \
-&& make \
-&& make install \
-&& export PATH=$PATH:/root/sailfish/bin \
-&& set +o posix
-#ENTRYPOINT ["sailfish"]
-#CMD ["-h"]
+RUN chmod +x /usr/bin/Sailfish_align.pl
+RUN chmod +x /usr/bin/Sailfish_align_with_gz.pl  
+RUN git clone https://github.com/kingsfordgroup/sailfish.git
+
+WORKDIR /sailfish
+RUN mkdir build
+
+WORKDIR build
+RUN cmake -DFETCH_BOOST=TRUE ..
+RUN make
+RUN make install 
+RUN export PATH=/sailfish/bin/:$PATH
+RUN export LD_LIBRARY_PATH=/sailfish/lib/:$PATH #\
+#&& set +o posix
+
+WORKDIR /
+ENTRYPOINT ["sailfish/bin/sailfish"]
+CMD ["-h"]
