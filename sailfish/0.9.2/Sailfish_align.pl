@@ -24,7 +24,7 @@ GetOptions( "file_query=s"      => \@file_query,
 	          "root_names=s"      => \$root_names,
 	          "file_type=s"       => \$file_type,
 	          "lib_type=s"        => \$lib_type,
-            "compress_type=s"   => \$compress_type
+            "compress_type=s"   => \$compress_type,
 	    );
 
 # sanity check for input data
