@@ -42,7 +42,7 @@ if (@file_query < 1) {
 
 
 # Allow over-ride of system-level database path with user
-my $sailfish  = "sailfish";
+my $sailfish  = "/sailfish/bin/sailfish";
 
 if ($user_database_path) {
   $database_path = $user_database_path;
@@ -50,12 +50,12 @@ if ($user_database_path) {
       die "Error: $database_path  the user supplied file is not a FASTA file";
   }
   my $name = basename($database_path, qw/.fa .fas .fasta .fna/);
-  print STDERR "sailfish-indexing $name\n";
+  print STDERR "sailfish-indexing $database_path\n";
   system $sailfish . " index -t $database_path -o index";
   if ($database_path !~ /$name\.fa$/) {
       my $new_path = $database_path;
       $new_path =~ s/$name\.\S+$/$name\.fa/;
-      system "cp $database_path $new_path";
+      system "/bin/cp $database_path $new_path";
   }
   $database_path = $name;
 }
@@ -94,14 +94,18 @@ my $compression = $compress_type;
 chomp(my $basename = `basename $query_file`);
     $basename =~ s/\.\S+$//;
 
-
 if ($compression eq 'gzipped'){
 	  if ($format eq 'PE') {
-          	my $align_command = "$sailfish quant -i index -1 <(gunzip -c $query_file) -2 <(gunzip -c $second_file) -o $basename $SAILFISH_ARGS";
+		system "gunzip $query_file";
+		system "gunzip $second_file";
+
+          	my $align_command = "$sailfish quant -i index -l $library  -1 $query_file -2 $second_file -o $basename $SAILFISH_ARGS";
           	system $align_command;
                      }
 	  elsif($format eq 'SE'){
-		my $align_command = "$sailfish quant -i index -r <(gunzip -c $query_file) -o $basename $SAILFISH_ARGS";
+		gunzip $query_file
+
+		my $align_command = "$sailfish quant -i index -l $library  -r $query_file -o $basename $SAILFISH_ARGS";
           	system $align_command;
 		}
 	}
@@ -109,12 +113,12 @@ if ($compression eq 'gzipped'){
 else{
 
 	if ($format eq 'PE') {
-          my $align_command = "$sailfish quant -i index -1 $query_file -2 $second_file -o $basename $SAILFISH_ARGS";
+          my $align_command = "$sailfish quant -i index -l $library -1 $query_file -2 $second_file -o $basename $SAILFISH_ARGS";
           system $align_command;
 		     }
 elsif($format eq 'SE'){
          
-          my $align_command = "$sailfish quant -i index -r $query_file -o $basename $SAILFISH_ARGS";
+          my $align_command = "$sailfish quant -i index -l $library -r $query_file -o $basename $SAILFISH_ARGS";
           system $align_command;        
 
 	}
