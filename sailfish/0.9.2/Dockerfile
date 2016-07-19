@@ -25,5 +25,5 @@ RUN export LD_LIBRARY_PATH=/sailfish/lib/:$PATH #\
 #&& set +o posix
 
 WORKDIR /
-ENTRYPOINT ["sailfish/bin/sailfish"]
+ENTRYPOINT ["/sailfish/bin/sailfish"]
 CMD ["-h"]
