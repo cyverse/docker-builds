@@ -11,7 +11,7 @@ use Getopt::Long qw(:config no_ignore_case no_auto_abbrev pass_through);
 #report_input_stack();
 
 my (@file_query, $database_path, $user_database_path, $annotation_path, 
-$user_annotation_path, $file_names, $root_names, @file_query2, $file_type, $lib_type);
+$user_annotation_path, $file_names, $root_names, @file_query2, $file_type, $lib_type, $compress_type);
 
 
 GetOptions( "file_query=s"      => \@file_query,
@@ -23,7 +23,8 @@ GetOptions( "file_query=s"      => \@file_query,
 	          "file_names=s"      => \$file_names,
 	          "root_names=s"      => \$root_names,
 	          "file_type=s"       => \$file_type,
-	          "lib_type=s"        => \$lib_type
+	          "lib_type=s"        => \$lib_type,
+            "compress_type=s"   => \$compress_type
 	    );
 
 # sanity check for input data
@@ -89,11 +90,22 @@ for my $query_file (@file_query) {
 
 my $format = $file_type;
 my $library = $lib_type;
+my $compression = $compress_type;
+
 
 chomp(my $basename = `basename $query_file`);
     $basename =~ s/\.\S+$//;
 
-
+if ($compression eq 'gzipped'){
+    if ($format eq 'PE') {
+            my $align_command = "$sailfish quant -i index -1 <(gunzip -c $query_file) -2 <(gunzip -c $second_file) -o $basename $SAILFISH_ARGS";
+            system $align_command;
+                     }
+    elsif($format eq 'SE'){
+    my $align_command = "$sailfish quant -i index -r <(gunzip -c $query_file) -o $basename $SAILFISH_ARGS";
+            system $align_command;
+    }
+  }
 
 if ($format eq 'PE') {
           my $align_command = "$sailfish quant -i index -l $library -1 $query_file -2 $second_file -o $basename $SAILFISH_ARGS";

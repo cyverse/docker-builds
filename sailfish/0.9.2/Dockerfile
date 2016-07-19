@@ -20,10 +20,9 @@ RUN export LD_LIBRARY_PATH=/sailfish/lib/:$PATH
 
 WORKDIR /
 
+# Add wrapper Script
 ADD Sailfish_align.pl /usr/bin/ 
-ADD Sailfish_align_with_gz.pl /usr/bin/
 RUN chmod +x /usr/bin/Sailfish_align.pl
-RUN chmod +x /usr/bin/Sailfish_align_with_gz.pl  
 
 ENTRYPOINT ["/usr/bin/Sailfish_align.pl"]
 CMD ["-h"]
