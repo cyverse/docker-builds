@@ -22,11 +22,8 @@ WORKDIR /
 
 RUN apt-get install -y gzip 
 
-# Add wrapper perl SCRIpt
-#ADD Sailfish_align.pl /usr/bin/ 
-#RUN chmod +x /usr/bin/Sailfish_align.pl
-ADD Sailfish_align_with_gz.pl /usr/bin/
-RUN chmod +x /usr/bin/Sailfish_align_with_gz.pl
+# Add wrapper ScripT
+ADD Sailfish_align.pl /usr/bin/ 
+RUN chmod +x /usr/bin/Sailfish_align.pl
 
-#ENTRYPOINT ["/usr/bin/Sailfish_align.pl"]
-ENTRYPOINT ["/usr/bin/Sailfish_align_with_gz.pl"]
+ENTRYPOINT ["/usr/bin/Sailfish_align.pl"]
