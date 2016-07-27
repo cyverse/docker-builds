@@ -70,7 +70,7 @@ if ($format eq 'SE') {
 	push(@stack, "$app mem $BWA_ARGS $database_path $query_file1 > $out_file");
 } elsif ($format eq 'PE') {
 #       push(@stack, "$app aln $BWA_ARGS $database_path $query_file2 > temp2.sai");
-       push(@stack, "$app mem $database_path $query_file1 $query_file2 > $out_file");
+        push(@stack, "$app mem $BWA_ARGS $database_path $query_file1 $query_file2 > $out_file");
 }
 
 foreach my $cmd (@stack) {
