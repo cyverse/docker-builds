@@ -4,7 +4,7 @@
 
 usage() {
       echo ""
-      echo "Usage : sh $0 -b BLASTing_list -l Query_lincRNA -q Query_species -i Input_folder -s Species_list -o Output_folder"
+      echo "Usage : sh $0 -b BLASTing_list -l Query_lincRNA -q Query_species -i Input_folder -s Species_list -v evalue -o Output_folder"
       echo ""
 
 cat <<'EOF'
@@ -18,6 +18,8 @@ cat <<'EOF'
 
   -s </path/to/species list>
 
+  -v <e-value>
+
   -o </path/to/output folder>
 
   -h Show this usage information
@@ -26,7 +28,7 @@ EOF
     exit 0
 }
 
-while getopts ":hb:q:l:i:s:o:" opt; do
+while getopts ":hb:q:l:i:s:o:e:" opt; do
   case $opt in
     b)
      Blasting_list=$OPTARG #This is a five-column tab-delimited list in the following order:
@@ -44,6 +46,9 @@ while getopts ":hb:q:l:i:s:o:" opt; do
     s)
      sp_list=$OPTARG # Species list 
      ;;
+    e)
+     value=$OPTARG # e-value
+     ;; 
     o)
      output=$OPTARG # Output file
      ;; 
@@ -76,11 +81,15 @@ mkdir Reciprocal_BLAST
 mkdir Orthologs
 
 # Make lincRNA list from the user provide lincRNA fasta file
+echo et -x grep ">" $query_lincRNA | sed 's/>//' > Orthologs/lincRNA.list
 grep ">" $query_lincRNA | sed 's/>//' > Orthologs/lincRNA.list
 
 # Initiate search for putative orthologs
+echo "Evolinc-part-II.sh script is reporting this"
 echo "***Starting lincRNA to Genome Comparisons***"
-python /startup_script.py $Blasting_list $input_folder
+# python /startup_script.py $Blasting_list $input_folder $value
+echo et -x python /startup_script.py -b $Blasting_list -i $input_folder -v $value
+python /startup_script.py -b $Blasting_list -i $input_folder -v $value
 echo "***Finished with lincRNA to Genome Comparisons***"
 
 #Create a list of all genomes, lincRNA ortholog, and gff files to set up reciprocal BLAST
@@ -107,7 +116,9 @@ rm Reciprocal_lincRNAs_coord_list.txt
 
 # Confirm the reciprocity of the putative orthologs
 echo "***Starting Reciprocal Search***"
-python /Reciprocal_BLAST_startup_script.py Reciprocal_list.txt
+# python /Reciprocal_BLAST_startup_script.py Reciprocal_list.txt
+echo et -x python /Reciprocal_BLAST_startup_script.py -b Reciprocal_list.txt -v $value
+python /Reciprocal_BLAST_startup_script.py -b Reciprocal_list.txt -v $value
 echo "***Finished with Reciprocal Search***"
 
 #Starting building families

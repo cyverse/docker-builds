@@ -6,7 +6,7 @@
 
 usage() {
       echo ""
-      echo "Usage : sh $0 -g genome -s ortho_sequences -f ortho_gff -a query_gff -b query_sp -c query_genome"
+      echo "Usage : sh $0 -g genome -s ortho_sequences -f ortho_gff -a query_gff -b query_sp -c query_genome -e evalue"
       echo ""
 
 cat <<'EOF'
@@ -20,7 +20,9 @@ cat <<'EOF'
 
      -b    <query species in four letter format>
 
-     -c    <query genome in fasta format>"
+     -c    <query genome in fasta format>
+
+     -e    <e-value>
 
      -h    Show this usage information
 EOF
@@ -28,7 +30,7 @@ EOF
 }
 
 
-while getopts ":g:s:f:a:hb:c:" opt; do
+while getopts ":g:s:f:a:hb:c:e:" opt; do
   case $opt in
     g)
      Genome=$OPTARG
@@ -48,6 +50,9 @@ while getopts ":g:s:f:a:hb:c:" opt; do
     c)
      query_genome=$OPTARG
      ;;
+    e)
+     value=$OPTARG # e-value
+     ;;  
     h) 
      usage 
      exit 1
@@ -71,7 +76,9 @@ mkdir -p Reciprocal_BLAST_Return
 makeblastdb -logfile stderr.out -in $query_genome -dbtype nucl -out Reciprocal_BLAST_DB/$query_genome.blast.out
 
 # Blasting the putative ortholog sequences against the query genome genome to find out the location on the genome.
-blastn -logfile stderr.out -query $Put_ortholog -db Reciprocal_BLAST_DB/$query_genome.blast.out -num_threads 4 -penalty -2 -reward 1 -gapopen 5 -gapextend 2 -dust no -word_size 8 -evalue 1e-20 -outfmt "6 qseqid sseqid pident length qlen qstart qend sstart send evalue bitscore" -out Reciprocal_BLAST_Return/$Put_ortholog.Reciprocal.out
+echo et -x blastn -logfile stderr.out -query $Put_ortholog -db Reciprocal_BLAST_DB/$query_genome.blast.out -num_threads 4 -penalty -2 -reward 1 -gapopen 5 -gapextend 2 -dust no -word_size 8 -evalue $value -outfmt "6 qseqid sseqid pident length qlen qstart qend sstart send evalue bitscore" -out Reciprocal_BLAST_Return/$Put_ortholog.Reciprocal.out
+blastn -logfile stderr.out -query $Put_ortholog -db Reciprocal_BLAST_DB/$query_genome.blast.out -num_threads 4 -penalty -2 -reward 1 -gapopen 5 -gapextend 2 -dust no -word_size 8 -evalue $value -outfmt "6 qseqid sseqid pident length qlen qstart qend sstart send evalue bitscore" -out Reciprocal_BLAST_Return/$Put_ortholog.Reciprocal.out
+echo "------------------------------------"
 
 # Remove spaces in the blastout files
 sed 's/ //g' Reciprocal_BLAST_Return/$Put_ortholog.Reciprocal.out > Reciprocal_BLAST_Return/$Put_ortholog.Reciprocal.stripped.out
@@ -91,7 +98,7 @@ cut -f 1,2,4,5,10,11,13,14 Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.comp
 #The below step is causing issues and I cannot remember why I inserted it here.
 #grep -f Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.Unique.IDs.list.txt Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.comparison.filtered.gff >Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.comparison.TBH.filtered.gff
 
-sed -i 's~.....TCONS~TCONS~g' Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.comparison.filtered.gff
+#sed -i 's~.....TCONS~TCONS~g' Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.comparison.filtered.gff
 awk -F'\t' '{gsub(/_Known.*/,"",$6); print}' Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.comparison.filtered.gff > temp && mv temp Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.comparison.filtered.gff
 
 ###
@@ -103,6 +110,7 @@ sed 's~_TBH_1~~g' Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.Unique.IDs.li
 #assign subject_species argument
 subject_species=${Put_ortholog:0:4}
 #sed -i 's~=.*~~g' Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.final.list.for.pooling.families.txt
+sed -i 's~^.....~~g' Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.final.list.for.pooling.families.txt
 sed -i 's~^~>'$subject_species'_~g' Reciprocal_BLAST_Return/$Put_ortholog.reciprocal.final.list.for.pooling.families.txt
 
 sleep 5
