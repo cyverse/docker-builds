@@ -5,7 +5,7 @@ __author__ = 'Paul Sarando'
 import config.ncbi_sra_submit_properties
 
 from metadata_client import MetadataClient
-from jinja2 import Environment, FileSystemLoader
+from genshi.template import TemplateLoader
 from lxml import etree
 from argparse import ArgumentParser
 from subprocess import call
@@ -116,7 +116,7 @@ args = parser.parse_args()
 
 # Define the objects we need.
 metadata_client = MetadataClient()
-env = Environment(loader=FileSystemLoader(config.ncbi_sra_submit_properties.templates_dir))
+loader = TemplateLoader(config.ncbi_sra_submit_properties.templates_dir)
 
 # Parse iPlant Data Store metadata into format usable by the submission templates
 metadata = metadata_client.get_metadata(args.metadata_path)
@@ -128,17 +128,16 @@ if not submit_dir:
 if not os.path.exists(submit_dir):
     os.makedirs(submit_dir)
 
-# Define the appropriate submission template
-if args.submit_mode == 'create':
-    metadata_template = env.get_template('submission-project-create.xml.j2')
-else:
-    metadata_template = env.get_template('submission.xml.j2')
-    if 'sra_project_id' not in metadata:
-        raise Exception("Could not find SRA Project ID in Bio Project metadata for project update.")
+# The SRA project ID is required if the submission mode is not 'create'
+if args.submit_mode != 'create' and 'sra_project_id' not in metadata:
+    raise Exception("Could not find SRA Project ID in Bio Project metadata for project update.")
 
 # Generate submission.xml in the submission dir
+metadata_template = loader.load('submission.xml')
 submission_path = os.path.join(submit_dir, 'submission.xml')
-metadata_template.stream(metadata).dump(submission_path)
+stream = metadata_template.generate(metadata=metadata, submit_mode=args.submit_mode)
+with open(submission_path, 'w') as f:
+    stream.render(method='xml', out=f)
 
 # Validate generated XML
 xml_validator = BioProjectXmlValidator(config.ncbi_sra_submit_properties.schemas_dir,

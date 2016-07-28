@@ -1,0 +1,46 @@
+    <Action xmlns:py="http://genshi.edgewall.org/">
+        <AddData target_db="BioProject">
+            <Data content_type="XML">
+                <XmlContent>
+                    <Project schema_version="2.0">
+                        <ProjectID>
+                            <SPUID spuid_namespace="BioCI">${metadata.sra_object_id}</SPUID>
+                        </ProjectID>
+                        <Descriptor>
+                            <Title>${metadata.sra_project_title}</Title>
+                            <Description>
+                                <p>${metadata.sra_project_description}</p>
+                            </Description>
+                            <ExternalLink py:if="'sra_external_link_url' in metadata and metadata.sra_external_link_url"
+                                          label="${metadata.sra_external_link_label}">
+                                <URL>${metadata.sra_external_link_url}</URL>
+                            </ExternalLink>
+                            <Relevance>
+                                <Medical>${metadata.sra_medical_relevance}</Medical>
+                                <!-- Choices are 'Yes' or 'No' -->
+                            </Relevance>
+                        </Descriptor>
+                        <ProjectType>
+                            <ProjectTypeSubmission sample_scope="${metadata.sra_project_type_submission_scope}">
+                                <!-- Choices are:
+                                     {'eMonoisolate', 'eMultiisolate', 'eMultispecies', 'eEnvironment', 'eSynthetic', 'eSingleCell', 'eOther'}
+                                     From http://www.ncbi.nlm.nih.gov/viewvc/v1/trunk/submit/public-docs/bioproject/bioproject.xsd?revision=66995&view=co -->
+                                <Organism py:if="metadata.organism_name">
+                                    <OrganismName>${metadata.organism_name}</OrganismName>
+                                </Organism>
+                                <IntendedDataTypeSet>
+                                    <DataType>${metadata.sra_project_intended_data_type}</DataType>
+                                    <!-- Choices are:
+                                         {'genome sequencing', 'raw sequence reads', 'genome sequencing and assembly', 'metagenome', 'metagenomic assembly', 'assembly', 'transcriptome', 'proteomic', 'map', 'clone ends', 'targeted loci', 'targeted loci cultured', 'targeted loci environmental', 'random survey', 'exome', 'variation', 'epigenomics', 'phenotype or genotype', 'other'}
+                                         From http://www.ncbi.nlm.nih.gov/viewvc/v1/trunk/submit/public-docs/bioproject/bioproject.xsd?revision=66995&view=co -->
+                                </IntendedDataTypeSet>
+                            </ProjectTypeSubmission>
+                        </ProjectType>
+                    </Project>
+                </XmlContent>
+            </Data>
+            <Identifier>
+                <SPUID spuid_namespace="BioCI">${metadata.sra_object_id}</SPUID>
+            </Identifier>
+        </AddData>
+    </Action>
