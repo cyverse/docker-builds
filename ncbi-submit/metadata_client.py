@@ -1,7 +1,6 @@
 __author__ = 'Paul Sarando'
 
 import config.ncbi_sra_submit_properties
-from xml.sax.saxutils import escape, unescape
 
 import os
 import json
@@ -156,7 +155,7 @@ class MetadataClient:
                 continue
 
             attr = attribute['attr']
-            value = escape(attribute['value'])
+            value = attribute['value']
             if attr in bio_project:
                 raise Exception("Duplicate '{0}' attribute found in Bio Project folder metadata.\nValues:\n{1}\n{2}".format(attr, bio_project[attr], value))
 
@@ -193,14 +192,14 @@ class MetadataClient:
                 continue
 
             attr = attribute['attr']
-            value = escape(attribute['value'])
+            value = attribute['value']
             if attr in self.bio_sample_reserved_attributes:
                 if attr in bio_sample:
                     raise Exception("Duplicate '{0}' attribute found in Bio Sample metadata.\nValues:\n{1}\n{2}".format(attr, bio_sample[attr], value))
 
                 bio_sample[attr] = value
             else:
-                bio_sample['attributes'].append({'name': escape(attr), 'value': value})
+                bio_sample['attributes'].append({'name': attr, 'value': value})
                 if attr in self.bio_sample_dup_attributes:
                     # This attribute needs to be duplicated outside the attributes node as well.
                     bio_sample[attr] = value
@@ -234,14 +233,14 @@ class MetadataClient:
                 continue
 
             attr = attribute['attr']
-            value = escape(attribute['value'])
+            value = attribute['value']
             if attr in self.library_reserved_attributes:
                 if attr in library:
                     raise Exception("Duplicate '{0}' attribute found in Bio Sample Library metadata.\nValues:\n{1}\n{2}".format(attr, library[attr], value))
 
                 library[attr] = value
             else:
-                library['attributes'].append({'name': escape(attr), 'value': value})
+                library['attributes'].append({'name': attr, 'value': value})
 
         library['files'] = [self._parse_file_metadata(library_name, file)
                             for file in library_folder['files']]
@@ -262,10 +261,10 @@ class MetadataClient:
         if not file_metadata.get('md5'):
             raise Exception("Could not find Bio Sample Library file md5 metadata: {0}".format(os.path.join(library_name, filename)))
 
-        return {"filename": escape(filename),
+        return {"filename": filename,
                 "md5":      file_metadata['md5']}
 
     def get_bio_project_file_paths(self, bio_project_metadata, bio_project_folder):
-        return [os.path.join(bio_project_folder, library['name'], unescape(file['filename']))
+        return [os.path.join(bio_project_folder, library['name'], file['filename'])
                 for library in bio_project_metadata['libraries']
                 for file in library['files']]
