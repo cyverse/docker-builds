@@ -20,7 +20,7 @@
                 </Name>
             </Contact>
         </Organization>
-        <Hold release_date="${metadata.sra_hold_release_date}"/>
+        <Hold release_date="${metadata.hold_release_date}"/>
     </Description>
 
     <py:if test="submit_mode == 'create'">
@@ -36,7 +36,7 @@
                 <XmlContent>
                     <BioSample schema_version="2.0">
                         <SampleId>
-                            <SPUID spuid_namespace="BioCI">${biosample.sra_sample_id}</SPUID>
+                            <SPUID spuid_namespace="BioCI">${biosample.sample_id}</SPUID>
                         </SampleId>
                         <Descriptor>
                             <Title py:if="'project_title' in biosample and biosample.project_title">
@@ -46,10 +46,10 @@
                         <Organism>
                             <OrganismName>${biosample.organism}</OrganismName>
                         </Organism>
-                        <BioProject py:if="'sra_project_id' in metadata and metadata.sra_project_id">
-                            <PrimaryId db="BioProject">${metadata.sra_project_id}</PrimaryId>
+                        <BioProject py:if="'project_id' in metadata and metadata.project_id">
+                            <PrimaryId db="BioProject">${metadata.project_id}</PrimaryId>
                         </BioProject>
-                        <Package>${biosample.sra_bio_sample_package}</Package>
+                        <Package>${biosample.bio_sample_package}</Package>
                         <Attributes>
                             <Attribute py:for="attribute in biosample.attributes"
                                        attribute_name="${attribute.name}">${attribute.value}</Attribute>
@@ -58,7 +58,7 @@
                 </XmlContent>
             </Data>
             <Identifier>
-                <SPUID spuid_namespace="BioCI">${biosample.sra_sample_id}</SPUID>
+                <SPUID spuid_namespace="BioCI">${biosample.sample_id}</SPUID>
             </Identifier>
         </AddData>
     </Action>
@@ -74,15 +74,15 @@
                        name="${attribute.name}">${attribute.value}</Attribute>
             <AttributeRefId name="BioProject">
                 <RefId py:choose="">
-                    <PrimaryId py:when="'sra_project_id' in metadata and metadata.sra_project_id">
-                        ${metadata.sra_project_id}
+                    <PrimaryId py:when="'project_id' in metadata and metadata.project_id">
+                        ${metadata.project_id}
                     </PrimaryId>
-                    <SPUID py:otherwise="" spuid_namespace="BioCI">${metadata.sra_object_id}</SPUID>
+                    <SPUID py:otherwise="" spuid_namespace="BioCI">${metadata.object_id}</SPUID>
                 </RefId>
             </AttributeRefId>
             <AttributeRefId name="BioSample">
                 <RefId>
-                    <SPUID spuid_namespace="BioCI">${library.sra_sample_id}</SPUID>
+                    <SPUID spuid_namespace="BioCI">${library.sample_id}</SPUID>
                 </RefId>
             </AttributeRefId>
             <Identifier>

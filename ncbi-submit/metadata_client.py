@@ -1,6 +1,6 @@
 __author__ = 'Paul Sarando'
 
-import config.ncbi_sra_submit_properties
+import config.ncbi_submit_properties
 
 import os
 import json
@@ -29,7 +29,7 @@ class MetadataClient:
                 "label": "bio_sample_1",
                 "metadata": [
                     {
-                        "attr": "sra_sample_id",
+                        "attr": "sample_id",
                         "value": "12345.biosample"
                     },
                     {
@@ -89,7 +89,7 @@ class MetadataClient:
         "bio_samples": [
             {
                 "name": "bio_sample_name",
-                "sra_sample_id": "12345.biosample",
+                "sample_id": "12345.biosample",
                 "bio_sample-reserved-attribute": "bio_sample-reserved-attribute",
                 "attributes": [
                     {
@@ -106,7 +106,7 @@ class MetadataClient:
         "libraries": [
             {
                 "name": "library_name",
-                "sra_sample_id": "12345.biosample",
+                "sample_id": "12345.biosample",
                 "library-reserved-attribute": "library-reserved-attribute",
                 "attributes": [
                     {
@@ -134,10 +134,10 @@ class MetadataClient:
     """
 
     def __init__(self):
-        self.bio_sample_reserved_attributes = config.ncbi_sra_submit_properties.bio_sample_reserved_attributes
-        self.bio_sample_dup_attributes = config.ncbi_sra_submit_properties.bio_sample_dup_attributes
-        self.library_reserved_attributes = config.ncbi_sra_submit_properties.library_reserved_attributes
-        self.compressed_content_types = config.ncbi_sra_submit_properties.compressed_content_types
+        self.bio_sample_reserved_attributes = config.ncbi_submit_properties.bio_sample_reserved_attributes
+        self.bio_sample_dup_attributes = config.ncbi_submit_properties.bio_sample_dup_attributes
+        self.library_reserved_attributes = config.ncbi_submit_properties.library_reserved_attributes
+        self.compressed_content_types = config.ncbi_submit_properties.compressed_content_types
 
     def get_metadata(self, json_file):
         with open(json_file) as file:
@@ -148,7 +148,7 @@ class MetadataClient:
         if not metadata.get('folders'):
             raise Exception("Could not find Bio Project folder metadata")
 
-        bio_project = {"sra_object_id": metadata['id']}
+        bio_project = {"object_id": metadata['id']}
         project_metadata = metadata['metadata']
         for attribute in project_metadata:
             if not (attribute.get('attr') and attribute.get('value')):
@@ -182,7 +182,7 @@ class MetadataClient:
         if not bio_sample_folder.get('folders'):
             raise Exception("Could not find Bio Sample folder metadata: {0}".format(bio_sample_name))
 
-        bio_sample = {"sra_sample_id": bio_sample_folder['id'],
+        bio_sample = {"sample_id": bio_sample_folder['id'],
                       "name": bio_sample_name,
                       "attributes": []}
         metadata = bio_sample_folder['metadata']
@@ -204,12 +204,12 @@ class MetadataClient:
                     # This attribute needs to be duplicated outside the attributes node as well.
                     bio_sample[attr] = value
 
-        bio_sample['libraries'] = [self._parse_library_metadata(bio_sample['sra_sample_id'], bio_sample['name'], library)
+        bio_sample['libraries'] = [self._parse_library_metadata(bio_sample['sample_id'], bio_sample['name'], library)
                                    for library in bio_sample_folder['folders']]
 
         return bio_sample
 
-    def _parse_library_metadata(self, sra_sample_id, bio_sample_name, library_folder):
+    def _parse_library_metadata(self, sample_id, bio_sample_name, library_folder):
         if not library_folder.get('path'):
             raise Exception("Could not find Bio Sample Library folder path")
 
@@ -224,7 +224,7 @@ class MetadataClient:
 
         library = {"library_id": library_folder['id'],
                    "name": library_name,
-                   "sra_sample_id": sra_sample_id,
+                   "sample_id": sample_id,
                    "attributes": []}
         metadata = library_folder['metadata']
 

@@ -18,13 +18,13 @@ RUN chmod 755 aspera-connect-install.sh
 RUN ./aspera-connect-install.sh \
     && rm aspera-connect-install.sh
 
-COPY ncbi_sra_submit.py metadata_client.py ncbi_sra_report_download.py ./
+COPY ncbi_submit.py metadata_client.py ncbi_report_download.py ./
 
 VOLUME [ "/root/config", "/root/templates", "/root/schemas" ]
 
-ENTRYPOINT [ "python", "/root/ncbi_sra_submit.py" ]
+ENTRYPOINT [ "python", "/root/ncbi_submit.py" ]
 CMD [ "--help" ]
 
 # Example run commands:
 # docker run --rm -e IPLANT_USER -e IPLANT_EXECUTION_ID -w /de-app-work -v /condor/scratch/workdir:/de-app-work --volumes-from=ncbi-ssh-key:ro --volumes-from=ncbi-sra-configs:ro --net=bridge discoenv/ncbi-sra-submit --submit-mode create --input-metadata metadata.json --input-dir BioProject
-# docker run --rm -e IPLANT_USER -e IPLANT_EXECUTION_ID -w /de-app-work -v /condor/scratch/workdir:/de-app-work --volumes-from=ncbi-ssh-key:ro --volumes-from=ncbi-sra-configs:ro --net=bridge --entrypoint /root/ncbi_sra_report_download.py discoenv/ncbi-sra-submit --submit-dir 'username.bio-project-folder-id'
+# docker run --rm -e IPLANT_USER -e IPLANT_EXECUTION_ID -w /de-app-work -v /condor/scratch/workdir:/de-app-work --volumes-from=ncbi-ssh-key:ro --volumes-from=ncbi-sra-configs:ro --net=bridge --entrypoint /root/ncbi_report_download.py discoenv/ncbi-sra-submit --submit-dir 'username.bio-project-folder-id'
