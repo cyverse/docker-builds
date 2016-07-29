@@ -4,7 +4,8 @@ LABEL Description "This Dockerfile is used for hisat2 tool"
 RUN apt-get update && apt-get install -y \
    build-essential \
    git \
-   python
+   python \
+   samtools
 ENV BINPATH /usr/bin
 ENV SRCPATH /usr/src
 ENV HISAT2GIT https://github.com/infphilo/hisat2.git

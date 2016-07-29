@@ -88,7 +88,7 @@ for my $query_file (@file_query) {
     $basename =~ s/\.\S+$//;
 
 
-        if ($format eq 'PE') {
+        if ($format eq "PE") {
     my $align_command = "$app $HISAT_ARGS --rna-strandness $library -x Sbicolor -1 $query_file -2 $second_file | samtools view -bS - > $query_file.bam";
     report("Executing: $align_command\n");
     system $align_command;
@@ -97,7 +97,7 @@ for my $query_file (@file_query) {
     system "samtools index output/$basename.sorted.bam";
     system "rm -rf *bam";
 	}
-	elsif($format eq 'SE'){
+	elsif($format eq "SE"){
     my $align_command = "$app $HISAT_ARGS --rna-strandness $library -x Sbicolor -U $query_file -p 4 | samtools view -bS - > $query_file.bam";
     report("Executing: $align_command\n");
     system $align_command;
