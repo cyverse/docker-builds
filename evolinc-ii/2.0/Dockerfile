@@ -84,8 +84,9 @@ RUN curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
 RUN python get-pip.py
 RUN pip install biopython
 
-# Add all the scripts to the root directory pAtHs
+# Add all the scripts to the root directory PATHSSSS
 ADD *.py *.pl *.R *.sh /
+RUN chmod +x /Building_Families.sh
 RUN chmod +x /evolinc-part-II.sh && cp /evolinc-part-II.sh $BINPATH
 
 ENTRYPOINT ["/evolinc-part-II.sh"]
