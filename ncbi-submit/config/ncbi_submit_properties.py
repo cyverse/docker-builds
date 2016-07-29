@@ -21,9 +21,9 @@ ncbi_host = "upload.ncbi.nlm.nih.gov"
 ncbi_sumbit_path = "submit/Production"
 # ncbi_sumbit_path = "submit/Test"
 
-bio_sample_reserved_attributes = {'sra_sample_id',
-                                  'sra_bio_sample_package'}
-library_reserved_attributes =    {'sra_sample_id',
+bio_sample_reserved_attributes = {'sample_id',
+                                  'bio_sample_package'}
+library_reserved_attributes =    {'sample_id',
                                   'library_id'}
 bio_sample_dup_attributes =      {'organism',
                                   'sample_title'}

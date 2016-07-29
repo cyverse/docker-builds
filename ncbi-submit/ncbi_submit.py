@@ -2,7 +2,7 @@
 
 __author__ = 'Paul Sarando'
 
-import config.ncbi_sra_submit_properties
+import config.ncbi_submit_properties
 
 from metadata_client import MetadataClient
 from genshi.template import TemplateLoader
@@ -86,7 +86,7 @@ class BioProjectXmlValidator:
             self.biosample_schema.assertValid(biosample)
 
 
-usage = 'ncbi_sra_submit.py [options]'
+usage = 'ncbi_submit.py [options]'
 
 desc = """
 Prepares files and metadata downloaded from the Discovery Environment Data Store for submission to
@@ -99,7 +99,7 @@ parser.add_argument('-s', '--submit-mode', dest = 'submit_mode',
                     default = 'create',
                     help = 'specify if the SRA submission is a BioProject "create" (default) or an "update" request.')
 parser.add_argument('-i', '--private-key', dest = 'private_key_path',
-                    default = config.ncbi_sra_submit_properties.private_key_path,
+                    default = config.ncbi_submit_properties.private_key_path,
                     help = '(optional) specify an alternative path to the id_rsa private-key file.')
 parser.add_argument('-f', '--input-dir', dest = 'input_dir',
                     help = 'specify the path to the input BioProject folder to submit to SRA')
@@ -116,7 +116,7 @@ args = parser.parse_args()
 
 # Define the objects we need.
 metadata_client = MetadataClient()
-loader = TemplateLoader(config.ncbi_sra_submit_properties.templates_dir)
+loader = TemplateLoader(config.ncbi_submit_properties.templates_dir)
 
 # Parse iPlant Data Store metadata into format usable by the submission templates
 metadata = metadata_client.get_metadata(args.metadata_path)
@@ -124,12 +124,12 @@ metadata = metadata_client.get_metadata(args.metadata_path)
 # Create the destination submission directory
 submit_dir = args.submit_dir
 if not submit_dir:
-    submit_dir = '{0}.{1}'.format(os.environ['IPLANT_USER'], metadata['sra_object_id'])
+    submit_dir = '{0}.{1}'.format(os.environ['IPLANT_USER'], metadata['object_id'])
 if not os.path.exists(submit_dir):
     os.makedirs(submit_dir)
 
 # The SRA project ID is required if the submission mode is not 'create'
-if args.submit_mode != 'create' and 'sra_project_id' not in metadata:
+if args.submit_mode != 'create' and 'project_id' not in metadata:
     raise Exception("Could not find SRA Project ID in Bio Project metadata for project update.")
 
 # Generate submission.xml in the submission dir
@@ -140,20 +140,20 @@ with open(submission_path, 'w') as f:
     stream.render(method='xml', out=f)
 
 # Validate generated XML
-xml_validator = BioProjectXmlValidator(config.ncbi_sra_submit_properties.schemas_dir,
-                                       config.ncbi_sra_submit_properties.submission_schema_path,
-                                       config.ncbi_sra_submit_properties.bioproject_schema_path,
-                                       config.ncbi_sra_submit_properties.biosample_schema_path)
+xml_validator = BioProjectXmlValidator(config.ncbi_submit_properties.schemas_dir,
+                                       config.ncbi_submit_properties.submission_schema_path,
+                                       config.ncbi_submit_properties.bioproject_schema_path,
+                                       config.ncbi_submit_properties.biosample_schema_path)
 xml_validator.validate_bioproject_xml(submission_path)
 
 if args.validate_only or not args.input_dir:
     print "Only validated metadata, no data was submitted to the NCBI SRA."
 else:
-    uploader = BioProjectUploader(config.ncbi_sra_submit_properties.ascp_cmd,
+    uploader = BioProjectUploader(config.ncbi_submit_properties.ascp_cmd,
                                   args.private_key_path,
-                                  config.ncbi_sra_submit_properties.ncbi_user,
-                                  config.ncbi_sra_submit_properties.ncbi_host,
-                                  config.ncbi_sra_submit_properties.ncbi_sumbit_path)
+                                  config.ncbi_submit_properties.ncbi_user,
+                                  config.ncbi_submit_properties.ncbi_host,
+                                  config.ncbi_submit_properties.ncbi_sumbit_path)
 
     # Build the list of submission input file paths for the uploader
     input_paths = metadata_client.get_bio_project_file_paths(metadata, args.input_dir)

@@ -2,7 +2,7 @@
 
 __author__ = 'Paul Sarando'
 
-import config.ncbi_sra_submit_properties
+import config.ncbi_submit_properties
 
 from argparse import ArgumentParser
 from subprocess import call
@@ -30,7 +30,7 @@ class BioProjectReportDownloader:
             raise Exception("Aspera Connect download failed", e)
 
 usage = """
-ncbi_sra_report_download.py [-i <PRIVATE_KEY_PATH>] -s <SRC_SUBMIT_DIR> -d <DOWNLOAD_OUTPUT_DIR>
+ncbi_report_download.py [-i <PRIVATE_KEY_PATH>] -s <SRC_SUBMIT_DIR> -d <DOWNLOAD_OUTPUT_DIR>
 """
 
 desc = """
@@ -40,7 +40,7 @@ Downloads a report.xml file from the NCBI Sequence Read Archive (SRA).
 # Parse the command-line options.
 parser = ArgumentParser(usage = usage, description = desc, add_help = False)
 parser.add_argument('-i', '--private-key', dest = 'private_key_path',
-                    default = config.ncbi_sra_submit_properties.private_key_path,
+                    default = config.ncbi_submit_properties.private_key_path,
                     help = '(optional) specify an alternative path to the id_rsa'
                            ' private-key file.')
 parser.add_argument('-s', '--submit-dir', dest = 'submit_dir',
@@ -55,11 +55,11 @@ parser.add_argument('-?', '--help', action = 'help')
 args = parser.parse_args()
 
 # Define the objects we need.
-downloader = BioProjectReportDownloader(config.ncbi_sra_submit_properties.ascp_cmd,
+downloader = BioProjectReportDownloader(config.ncbi_submit_properties.ascp_cmd,
                                         args.private_key_path,
-                                        config.ncbi_sra_submit_properties.ncbi_user,
-                                        config.ncbi_sra_submit_properties.ncbi_host,
-                                        config.ncbi_sra_submit_properties.ncbi_sumbit_path)
+                                        config.ncbi_submit_properties.ncbi_user,
+                                        config.ncbi_submit_properties.ncbi_host,
+                                        config.ncbi_submit_properties.ncbi_sumbit_path)
 
 # Download the SRA report
 downloader.download_report(args.submit_dir, args.output_dir)
