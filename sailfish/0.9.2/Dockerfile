@@ -20,10 +20,8 @@ RUN export LD_LIBRARY_PATH=/sailfish/lib/:$PATH
 
 WORKDIR /
 
-RUN apt-get install -y gzip 
-
 # Add wrapper ScripT
 ADD Sailfish_align.pl /usr/bin/ 
 RUN chmod +x /usr/bin/Sailfish_align.pl
 
-ENTRYPOINT ["/usr/bin/Sailfish_align.pl"]
+#ENTRYPOINT ["/usr/bin/Sailfish_align.pl"]
