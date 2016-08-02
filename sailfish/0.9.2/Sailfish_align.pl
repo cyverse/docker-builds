@@ -55,7 +55,7 @@ if ($user_database_path) {
   if ($database_path !~ /$name\.fa$/) {
       my $new_path = $database_path;
       $new_path =~ s/$name\.\S+$/$name\.fa/;
-      system "cp $database_path $new_path";
+      #system "cp $database_path $new_path";
   }
   $database_path = $name;
 }
