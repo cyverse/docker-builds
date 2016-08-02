@@ -1,5 +1,5 @@
 FROM ubuntu:14.04.3
-MAINTAINER Upendra Devisetty
+MAINTAINER Upendra Devisetty <upendra@cyverse.org>
 LABEL Description "This Dockerfile is for evolinc-ii pipeline"
 
 RUN apt-get update && apt-get install -y g++ \
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y g++ \
 		curl \
 		python-matplotlib \
 		python-numpy \
-                python-pandas
+        python-pandas
 
 ENV BINPATH /usr/bin
 
@@ -21,9 +21,9 @@ RUN curl ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.3.0/ncbi-blast-2.
 RUN tar xvf ncbi-blast-2.3.0+-x64-linux.tar.gz
 
 # Bedtools
-RUN wget https://github.com/arq5x/bedtools2/archive/v2.25.0.tar.gz
-RUN tar xvf v2.25.0.tar.gz
-RUN cd bedtools2-2.25.0 && make
+RUN wget https://github.com/arq5x/bedtools2/releases/download/v2.26.0/bedtools-2.26.0.tar.gz
+RUN tar zxvf bedtools-2.26.0.tar.gz
+RUN cd bedtools2 && make
 RUN cd ..
 
 # Cufflinks
@@ -74,7 +74,7 @@ RUN cpanm -v  \
 
 # Setting paths to all the softwares
 ENV PATH /ncbi-blast-2.3.0+/bin/:$PATH
-ENV PATH /bedtools2-2.25.0/bin/:$PATH
+ENV PATH /bedtools2/bin/:$PATH
 ENV PATH /cufflinks-2.2.1.Linux_x86_64/:$PATH
 
 RUN apt-get -y install r-base
