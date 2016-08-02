@@ -2,7 +2,7 @@
 # VERSION               0.9.2
 # 
 FROM      ubuntu:14.04.3 
-MAINTAINER Kapeel Chougule
+MAINTAINER Upendra Kumar Devisetty <upendra@cyverse.org>
 LABEL Description="This image is used for running Sailfish RNA seq qauntification tool "
 RUN apt-get update && apt-get install -y build-essential git cmake curl unzip zlib1g-dev wget python libtbb-dev libjemalloc-dev libgoogle-perftools-dev \
 pkg-config libbz2-dev 
