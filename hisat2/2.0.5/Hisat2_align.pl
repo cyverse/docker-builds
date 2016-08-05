@@ -97,11 +97,3 @@ system "rm -rf *.ht2";
 sub report {
     print STDERR "$_[0]\n";
 }
-
-if ($database_path !~ /$name\.fa$/) {
-      my $new_path = $database_path;
-      $new_path =~ s/$name\.\S+$/$name\.fa/;
-      system "cp $database_path $new_path";
-  }
-  $database_path = $name;
-}
