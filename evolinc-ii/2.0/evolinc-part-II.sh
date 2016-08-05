@@ -144,7 +144,7 @@ echo "Finished alignments"
 echo "Generating summary of aligned linRNA"
 python /Family_division_and_summary.py ../../../$sp_list
 grep -v "aligned_list.txt" summary.txt > final_summary.txt
-Rscript /final_summary.R
+Rscript final_summary.R -q $query_species
 rm summary.txt
 echo "Finished summary"
 
