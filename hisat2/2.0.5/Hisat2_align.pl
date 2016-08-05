@@ -5,7 +5,7 @@ use Data::Dumper;
 use Getopt::Long qw(:config no_ignore_case no_auto_abbrev pass_through);
 
 my (@file_query, $database_path, $user_database_path, $annotation_path, 
-$user_annotation_path, $file_names, $root_names, @file_query2, $lib_type, $file_type);
+$user_annotation_path, $file_names, $root_names, @file_query2, $lib_type, $file_type, $n_cores);
 
 
 GetOptions( "file_query=s"      => \@file_query,
@@ -18,6 +18,7 @@ GetOptions( "file_query=s"      => \@file_query,
 	          "root_names=s"      => \$root_names,
 	          "lib_type=s"        => \$lib_type,
 	          "file_type=s"       => \$file_type,
+            "n_cores=s"         => \$n_cores,
           );
 
 # sanity check for input data
@@ -64,6 +65,10 @@ if ($user_database_path) {
             exit 1;
         }
     }
+    
+    my $success = undef;
+    system "mkdir output";
+
     my $app  = "/usr/bin/hisat2";
     my $format = $file_type;
     my $library = $lib_type;
@@ -72,7 +77,7 @@ if ($user_database_path) {
     $basename =~ s/\.\S+$//;
 
     if ($format eq "PE") {
-    	my $align_command = "$app $HISAT_ARGS --rna-strandness $library -x $name -1 $query_file -2 $second_file -p 4 | samtools view -bS - > $query_file.bam";
+    	my $align_command = "$app $HISAT_ARGS --rna-strandness $library -x $name -1 $query_file -2 $second_file -p $n_cores | samtools view -bS - > $query_file.bam";
     	report("Executing: $align_command\n");
     	system $align_command;
     	system "samtools sort $query_file.bam $basename.sorted";
@@ -81,7 +86,7 @@ if ($user_database_path) {
     	system "rm -rf *bam";
         }
     elsif($format eq "SE"){
-    	my $align_command = "$app $HISAT_ARGS --rna-strandness $library -x $name -U $query_file -p 4 | samtools view -bS - > $query_file.bam";
+    	my $align_command = "$app $HISAT_ARGS --rna-strandness $library -x $name -U $query_file -p $n_cores | samtools view -bS - > $query_file.bam";
     	report("Executing: $align_command\n");
     	system $align_command;
     	system "samtools sort $query_file.bam $basename.sorted";
