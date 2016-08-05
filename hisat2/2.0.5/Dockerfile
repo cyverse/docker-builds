@@ -24,4 +24,4 @@ ADD Hisat2_align.pl $BINPATH
 
 RUN chmod +x $BINPATH/Hisat2_align.pl
 
-#ENTRYPOINT ["/usr/bin/Hisat2_align.pl"]
+ENTRYPOINT ["/usr/bin/Hisat2_align.pl"]
