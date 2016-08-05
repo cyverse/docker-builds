@@ -84,6 +84,9 @@ RUN curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
 RUN python get-pip.py
 RUN pip install biopython
 
+# R library
+RUN Rscript -e 'install.packages("getopt", dependencies = TRUE, repos="http://cran.rstudio.com/");'
+
 # Add all the scripts to the root directory PATHSSSS
 ADD *.py *.pl *.R *.sh /
 RUN chmod +x /Building_Families.sh
