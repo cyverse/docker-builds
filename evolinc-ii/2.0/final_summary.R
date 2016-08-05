@@ -39,7 +39,11 @@ colnames(dataMatrix) <- result
 
 plot <- apply(dataMatrix, 2, sum)
 
-plot <- round(((plot/max(plot))*100))
+res1 = paste0("(", plot, ")")
+
+plot1 <- round(((plot/max(plot))*100))
+
+res2 = paste(plot1, res1, sep = " ")
 
 png(filename="lincRNA_barplot.png",width=min(3600,1800+800*ncol(plot)/10),height=1800,res=300)
 
@@ -54,5 +58,5 @@ bargraph <- barplot(plot, col = "blue",
 
 axis(2)
                     
-text(bargraph,plot,labels = plot,pos=3,cex=.8)
+text(bargraph,plot,labels = res2, pos=3, cex=.8)
 dev.off()
