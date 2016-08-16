@@ -79,12 +79,16 @@ for my $query_file (@file_query) {
     
     report("Executing: $align_command\n");
     system $align_command;
+    my $move_files = "mkdir output;mkdir output\$basename;mv Log* $basename* output\$basename";
+    system $move_files;
 	}
     elsif($format eq 'SE'){
 	 my $align_command = "$app $STAR_ARGS --runThreadN 4 --genomeDir index --outFileNamePrefix $basename --readFilesIn $query_file --readFilesCommand gunzip -c --sjdbGTFfile $user_annotation_path";
 
     report("Executing: $align_command\n");
     system $align_command;
+    my $move_files = "mkdir output;mkdir output\$basename;mv Log* $basename* output\$basename";
+    system $move_files;
 
 	}
 }
