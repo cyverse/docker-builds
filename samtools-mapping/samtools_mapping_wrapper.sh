@@ -34,11 +34,14 @@ while getopts ":hi:" opt; do
   esac
 done
 
+#!/bin/bash
+for file in test_data/*; 
+do 
+var="$(samtools view -F 4 $file | wc -l)"; 
+var1="$(samtools view -f 4 $file | wc -l)";
+var3="$(samtools view $file | wc -l)";
+echo -e $file '\t' $var '\t' $var1 '\t' $var3 >> output1.txt; 
+done
 
-for file in $input/*; 
-	do 
-	echo $file >> output1; 
-	samtools view -F 4 $file | wc -l >> output1;
-	tr '\n' '\t' < output1 | sed -r 's/([0-9]+\t)/\1\n/' > output2
-	done
-rm output1
+awk 'BEGIN {print "Sample_name\tMapped_reads\tUnmapped_reads\tTotal_reads"} {print}' output1.txt > output.txt
+rm output1.txt
