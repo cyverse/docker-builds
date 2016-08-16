@@ -123,7 +123,7 @@ sed -i 's~>~~g' Homology_Search/List_of_non_identified_query_lincRNAs.txt
 # Move genome and putative ortholog files for reciprocal BLAST to reciprocal BLAST folder. Also, rename putative orthologs file
 
 cp $subject_genome Reciprocal_BLAST/
-mv Homology_Search/$subject_species.$query_species.TBH.orthologs.fasta Reciprocal_BLAST/$subject_species.$query_species.putative_orthologs.fasta
+cp Homology_Search/$subject_species.$query_species.orthologs.lincRNA_tested.renamed.fasta Reciprocal_BLAST/$subject_species.$query_species.putative_orthologs.fasta
 mv Homology_Search/$subject_species.out.TBH.only.gff Reciprocal_BLAST/$subject_species.$query_species.coords.gff
 mv Homology_Search/$subject_species.$query_species.orthologs.lincRNA_tested.renamed.fasta.dup_removed.fasta Orthologs/$subject_species.$query_species.putative_orthologs.fasta
 
