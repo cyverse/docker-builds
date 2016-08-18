@@ -35,7 +35,7 @@ while getopts ":hi:" opt; do
 done
 
 #!/bin/bash
-for file in test_data/*.bam; 
+for file in $input/*.bam; 
 do 
 var="$(samtools view -F 4 $file | wc -l)"; 
 var1="$(samtools view -f 4 $file | wc -l)";
