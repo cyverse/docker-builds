@@ -52,7 +52,6 @@ df1 <- cbind(t, df1)
 
 df1$id <- gene
 df1[cbind(1:nrow(df1), match(sp, names(df1)))] <- fun
-df1 <- dcast(subset(melt(df1, id = "id"), value != "Not found"), id ~ variable + value)
+df1 <- dcast(subset(melt(df1, id = "id"), value != "Not found"), id ~ variable)
 df1[is.na(df1)] <- "Not found"
-names(df1) <- sub("([[:alpha:]]+)_([A-Za-z_]+)","\\1", colnames(df1))
 write.table(df1, "final_summary_table.tsv", row.names = F, col.names = T, quote = F, sep = "\t")

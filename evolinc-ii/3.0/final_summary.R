@@ -15,7 +15,14 @@ if ( !is.null(ret.opts$help) ) {
   q(status=1);
 }
 
-species <- ret.opts$spe
+species <- read.table(ret.opts$spe)
+species.1 <- species[1,]
+
+a1 <- substring(species.1,1,1)
+
+a2 <- substring(species.1,2:3)[1]
+
+a3 <- paste(a1, a2, sep = ".")
 
 dataFile <- read.table("final_summary.txt", sep = "\t", header = TRUE)
 
@@ -49,14 +56,14 @@ png(filename="lincRNA_barplot.png",width=min(3600,1800+800*ncol(plot)/10),height
 
 string1 = "Percent "
 string2 = " homologous lincRNA loci identified"
-new = paste0(string1, species, string2) 
+new = paste0(string1, a3, string2) 
 
-bargraph <- barplot(plot, col = "blue",
-                    ylab = new, ylim = c(0, max(plot)*1.15),
+bargraph <- barplot(plot1, col = "blue",
+                    ylab = new, ylim = c(0, max(plot1)*1.15),
                     font = 3, yaxt = "n"
                    ,las = 2)
 
 axis(2)
                     
-text(bargraph,plot,labels = res2, pos=3, cex=.8)
+text(bargraph, plot1, labels=res2, pos=3, cex=.8)
 dev.off()

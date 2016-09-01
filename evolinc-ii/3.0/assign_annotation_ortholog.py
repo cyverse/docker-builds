@@ -44,7 +44,7 @@ with open(output_file, 'w') as otpt:
                             bob,tail = (line.strip('>').strip('\n').strip(' ').split("TBH_1",1))
                             head = '%sTBH_1' % (bob)
                             if head in id_dict:
-                                line = '>%s_Ortholog%s\n' % (head,tail)
+                                line = '>%s_Homolog%s\n' % (head,tail)
                             else:
                                 pass
                         else: 
@@ -55,7 +55,7 @@ with open(output_file, 'w') as otpt:
                         if "TBH_1" in line: 
                             head2 = line.strip('>').strip('\n').strip(' ')
                             if head2 in id_dict:
-                                line = '>%s_Ortholog\n' % (head2)
+                                line = '>%s_Homolog\n' % (head2)
                             else:
                                 pass
                         else:
