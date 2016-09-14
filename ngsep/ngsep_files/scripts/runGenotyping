@@ -1,0 +1,16 @@
+p=$1;
+f=$2;
+t=$3;
+
+c="";
+if [ -z $4 ]
+then
+c="-knownSVs ${p}_bowtie2_NGSEP_SV.gff";
+fi
+
+REFERENCE=/path/to/reference/reference.fa;
+JARS_DIR=/path/to/jars;
+NGSEP=${JARS_DIR}/NGSToolsApp.jar
+KNOWN_VARS=AllSamples_variants.vcf;
+JAVA="java -d64 -XX:MaxHeapSize=1g -XX:MaxPermSize=256m";
+$JAVA -Xmx7g -jar ${NGSEP} FindVariants -noRep -noRD -noRP -ignore5 ${f} -ignore3 ${t} -maxBaseQS 30 -maxAlnsPerStartPos 2 -sampleId ${p} ${c} -knownVariants ${KNOWN_VARS} ${REFERENCE} ${p}_bowtie2_sorted.bam ${p}_bowtie2_NGSEP_gt >& ${p}_bowtie2_NGSEP_gt.log;

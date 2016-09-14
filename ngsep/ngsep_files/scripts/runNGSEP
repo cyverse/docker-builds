@@ -1,0 +1,8 @@
+p=$1;
+f=$2;
+t=$3;
+REFERENCE=/path/to/reference/reference.fa;
+JARS_DIR=/path/to/jars;
+NGSEP=${JARS_DIR}/NGSToolsApp.jar
+JAVA="java -d64 -XX:MaxHeapSize=1g -XX:MaxPermSize=256m";
+$JAVA -Xmx4g -jar ${NGSEP} FindVariants -noRep -ignore5 ${f} -ignore3 ${t} -maxBaseQS 30 -minQuality 40 -maxAlnsPerStartPos 2 -sampleId ${p} ${REFERENCE} ${p}_bowtie2_sorted.bam ${p}_bowtie2_NGSEP >& ${p}_bowtie2_NGSEP.log;
