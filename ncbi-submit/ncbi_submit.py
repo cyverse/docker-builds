@@ -2,6 +2,7 @@
 
 __author__ = 'Paul Sarando'
 
+import bioproject
 import config.ncbi_submit_properties
 
 from metadata_client import MetadataClient
@@ -12,79 +13,6 @@ from subprocess import call
 
 import os
 import shutil
-
-class BioProjectUploader:
-    def __init__(self, ascp_cmd, private_key_path, ncbi_user, ncbi_host, ncbi_sumbit_path):
-        self.ascp_cmd = ascp_cmd
-        self.private_key_path = private_key_path
-        self.upload_dest = '{0}@{1}:{2}'.format(ncbi_user, ncbi_host, ncbi_sumbit_path)
-
-    def upload_project(self, submit_dir, input_paths):
-        # Collect the submission files from the input paths into the submission dir
-        src_files = {}
-        for path in input_paths:
-            filename = os.path.basename(path)
-            if filename in src_files:
-                raise Exception("Duplicate filenames found in input directory:\n{0}\n{1}".format(src_files[filename], path))
-            src_files[filename] = path
-
-            shutil.move(path, os.path.join(submit_dir, filename))
-
-        ascp_cmd = self.ascp_cmd + [
-            "-i", self.private_key_path,
-            submit_dir,
-            self.upload_dest
-        ]
-
-        try:
-            retcode = call(ascp_cmd)
-            if retcode != 0:
-                raise Exception("Upload error: {0}".format(-retcode))
-
-            # The file uploads were successful, so upload a 'submit.ready' file to complete the submission.
-            submit_ready = "submit.ready"
-            open(os.path.join(submit_dir, submit_ready), 'a').close()
-
-            # Calling the same upload command with the same submit directory will skip all files already
-            # successfully uploaded, and only upload the new 'submit.ready' file.
-            retcode = call(ascp_cmd)
-            if retcode != 0:
-                raise Exception("Error uploading '{0}' file: {1}".format(submit_ready, -retcode))
-        except OSError as e:
-            raise Exception("Aspera Connect upload failed", e)
-
-        # Clean up: Move input files back into their original directories,
-        # so they are not transferred as outputs, but can be preserved as inputs
-        for filename in src_files:
-            shutil.move(os.path.join(submit_dir, filename), src_files[filename])
-
-class BioProjectXmlValidator:
-    def __init__(self, schemas_dir, submission_schema_path, bioproject_schema_path, biosample_schema_path):
-        with open(submission_schema_path, 'r') as f:
-            schema_root = etree.XML(f.read(), base_url=schemas_dir)
-        schema = etree.XMLSchema(schema_root)
-        self.xmlparser = etree.XMLParser(schema=schema)
-
-        with open(bioproject_schema_path, 'r') as f:
-            schema_root = etree.XML(f.read(), base_url=schemas_dir)
-        self.bioproject_schema = etree.XMLSchema(schema_root)
-
-        with open(biosample_schema_path, 'r') as f:
-            schema_root = etree.XML(f.read(), base_url=schemas_dir)
-        self.biosample_schema = etree.XMLSchema(schema_root)
-
-    def validate_bioproject_xml(self, submission_path):
-        with open(submission_path, 'r') as f:
-            submission = etree.fromstring(f.read(), self.xmlparser)
-
-        bioproject = submission.xpath('/Submission/Action/AddData/Data/XmlContent/Project')
-        if len(bioproject) > 0:
-            self.bioproject_schema.assertValid(bioproject[0])
-
-        bio_samples = submission.xpath('/Submission/Action/AddData/Data/XmlContent/BioSample')
-        for biosample in bio_samples:
-            self.biosample_schema.assertValid(biosample)
-
 
 usage = 'ncbi_submit.py [options]'
 
@@ -140,20 +68,13 @@ with open(submission_path, 'w') as f:
     stream.render(method='xml', out=f)
 
 # Validate generated XML
-xml_validator = BioProjectXmlValidator(config.ncbi_submit_properties.schemas_dir,
-                                       config.ncbi_submit_properties.submission_schema_path,
-                                       config.ncbi_submit_properties.bioproject_schema_path,
-                                       config.ncbi_submit_properties.biosample_schema_path)
+xml_validator = bioproject.get_xml_validator()
 xml_validator.validate_bioproject_xml(submission_path)
 
 if args.validate_only or not args.input_dir:
     print "Only validated metadata, no data was submitted to the NCBI SRA."
 else:
-    uploader = BioProjectUploader(config.ncbi_submit_properties.ascp_cmd,
-                                  args.private_key_path,
-                                  config.ncbi_submit_properties.ncbi_user,
-                                  config.ncbi_submit_properties.ncbi_host,
-                                  config.ncbi_submit_properties.ncbi_sumbit_path)
+    uploader = bioproject.get_uploader(private_key_path=args.private_key_path)
 
     # Build the list of submission input file paths for the uploader
     input_paths = metadata_client.get_bio_project_file_paths(metadata, args.input_dir)
