@@ -12,9 +12,12 @@ ascp_cmd = [
     "--file-manifest=text"
 ]
 
-submission_schema_path = schemas_dir + "submission.xsd"
-bioproject_schema_path = schemas_dir + "bioproject.xsd"
-biosample_schema_path = schemas_dir + "biosample.xsd"
+schema_paths = {
+    'submission': schemas_dir + 'submission.xsd',
+    'bioproject': schemas_dir + 'bioproject.xsd',
+    'biosample':  schemas_dir + 'biosample.xsd',
+    'genome':     schemas_dir + 'genome.xsd'
+}
 
 ncbi_user = "asp-bioci"
 ncbi_host = "upload.ncbi.nlm.nih.gov"
