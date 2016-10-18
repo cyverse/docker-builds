@@ -1,0 +1,50 @@
+FROM ubuntu:14.04.3
+MAINTAINER Benjamin Bolduc <bolduc.10@osu.edu>
+
+# Remove those annoying warnings
+ENV DEBIAN_FRONTEND noninteractive
+
+ENV BINPATH /usr/bin
+
+RUN apt-get update && apt-get install -y \
+    automake \
+    build-essential \
+    zlib1g-dev \
+    libncurses5-dev \
+    wget \
+    unzip \
+    python \
+    python-dev \
+    libtool
+    
+# Clean up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Get pip
+RUN wget --no-verbose https://bootstrap.pypa.io/get-pip.py
+RUN python get-pip.py
+
+# Get natsort
+RUN pip install natsort
+
+# Get biopython
+RUN pip install biopython
+
+# Get Levenshtein
+RUN pip install python-Levenshtein
+
+# Install Bowtie2
+RUN wget --no-verbose http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.6/bowtie2-2.2.6-linux-x86_64.zip
+RUN unzip bowtie2-2.2.6-linux-x86_64.zip && cp bowtie2-2.2.6/bowtie2* $BINPATH
+
+# Install Samtools
+RUN wget --no-verbose https://github.com/samtools/samtools/releases/download/1.3.1/samtools-1.3.1.tar.bz2
+RUN tar -vxjf samtools-1.3.1.tar.bz2 && cd samtools-1.3.1 && make && make install
+
+ENV BITBUCKET_URL https://bitbucket.org/MAVERICLab/docker-bowtiebatch/raw/beb39333f41289e2be429add4badfc2b82aa427d
+
+RUN wget --no-verbose -P $BINPATH $BITBUCKET_URL/scripts/bowtie_batch.py
+RUN chmod +x $BINPATH/bowtie_batch.py
+
+ENTRYPOINT ["bowtie_batch.py"]
+CMD ["--help"]
