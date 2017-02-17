@@ -1,5 +1,6 @@
 FROM ubuntu:14.04.3
-MAINTAINER Upendra Devisetty
+MAINTAINER Upendra Devisetty <upendra@cyverse.org>
+LABEL Description "This Dockerfile is for evolinc-ii pipeline"
 
 RUN apt-get update && apt-get install -y g++ \
 		make \
@@ -79,20 +80,3 @@ ENV PATH /evolinc_docker/bin/:$PATH
 # Entrypoint
 ENTRYPOINT ["evolinc-part-I.sh"]
 CMD ["-h"]
-
-# Docker build
-# docker build -t"=ubuntu/evolinc:0.2" dockerfile-evolinc
-# Run it to test
-# docker run -it ubuntu/evolinc:0.2
-# mkdir /workind-dir
-# sudo git clone https://upendra_35@bitbucket.org/upendra_35/evolinc_docker.git
-# docker run --rm -v $(pwd):/working-dir -w /working-dir ubuntu/evolinc:0.2 -c AthalianaslutteandluiN30merged.gtf -g TAIR10_chr.fasta -r TAIR10_GFF3_genes_mod.gff -b TE_RNA_transcripts.fa -o test_out_new -t AnnotatedPEATPeaks.gff -x Atha_known_lncRNAs.mod.gff 
-# docker tag ubuntu/evolinc:0.2 upendradevisetty/evolinc:0.2
-# sudo docker build -t="ubuntu/evolinc-i:0.4" .
-#docker run --rm -v $(pwd):/working-dir -w /working-dir ubuntu/evolinc:0.2 -c AthalianaslutteandluiN30merged.gtf -g TAIR10_chr.fasta -r TAIR10_GFF3_genes_mod.gff -b TE_RNA_transcripts.fa -o test_out_new -t AnnotatedPEATPeaks.gff -x Atha_known_lncRNAs.mod.gff
-# sudo docker run --rm -v /home/upendra_35/dockerfile-evolinc/sample.data.arabi:/result -v /home/upendra_35/dockerfile-evolinc/sample.data.arabi/uniprot_sprot.fa:/uniprot_sprot.fa -w /result ubuntu/evolinc:0.4 -c AthalianaslutteandluiN30merged.gtf -g TAIR10_chr.fasta -r TAIR10_GFF3_genes_mod.gff -o test_out2 -b TE_RNA_transcripts.fa -t AnnotatedPEATPeaks.gff -x Atha_known_lncRNAs.mod.gff
-#upendra_35$ docker run --rm -v /Users/upendra_35/Documents/git.repos/dockerfile-evolinc/sample.data.arabi:/result -w /result ubuntu/evolinc:0.4 -c AthalianaslutteandluiN30merged.gtf -g TAIR10_chr.fasta -r TAIR10_GFF3_genes_mod.gff -o test_out2 -b TE_RNA_transcripts.fa -t AnnotatedPEATPeaks.gff -x Atha_known_lncRNAs.mod.
-#docker run --rm -v /Users/upendra_35/Documents/git.repos/dockerfile-evolinc/sample.data.arabi:/result -w /result ubuntu/evolinc:0.4 -c AthalianaslutteandluiN30merged.gtf -g TAIR10_chr.fasta -r TAIR10_GFF3_genes_mod.gff -n 4 -o test_out2 -b TE_RNA_transcripts.fa -t AnnotatedPEATPeaks.gff -x Atha_known_lncRNAs.mod.gff
-# docker run --rm -v /Users/upendra_35/Documents/git.repos/dockerfile-evolinc/sample.data.crub:/result -w /result ubuntu/evolinc:0.4 -c Crub_merged_with_ref_ids.gtf -g Crubella_183.fa -r Crubella_183_gene.gff3 -n 4 -o test_out_crub -b TE_RNA_transcripts.fa -x Crub_known_lincRNA_coordinates_gene_only.gff
-
-
