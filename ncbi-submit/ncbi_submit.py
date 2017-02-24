@@ -29,6 +29,11 @@ parser.add_argument(
     choices = ['create', 'update']
 )
 parser.add_argument(
+    '-t', '--target-database', dest = 'target_database', default = 'SRA',
+    help = 'Specifies the target database for files being submitted to NCBI.',
+    choices = ['SRA', 'WGS']
+)
+parser.add_argument(
     '-i', '--private-key', dest = 'private_key_path',
     default = config.ncbi_submit_properties.private_key_path,
     help = '(optional) specify an alternative path to the id_rsa private-key file.'
@@ -55,7 +60,7 @@ parser.add_argument('-?', '--help', action = 'help')
 args = parser.parse_args()
 
 # Define the objects we need.
-metadata_client = MetadataClient()
+metadata_client = MetadataClient(args.target_database)
 loader = TemplateLoader(config.ncbi_submit_properties.templates_dir)
 
 # Parse iPlant Data Store metadata into format usable by the submission templates

@@ -7,7 +7,7 @@ import json
 
 class MetadataClient:
     """
-    A class for transforming DE Data Store Metadata into NCBI SRA XML template metadata.
+    A class for transforming DE Data Store Metadata into NCBI XML template metadata.
     The get_metadata method expects the DE metadata file to contain JSON in the following format:
     {
         "id": "642ad94c-bd2a-11e4-891f-6abdce5a08d5",
@@ -82,7 +82,7 @@ class MetadataClient:
         ]
     }
 
-    The get_metadata method will return NCBI SRA XML template metadata in the following format:
+    The get_metadata method will return NCBI XML template metadata in the following format:
     {
         "BioProject-attribute1": "BioProject-value1",
         "BioProject-attribute2": "BioProject-value2",
@@ -133,7 +133,8 @@ class MetadataClient:
     }
     """
 
-    def __init__(self):
+    def __init__(self, target_database):
+        self.target_database = target_database
         self.bio_sample_reserved_attributes = config.ncbi_submit_properties.bio_sample_reserved_attributes
         self.bio_sample_dup_attributes = config.ncbi_submit_properties.bio_sample_dup_attributes
         self.library_reserved_attributes = config.ncbi_submit_properties.library_reserved_attributes
@@ -161,6 +162,7 @@ class MetadataClient:
 
             bio_project[attr] = value
 
+        bio_project['target_database'] = self.target_database
         bio_project['bio_samples'] = [self._parse_folder_metadata(folder)
                                       for folder in metadata['folders']]
         bio_project['libraries'] = [library
