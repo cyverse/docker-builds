@@ -24,9 +24,9 @@ the NCBI Sequence Read Archive (SRA).
 # Parse the command-line options.
 parser = ArgumentParser(usage = usage, description = desc, add_help = False)
 parser.add_argument(
-    '-s', '--submit-mode', dest = 'submit_mode',
-    default = 'create',
-    help = 'specify if the SRA submission is a BioProject "create" (default) or an "update" request.'
+    '-s', '--submit-mode', dest = 'submit_mode', default = 'create',
+    help = 'Specifies whether to create a new bio project or update an existing one.',
+    choices = ['create', 'update']
 )
 parser.add_argument(
     '-i', '--private-key', dest = 'private_key_path',
