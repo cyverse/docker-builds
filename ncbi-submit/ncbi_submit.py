@@ -23,22 +23,34 @@ the NCBI Sequence Read Archive (SRA).
 
 # Parse the command-line options.
 parser = ArgumentParser(usage = usage, description = desc, add_help = False)
-parser.add_argument('-s', '--submit-mode', dest = 'submit_mode',
-                    default = 'create',
-                    help = 'specify if the SRA submission is a BioProject "create" (default) or an "update" request.')
-parser.add_argument('-i', '--private-key', dest = 'private_key_path',
-                    default = config.ncbi_submit_properties.private_key_path,
-                    help = '(optional) specify an alternative path to the id_rsa private-key file.')
-parser.add_argument('-f', '--input-dir', dest = 'input_dir',
-                    help = 'specify the path to the input BioProject folder to submit to SRA')
-parser.add_argument('-m', '--input-metadata', dest = 'metadata_path',
-                    required = True,
-                    help = 'specify the path to the BioProject folder metadata file.')
-parser.add_argument('-v', '--validate-metadata-only', dest = 'validate_only', action='store_true',
-                    help = 'when included, no data will be submitted and only the BioProject folder'
-                           ' metadata file will be validated.')
-parser.add_argument('-d', '--submit-dir', dest = 'submit_dir',
-                    help = 'specify the path to the destination BioProject SRA submission folder')
+parser.add_argument(
+    '-s', '--submit-mode', dest = 'submit_mode',
+    default = 'create',
+    help = 'specify if the SRA submission is a BioProject "create" (default) or an "update" request.'
+)
+parser.add_argument(
+    '-i', '--private-key', dest = 'private_key_path',
+    default = config.ncbi_submit_properties.private_key_path,
+    help = '(optional) specify an alternative path to the id_rsa private-key file.'
+)
+parser.add_argument(
+    '-f', '--input-dir', dest = 'input_dir',
+    help = 'specify the path to the input BioProject folder to submit to SRA'
+)
+parser.add_argument(
+    '-m', '--input-metadata', dest = 'metadata_path',
+    required = True,
+    help = 'specify the path to the BioProject folder metadata file.'
+)
+parser.add_argument(
+    '-v', '--validate-metadata-only', dest = 'validate_only', action='store_true',
+    help = 'when included, no data will be submitted and only the BioProject folder'
+           ' metadata file will be validated.'
+)
+parser.add_argument(
+    '-d', '--submit-dir', dest = 'submit_dir',
+    help = 'specify the path to the destination BioProject SRA submission folder'
+)
 parser.add_argument('-?', '--help', action = 'help')
 args = parser.parse_args()
 
