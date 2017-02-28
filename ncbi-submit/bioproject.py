@@ -1,7 +1,11 @@
 __author__ = 'Dennis Roberts'
 
 import config.ncbi_submit_properties
+import os
+import shutil
+
 from lxml import etree
+from subprocess import call
 
 def load_schema(schemas_dir, path):
     with open(path, 'r') as f:
@@ -85,7 +89,7 @@ def get_xml_validator():
 
 def get_uploader(private_key_path=None):
     key_path = config.ncbi_submit_properties.private_key_path if private_key_path is None else private_key_path
-    BioProjectUploader(
+    return BioProjectUploader(
         config.ncbi_submit_properties.ascp_cmd,
         key_path,
         config.ncbi_submit_properties.ncbi_user,

@@ -9,10 +9,8 @@ from metadata_client import MetadataClient
 from genshi.template import TemplateLoader
 from lxml import etree
 from argparse import ArgumentParser
-from subprocess import call
 
 import os
-import shutil
 
 usage = 'ncbi_validate.py [options]'
 
