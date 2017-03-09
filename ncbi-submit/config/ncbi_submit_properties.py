@@ -27,7 +27,8 @@ ncbi_sumbit_path = "submit/Production"
 bio_sample_reserved_attributes = {'sample_id',
                                   'bio_sample_package'}
 library_reserved_attributes =    {'sample_id',
-                                  'library_id'}
+                                  'library_id',
+                                  'data_type'}
 bio_sample_dup_attributes =      {'organism',
                                   'sample_title'}
 

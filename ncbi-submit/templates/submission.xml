@@ -68,7 +68,7 @@
     <Action py:for="library in metadata.libraries">
         <AddFiles target_db="${metadata.target_database}">
             <File py:for="file in library.files" file_path="${file.filename}" md5="${file.md5}">
-                <DataType>generic-data</DataType>
+                <DataType>${library.data_type}</DataType>
             </File>
             <Attribute py:for="attribute in library.attributes"
                        name="${attribute.name}">${attribute.value}</Attribute>
