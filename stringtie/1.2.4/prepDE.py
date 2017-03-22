@@ -18,10 +18,10 @@ parser.add_option('--legend', default="legend.csv", help="if clustering, where t
 (opts, args)=parser.parse_args()
 #opts.cluster=True
 if not os.path.isdir(opts.input):
-  parser.print_help()
-  print " "
-  print "Error: sub-directory '%s' not found!" % ( opts.input)
-  sys.exit(1)
+    parser.print_help()
+    print " "
+    print "Error: sub-directory '%s' not found!" % ( opts.input)
+    sys.exit(1)
 RE_GENE_ID=re.compile('gene_id "([^"]+)"')
 RE_TRANSCRIPT_ID=re.compile('transcript_id "([^"]+)"')
 RE_COVERAGE=re.compile('cov "([\d.]+)"')
@@ -29,10 +29,10 @@ RE_STRING=re.compile(re.escape(opts.string))
 
 samples = [i for i in next(os.walk(opts.input))[1] if re.search(opts.pattern,i)]
 if len(samples) == 0:
-  parser.print_help()
-  print " "
-  print "Error: no GTF files found under ./%s !" % ( opts.input)
-  sys.exit(1)
+    parser.print_help()
+    print " "
+    print "Error: no GTF files found under ./%s !" % ( opts.input)
+    sys.exit(1)
 
 samples.sort()
 
@@ -61,7 +61,7 @@ geneIDs={} #key=transcript, value=cluster/gene_id
 
 for s in samples:
     badGenes=[] #list of bad genes (just ones that aren't MSTRG)
-    
+
     try:
         with open(glob.iglob(os.path.join(opts.input,s,"*.gtf")).next()) as f:
             split=[l.split('\t') for l in f.readlines()]
@@ -100,7 +100,7 @@ if opts.cluster and len(badGenes)>0:
                     del badGenes[j]
                 else:
                     j+=1
-            k+=1            
+            k+=1
         if len(temp_cluster)>1:
             clusters.append([t[2] for t in temp_cluster])
         i+=1
@@ -120,15 +120,15 @@ if opts.cluster and len(badGenes)>0:
         legend.append(list(itertools.chain.from_iterable([[my_ID],c]))) #my_ID, clustered transcript IDs
 #        print c
         for t in c:
-            geneIDs[t]=my_ID            
+            geneIDs[t]=my_ID
 ##            geneIDs[t]="|".join(c) #duct-tape transcript IDs together, disregarding ref_gene_names and things like that
 
     print legend
-    
+
     with open(opts.legend, 'w') as l_file:
         my_writer=csv.writer(l_file)
         my_writer.writerows(sortedClusters)
-    
+
 geneDict={} #key=gene/cluster, value=dictionary with key=sample, value=summed counts
 t_dict={}
 for q, s in enumerate(samples):
@@ -156,9 +156,9 @@ for q, s in enumerate(samples):
                     t_id=RE_TRANSCRIPT_ID.search(v[len(v)-1]).group(1)
                     g_id=RE_GENE_ID.search(v[len(v)-1]).group(1)
                     coverage=float(RE_COVERAGE.search(v[len(v)-1]).group(1))
-                    transcript_len=0                
+                    transcript_len=0
                 if v[2]=="exon":
-                    transcript_len+=int(v[4])-int(v[3])                 
+                    transcript_len+=int(v[4])-int(v[3])
 
 ##            transcriptList.append((g_id, t_id, int(ceil(coverage*transcript_len/read_len))))
             t_dict.setdefault(t_id, {})
