@@ -16,7 +16,7 @@ parser.add_option('-s', '--string', default="MSTRG", help="if a different prefix
 parser.add_option('-k', '--key', default="prepG", help="if clustering, what prefix to use for geneIDs assigned by this script [default: %default]")
 parser.add_option('--legend', default="legend.csv", help="if clustering, where to output the legend file mapping transcripts to assigned geneIDs [defaukt: %default]")
 (opts, args)=parser.parse_args()
-#opts.cluster=True
+
 if not os.path.isdir(opts.input):
     parser.print_help()
     print " "
@@ -126,10 +126,8 @@ if opts.cluster and len(badGenes)>0:
         my_ID=opts.key+str((u+1))
         print my_ID
         legend.append(list(itertools.chain.from_iterable([[my_ID],c]))) #my_ID, clustered transcript IDs
-#        print c
         for t in c:
             geneIDs[t]=my_ID
-##            geneIDs[t]="|".join(c) #duct-tape transcript IDs together, disregarding ref_gene_names and things like that
 
     print legend
 
@@ -149,12 +147,6 @@ for q, s in enumerate(samples):
     # Process the GTF file if it's present.
     if gtf_file is not None:
         with open(gtf_file) as f:
-##        split=[t[:len(t)-1]+t[len(t)-1].split(";") for t in split]
-##        split=[t[:len(t)-1] for t in split] #eliminate '\n' at end
-##        split=[[e.lstrip() for e in t] for t in split]
-        #should consider making stuff into dictionaries, maybe each split line
-
-##            transcriptList=[]
             transcript_len=0
             for l in f:
                 if l.startswith("#"):
@@ -162,7 +154,6 @@ for q, s in enumerate(samples):
                 v=l.split('\t')
                 if v[2]=="transcript":
                     if transcript_len>0:
-##                        transcriptList.append((g_id, t_id, int(ceil(coverage*transcript_len/read_len))))
                         t_dict.setdefault(t_id, {})
                         t_dict[t_id].setdefault(s, int(ceil(coverage*transcript_len/read_len)))
                     t_id=RE_TRANSCRIPT_ID.search(v[len(v)-1]).group(1)
@@ -172,17 +163,14 @@ for q, s in enumerate(samples):
                 if v[2]=="exon":
                     transcript_len+=int(v[4])-int(v[3])
 
-##            transcriptList.append((g_id, t_id, int(ceil(coverage*transcript_len/read_len))))
             t_dict.setdefault(t_id, {})
             t_dict[t_id].setdefault(s, int(ceil(coverage*transcript_len/read_len)))
 
     else:
         warnings.warn("No GTF file found in "+os.path.join(opts.input,s))
 
-##        transcriptList.sort(key=lambda bla: bla[1]) #gene_id
 
     for i,v in t_dict.iteritems():
-##        print i,v
         geneDict.setdefault(geneIDs[i],{}) #gene_id
         geneDict[geneIDs[i]].setdefault(s,0)
         geneDict[geneIDs[i]][s]+=v[s]
@@ -196,8 +184,6 @@ with open(opts.t, 'w') as csvfile:
 
 with open(opts.g, 'w') as csvfile:
     my_writer=csv.DictWriter(csvfile, fieldnames=[""]+samples)
-##    my_writer.writerow([""]+samples)
-##    my_writer.writerows(geneDict)
     my_writer.writerow(dict((fn,fn) for fn in my_writer.fieldnames))
     for i in geneDict:
         geneDict[i][""]=i #add gene_id to row
