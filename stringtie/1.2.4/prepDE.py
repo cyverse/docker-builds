@@ -52,6 +52,12 @@ def t_overlap(t1, t2): #from badGenes: chromosome, strand, cluster, start, end, 
             if is_overlap(t1[i], t2[j]): return True
     return False
 
+def list_gtf_files(dir_path):
+    glob_pattern = os.path.join(dir_path, "*.gtf")
+    return [
+        x for x in glob.glob(glob_pattern)
+        if not re.search(r"[.]refs[.]gtf$", x)
+    ]
 
 read_len=opts.length
 t_count_matrix, g_count_matrix=[],[]
@@ -62,8 +68,13 @@ geneIDs={} #key=transcript, value=cluster/gene_id
 for s in samples:
     badGenes=[] #list of bad genes (just ones that aren't MSTRG)
 
-    try:
-        with open(glob.iglob(os.path.join(opts.input,s,"*.gtf")).next()) as f:
+    # Find a GTF file in the sample directory.
+    sample_path = os.path.join(opts.input, s)
+    gtf_file = next(iter(list_gtf_files(sample_path)), None)
+
+    # Build the list of bad genes if the GTF file is present.
+    if gtf_file is not None:
+        with open(gtf_file) as f:
             split=[l.split('\t') for l in f.readlines()]
         for i,v in enumerate(split):
             if is_transcript(v):
@@ -76,12 +87,9 @@ for s in samples:
                     while j<len(split) and split[j][2]=="exon":
                         badGenes[len(badGenes)-1].append((min(int(split[j][3]), int(split[j][4])), max(int(split[j][3]), int(split[j][4]))))
                         j+=1
-
-    except StopIteration:
-        warnings.warn("Didn't get a GTF in that directory. Looking in another...")
-
-    else:
         break
+    else:
+        warnings.warn("Didn't get a GTF in that directory. Looking in another...")
 
 ##THE CLUSTERING BEGINS!##
 if opts.cluster and len(badGenes)>0:
@@ -134,9 +142,13 @@ t_dict={}
 for q, s in enumerate(samples):
     print q,s
 
-    try:
-        with open(glob.iglob(os.path.join(opts.input,s,"*.gtf")).next()) as f: #grabs first .gtf file it finds inside the sample subdirectory
+    # Find a GTF file in the sample directory.
+    sample_path = os.path.join(opts.input, s)
+    gtf_file = next(iter(list_gtf_files(sample_path)), None)
 
+    # Process the GTF file if it's present.
+    if gtf_file is not None:
+        with open(gtf_file) as f:
 ##        split=[t[:len(t)-1]+t[len(t)-1].split(";") for t in split]
 ##        split=[t[:len(t)-1] for t in split] #eliminate '\n' at end
 ##        split=[[e.lstrip() for e in t] for t in split]
@@ -164,7 +176,7 @@ for q, s in enumerate(samples):
             t_dict.setdefault(t_id, {})
             t_dict[t_id].setdefault(s, int(ceil(coverage*transcript_len/read_len)))
 
-    except StopIteration:
+    else:
         warnings.warn("No GTF file found in "+os.path.join(opts.input,s))
 
 ##        transcriptList.sort(key=lambda bla: bla[1]) #gene_id
