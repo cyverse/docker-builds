@@ -138,6 +138,7 @@ class MetadataClient:
         self.bio_sample_reserved_attributes = config.ncbi_submit_properties.bio_sample_reserved_attributes
         self.bio_sample_dup_attributes = config.ncbi_submit_properties.bio_sample_dup_attributes
         self.library_reserved_attributes = config.ncbi_submit_properties.library_reserved_attributes
+        self.library_categorized_attributes = config.ncbi_submit_properties.library_categorized_attributes
         self.compressed_content_types = config.ncbi_submit_properties.compressed_content_types
 
     def get_metadata(self, json_file):
@@ -230,6 +231,10 @@ class MetadataClient:
                    "attributes": []}
         metadata = library_folder['metadata']
 
+        # Initialize categorized attributes.
+        for category_name in set(self.library_categorized_attributes.values()):
+            library[category_name] = {}
+
         for attribute in metadata:
             if not (attribute.get('attr') and attribute.get('value')):
                 continue
@@ -241,6 +246,9 @@ class MetadataClient:
                     raise Exception("Duplicate '{0}' attribute found in Bio Sample Library metadata.\nValues:\n{1}\n{2}".format(attr, library[attr], value))
 
                 library[attr] = value
+            elif attr in self.library_categorized_attributes:
+                category_name = self.library_reserved_attributes[attr]
+                library[category_name][attr] = value
             else:
                 library['attributes'].append({'name': attr, 'value': value})
 

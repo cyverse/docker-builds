@@ -1,0 +1,31 @@
+            <Meta py:if="metadata.target_database == 'WGS'" content_type="XML" xmlns:py="http://genshi.edgewall.org/" xmlns:xi="http://www.w3.org/2001/XInclude">
+                <XmlContent>
+                    <Genome>
+                        <Description>
+                            <GenomeAssemblyMetadataChoice>
+                               <GenomeAssemblyMetadata>
+                                    <SequencingTechnologies coverage="${library.genome_coverage}">
+                                        <Technology>${library.sequencing_technology}</Technology>
+                                    </SequencingTechnologies>
+                                    <Assembly>
+                                        <Method version="${library.assembly_method_version}">${library.assembly_method}</Method>
+                                    </Assembly>
+                                    <AssemblyName py:if="'assembly_name' in library">${library.assembly_name}</AssemblyName>
+                                </GenomeAssemblyMetadata>
+                            </GenomeAssemblyMetadataChoice>
+                            <GenomeRepresentation py:attrs="library.genome_representation_attrs">${library.genome_representation}</GenomeRepresentation>
+                            <SequenceAuthors>
+                                <Author>
+                                    <Name>
+                                        <First py:if="'author_first_name' in library">${library.author_first_name}</First>
+                                        <Last>${library.author_last_name}</Last>
+                                        <Middle py:if="'author_middle_name' in library">${library.author_middle_name}</Middle>
+                                        <Suffix py:if="'author_name_suffix' in library">${library.author_name_suffix}</Suffix>
+                                    </Name>
+                                </Author>
+                            </SequenceAuthors>
+                            <ExpectedFinalVersion>${library.expected_final_version}</ExpectedFinalVersion>
+                        </Description>
+                    </Genome>
+                </XmlContent>
+            </Meta>

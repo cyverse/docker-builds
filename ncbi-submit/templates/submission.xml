@@ -70,6 +70,9 @@
             <File py:for="file in library.files" file_path="${file.filename}" md5="${file.md5}">
                 <DataType>${library.data_type}</DataType>
             </File>
+            <py:if test="metadata.target_database == 'WGS'">
+                <xi:include href="genome-metadata.xml" />
+            </py:if>
             <Attribute py:for="attribute in library.attributes"
                        name="${attribute.name}">${attribute.value}</Attribute>
             <AttributeRefId name="BioProject">
