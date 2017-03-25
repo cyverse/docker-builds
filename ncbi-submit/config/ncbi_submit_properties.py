@@ -39,7 +39,12 @@ library_reserved_attributes =    {'sample_id',
                                   'author_first_name',
                                   'author_last_name',
                                   'author_middle_name',
-                                  'author_name_suffix'}
+                                  'author_name_suffix',
+                                  'publication_status',
+                                  'publication_id',
+                                  'publication_db_type',
+                                  'annotate_with_pgap',
+                                  'notes'}
 bio_sample_dup_attributes =      {'organism',
                                   'sample_title'}
 
