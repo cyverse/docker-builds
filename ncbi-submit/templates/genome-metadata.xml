@@ -24,7 +24,21 @@
                                     </Name>
                                 </Author>
                             </SequenceAuthors>
-                            <Publication status="${library.publication_status}" id="${library.publication_id}">
+                            <Publication py:if="library.publication_status != 'eUnpublished'" status="${library.publication_status}" id="${library.publication_id}">
+                                <DbType>${library.publication_db_type}</DbType>
+                            </Publication>
+                            <Publication py:if="library.publication_status == 'eUnpublished'" status="eUnpublished">
+                                <AuthorSet>
+                                    <Author>
+                                        <Name>
+                                            <First py:if="'author_first_name' in library">${library.author_first_name}</First>
+                                            <Last>${library.author_last_name}</Last>
+                                            <Middle py:if="'author_middle_name' in library">${library.author_middle_name}</Middle>
+                                            <Suffix py:if="'author_name_suffix' in library">${library.author_name_suffix}</Suffix>
+                                        </Name>
+                                    </Author>
+                                </AuthorSet>
+                                <Reference>${library.publication_title}</Reference>
                                 <DbType>${library.publication_db_type}</DbType>
                             </Publication>
                             <ExpectedFinalVersion>${library.expected_final_version}</ExpectedFinalVersion>

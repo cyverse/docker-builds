@@ -21,8 +21,8 @@ schema_paths = {
 
 ncbi_user = "asp-bioci"
 ncbi_host = "upload.ncbi.nlm.nih.gov"
-ncbi_sumbit_path = "submit/Production"
-# ncbi_sumbit_path = "submit/Test"
+# ncbi_sumbit_path = "submit/Production"
+ncbi_sumbit_path = "submit/Test"
 
 bio_sample_reserved_attributes = {'sample_id',
                                   'bio_sample_package'}
@@ -43,6 +43,7 @@ library_reserved_attributes =    {'sample_id',
                                   'publication_status',
                                   'publication_id',
                                   'publication_db_type',
+                                  'publication_title',
                                   'annotate_with_pgap',
                                   'notes'}
 bio_sample_dup_attributes =      {'organism',
