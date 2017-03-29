@@ -17,7 +17,7 @@
                             <SequenceAuthors>
                                 <Author>
                                     <Name>
-                                        <First py:if="'author_first_name' in library">${library.author_first_name}</First>
+                                        <First>${library.author_first_name}</First>
                                         <Last>${library.author_last_name}</Last>
                                         <Middle py:if="'author_middle_name' in library">${library.author_middle_name}</Middle>
                                         <Suffix py:if="'author_name_suffix' in library">${library.author_name_suffix}</Suffix>
@@ -31,7 +31,7 @@
                                 <AuthorSet>
                                     <Author>
                                         <Name>
-                                            <First py:if="'author_first_name' in library">${library.author_first_name}</First>
+                                            <First>${library.author_first_name}</First>
                                             <Last>${library.author_last_name}</Last>
                                             <Middle py:if="'author_middle_name' in library">${library.author_middle_name}</Middle>
                                             <Suffix py:if="'author_name_suffix' in library">${library.author_name_suffix}</Suffix>
