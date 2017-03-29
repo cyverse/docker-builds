@@ -18,7 +18,7 @@ EOF
 while getopts ":i:ho:" opt; do
   case $opt in
     i)
-     input=$OPTARG
+     input+=("$OPTARG")
       ;;
     o)
      output=$OPTARG
@@ -30,4 +30,18 @@ while getopts ":i:ho:" opt; do
   esac
 done
 
-sed 's/.*|/>/g' $input > $output
+mkdir $output
+
+for f in "${input[@]}"; do
+    extension=${f#*.}
+    if [ "$extension" == "fasta" ]; then
+        filename=$(basename "$f" ".fasta")
+        sed 's/.*|/>/g' $f > out.txt && mv out.txt $output/"$filename".cleaned."$extension"
+    elif [ "$extension" == "fa" ]; then
+        filename=$(basename "$f" ".fa")
+        sed 's/.*|/>/g' $f > out.txt && mv out.txt $output/"$filename".cleaned."$extension"
+   else
+	echo The extension - "$extension" for the file "$f" needs to be either fasta or fa
+   fi
+
+done
