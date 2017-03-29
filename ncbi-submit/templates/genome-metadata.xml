@@ -13,6 +13,7 @@
                                     <AssemblyName py:if="'assembly_name' in library">${library.assembly_name}</AssemblyName>
                                 </GenomeAssemblyMetadata>
                             </GenomeAssemblyMetadataChoice>
+                            <GapInfo py:if="'gap_min_size' in library and 'gap_unknown_size' in library and 'gap_linkage_evidence' in library" min_gap_size="${library.gap_min_size}" unknown_gap_size="${library.gap_unknown_size}" linkage_evidence="${library.gap_linkage_evidence}" />
                             <GenomeRepresentation py:attrs="library.genome_representation_attrs">${library.genome_representation}</GenomeRepresentation>
                             <SequenceAuthors>
                                 <Author>

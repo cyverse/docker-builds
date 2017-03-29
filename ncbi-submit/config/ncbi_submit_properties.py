@@ -45,7 +45,10 @@ library_reserved_attributes =    {'sample_id',
                                   'publication_db_type',
                                   'publication_title',
                                   'annotate_with_pgap',
-                                  'notes'}
+                                  'notes',
+                                  'gap_min_size',
+                                  'gap_unknown_size',
+                                  'gap_linkage_evidence'}
 bio_sample_dup_attributes =      {'organism',
                                   'sample_title'}
 
