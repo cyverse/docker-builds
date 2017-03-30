@@ -2,6 +2,7 @@ __author__ = 'Dennis Roberts'
 
 import config.ncbi_submit_properties
 import os
+import requests
 import shutil
 
 from lxml import etree
@@ -34,6 +35,21 @@ class BioProjectXmlValidator:
         bio_samples = submission.xpath('/Submission/Action/AddData/Data/XmlContent/BioSample')
         for biosample in bio_samples:
             self.biosample_schema.assertValid(biosample)
+
+class SubmissionValidator:
+    def __init__(self, validation_url):
+        self.validation_url = validation_url
+
+    def validate_submission(self, submission_path, report_path):
+        with open(submission_path, 'r') as f:
+            submission = f.read()
+
+        headers = {'Content-Type': 'text/xml'}
+        r = requests.post(self.validation_url, data=submission, headers=headers)
+        r.raise_for_status()
+
+        with open(report_path, 'w') as out:
+            out.write(r.text)
 
 class BioProjectUploader:
     def __init__(self, ascp_cmd, private_key_path, ncbi_user, ncbi_host, ncbi_sumbit_path):
@@ -86,6 +102,9 @@ def get_xml_validator():
         config.ncbi_submit_properties.schemas_dir,
         config.ncbi_submit_properties.schema_paths
     )
+
+def get_submission_validator():
+    return SubmissionValidator(config.ncbi_submit_properties.validation_url)
 
 def get_uploader(private_key_path=None):
     key_path = config.ncbi_submit_properties.private_key_path if private_key_path is None else private_key_path

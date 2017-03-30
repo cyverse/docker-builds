@@ -3,6 +3,9 @@ templates_dir = base_script_dir + "templates"
 schemas_dir = base_script_dir + "schemas/"
 private_key_path = base_script_dir + ".ssh/id_rsa_ncbi"
 
+# The URL to use when validating the submission XML.
+validation_url = "https://www.ncbi.nlm.nih.gov/projects/biosample/validate/"
+
 # ASCP command and default options
 ascp_cmd = [
     base_script_dir + ".aspera/connect/bin/ascp",

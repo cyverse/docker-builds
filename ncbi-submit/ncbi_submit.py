@@ -54,6 +54,10 @@ parser.add_argument(
     '-d', '--submit-dir', dest = 'submit_dir',
     help = 'specify the path to the destination BioProject SRA submission folder'
 )
+parser.add_argument(
+    '-r', '--report-file', dest = 'report_file', default = 'report.xml',
+    help = 'The path to the validation report in validation only mode.'
+)
 parser.add_argument('-?', '--help', action = 'help')
 args = parser.parse_args()
 
@@ -82,11 +86,13 @@ stream = metadata_template.generate(metadata=metadata, submit_mode=args.submit_m
 with open(submission_path, 'w') as f:
     stream.render(method='xml', out=f)
 
-# Validate generated XML
+# Validate generated XML against the schema.
 xml_validator = bioproject.get_xml_validator()
 xml_validator.validate_bioproject_xml(submission_path)
 
 if args.validate_only or not args.input_dir:
+    submission_validator = bioproject.get_submission_validator()
+    submission_validator.validate_submission(submission_path, args.report_file)
     print "Only validated metadata, no data was submitted to the NCBI SRA."
 else:
     uploader = bioproject.get_uploader(private_key_path=args.private_key_path)

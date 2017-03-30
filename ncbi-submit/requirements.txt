@@ -1,2 +1,3 @@
 genshi
 lxml
+requests
