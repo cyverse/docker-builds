@@ -1,8 +1,6 @@
 #!/bin/bash
 # Upendra Kumar Devisetty
 # Script to process cuffcompare output file to generate long non-coding RNA
-# Usage: 
-# sh evolinc-part-I.sh -c sample.data/cuffcompare_out_annot_no_annot.combined.gtf -g sample.data/Brassica_rapa_v1.2_genome.fa -r sample.data/Brassica_rapa_v1.2.gff -b sample.data/TE_RNA_transcripts.fa -t CAGE_file.txt -x 2> errors.txt > output.txt
 
 usage() {
       echo ""
@@ -84,15 +82,27 @@ echo `date`
 
 START_TIME=$SECONDS
 
-# Creat a directory to move all the output files
+# Throw an error if the genomes are coming from NCBI that adds "|" in the headers
+if ( grep -q ".*|" $referencegenome ); then
+   echo "Your genome file header have pipe characters. Please remove/replace them before proceeding" 1>&2
+   exit 64
+fi
+
+# Create a directory to move all the output files
 mkdir $output
 
-# STEP 1:
-START_TIME_1=$SECONDS
-# Extracting classcode u transcripts, making fasta file, removing transcripts > 200 and selecting protein coding transcripts and modify the header to generate genes
+# Fix the gff files if they are coming for coge
+grep -v "#" $referencegff |grep -iv "chromosome    " | grep -iv "region    " | grep -iv "scaffold    " > temp && mv temp $referencegff
+grep -v "#" $user_referencegff |grep -iv "chromosome    " | grep -iv "region    " | grep -iv "scaffold    " > temp && mv temp $user_referencegff
+
+# Fixing the cuffcompare files as well
 sed 's~^~>~g' $comparefile | sed 's~^>0*~>~g' | sed 's~^>Chr0*~>~g' | sed 's~^>Scaffold0*~>~g' | sed 's~^>~~g' > comparefile.gtf
 sed 's~^>0*~>~g' $referencegenome | sed 's~^>Chr0*~>~g' | sed 's~^>Scaffold0*~>~g' > referencegenome.fa
+ 
+# STEP 1:
+START_TIME_1=$SECONDS
 
+# Extracting classcode u transcripts, making fasta file, removing transcripts > 200 and selecting protein coding transcripts and modify the header to generate genes
 grep '"u"' comparefile.gtf | gffread -w transcripts.u.fa -g referencegenome.fa - && python /evolinc_docker/get_gene_length_filter.py transcripts.u.fa putative_intergenic.genes.fa && sed 's/ .*//' putative_intergenic.genes.fa | sed -ne 's/>//p' > putative_intergenic.genes
 grep '"x"' comparefile.gtf | gffread -w transcripts.x.fa -g referencegenome.fa - && python /evolinc_docker/get_gene_length_filter.py transcripts.x.fa transcripts.x.filter.fa && sed 's/ .*//' transcripts.x.filter.fa | sed -ne 's/>//p' > transcripts.x.filter.fa.genes 
 grep '"s"' comparefile.gtf | gffread -w transcripts.s.fa -g referencegenome.fa - && python /evolinc_docker/get_gene_length_filter.py transcripts.s.fa transcripts.s.filter.fa && sed 's/ .*//' transcripts.s.filter.fa | sed -ne 's/>//p' > transcripts.s.filter.fa.genes
@@ -197,7 +207,8 @@ python /evolinc_docker/extract_sequences-1.py lincRNA.genes.modified putative_in
 
 #Extract TE-containing sequences for user
 python /evolinc_docker/extract_sequences-1.py List_of_TE_containing_transcripts.txt putative_intergenic.genes.not.genes.fa TE_containing_transcripts.fa
-
+sed -i 's/_/./g' TE_containing_transcripts.fa
+sed -i 's/gene=//g' TE_containing_transcripts.fa
 #Create a bed file of TE-containing INTERGENIC transcripts for user
 cut -f 1 -d "." putative_intergenic.genes.not.genes.fa.blast.out > TE_containing_transcript_list_transcript_ID_only.txt
 grep -F -f TE_containing_transcript_list_transcript_ID_only.txt ../comparefile.gtf > TE_containing_transcripts.gtf
@@ -450,6 +461,10 @@ then
      fi
      python /evolinc_docker/lincRNA_fig.py lincRNAs.fa lincRNAs.with.CAGE.support.annotated.fa lincRNAs.overlapping.known.lincs.fa &&
      Rscript /evolinc_docker/final_summary_table_gen_evo-I.R --lincRNA lincRNAs.fa --lincRNAbed lincRNAs.bed --overlap lincRNAs.overlapping.known.lincs.fa --tss lincRNAs.with.CAGE.support.annotated.fa &&
+     sed -i 's/_/./g' lincRNAs.with.CAGE.support.annotated.fa
+     sed -i 's/gene=//g' lincRNAs.with.CAGE.support.annotated.fa
+     sed -i 's/_/./g' lincRNAs.overlapping.known.lincs.fa
+     sed -i 's/gene=//g' lincRNAs.overlapping.known.lincs.fa
      cp lincRNAs.with.CAGE.support.annotated.fa lincRNAs.overlapping.known.lincs.fa lincRNA_piechart.png final_Summary_table.tsv ../$output
 
 elif [ ! -z $cagefile ]; 
@@ -460,6 +475,8 @@ then
      closestBed -a lincRNAs.bed -b AnnotatedPEATPeaks.sorted.bed -s -D a > closest_output.txt && grep 'exon_number "1"' closest_output.txt > closest_output_exon_1_only.txt &&     
      python /evolinc_docker/closet_bed_compare.py closest_output_exon_1_only.txt lincRNAs.fa lincRNAs.with.CAGE.support.annotated.fa &&
      Rscript /evolinc_docker/final_summary_table_gen_evo-I.R --lincRNA lincRNAs.fa --lincRNAbed lincRNAs.bed --tss lincRNAs.with.CAGE.support.annotated.fa &&
+     sed -i 's/_/./g' lincRNAs.with.CAGE.support.annotated.fa
+     sed -i 's/gene=//g' lincRNAs.with.CAGE.support.annotated.fa
      cp lincRNAs.with.CAGE.support.annotated.fa final_Summary_table.tsv ../$output
 
 elif [ ! -z $knownlinc ]; 
@@ -477,6 +494,8 @@ then
         python /evolinc_docker/interesect_bed_compare.py intersect_output.txt lincRNAs.fa lincRNAs.overlapping.known.lincs.fa
      fi
      Rscript /evolinc_docker/final_summary_table_gen_evo-I.R --lincRNA lincRNAs.fa --lincRNAbed lincRNAs.bed --overlap lincRNAs.overlapping.known.lincs.fa &&
+     sed -i 's/_/./g' lincRNAs.overlapping.known.lincs.fa
+     sed -i 's/gene=//g' lincRNAs.overlapping.known.lincs.fa
      cp lincRNAs.overlapping.known.lincs.fa final_Summary_table.tsv ../$output
 
 else
@@ -491,6 +510,14 @@ echo "Elapsed time for Optional Step(s) is" $ELAPSED_TIME_O1 "seconds" >> ../$ou
 rm -r ../transcripts_u_filter.fa.transdecoder_dir
 rm ../*.fa*.*
 
+### Clean up fasta headers
+cd ../$output
+sed -i 's/_/./g' lincRNAs.fa
+sed -i 's/gene=//g' lincRNAs.fa
+sed -i 's/_/./g' Other_lncRNA/AOT.fa
+sed -i 's/gene=//g' Other_lncRNA/AOT.fa
+sed -i 's/_/./g' Other_lncRNA/SOT.fa
+sed -i 's/gene=//g' Other_lncRNA/SOT.fa
 echo "All necessary files written to" $output
 echo "Finished Evolinc-part-I!"
 echo `date`

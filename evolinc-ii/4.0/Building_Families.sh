@@ -43,6 +43,15 @@ echo "Starting! on $subject_species"
 
 # Formatting the genome
 makeblastdb -logfile stderr.out -in $subject_genome -dbtype nucl -out BLAST_DB/$subject_genome.blast.out
+### Check to see if query FASTA file contains only one lincRNA
+count=$(grep -c ">" $lincRNAfasta)
+param=2
+if [ "$count" -ge "$param" ]; then
+   touch $lincRNAfasta
+else
+   cat $lincRNAfasta $lincRNAfasta >temp && mv temp $lincRNAfasta
+   sed -i 's~.>~\n>~g' $lincRNAfasta
+fi
 
 # Blasting the lincRNA transcripts against the genome to find out the location on the genome And identify if there are any paralogs in the query genome.
 blastn -logfile stderr.out -query $lincRNAfasta -db BLAST_DB/$subject_genome.blast.out -num_threads 4 -penalty -2 -reward 1 -gapopen 5 -gapextend 2 -dust no -word_size 8 -evalue $value -outfmt "6 qseqid sseqid pident length qlen qstart qend sstart send evalue bitscore" -out Homology_Search/$subject_species.out
