@@ -2,6 +2,7 @@ __author__ = 'Dennis Roberts'
 
 import config.ncbi_submit_properties
 import os
+import re
 import requests
 import shutil
 
@@ -44,12 +45,36 @@ class SubmissionValidator:
         with open(submission_path, 'r') as f:
             submission = f.read()
 
+        # Call the submission validation endpoint.
         headers = {'Content-Type': 'text/xml'}
         r = requests.post(self.validation_url, data=submission, headers=headers)
         r.raise_for_status()
 
+        # Write a copy of the report to disk for reference.
         with open(report_path, 'w') as out:
             out.write(r.text)
+
+        # Parse the report.
+        report = etree.fromstring(re.sub(r'^<\?xml[^>]+>\s+', '', r.text))
+
+        # Extract and print the messages in the report for convenience.
+        messages = report.xpath('//Message') or []
+        if len(messages) != 0:
+            print 'Messages found in Report:'
+            for message in messages:
+                attrs = message.attrib
+                severity = attrs['severity'] if 'severity' in attrs else 'unknown-severity'
+                print '\t', severity, ':', message.text
+            print
+            print 'Please see report.xml for details.'
+            print
+
+        # Check the report for errors.
+        statuses = report.xpath('/BioSampleValidate/Action/@status') or []
+        if len(statuses) == 0:
+            raise Exception('status not found in downloaded report')
+        if any(status == 'processed-error' for status in statuses):
+            raise Exception('NCBI validation failed: please see report.xml for details')
 
 class BioProjectUploader:
     def __init__(self, ascp_cmd, private_key_path, ncbi_user, ncbi_host, ncbi_sumbit_path):
