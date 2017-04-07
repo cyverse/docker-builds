@@ -15,6 +15,7 @@
                             </GenomeAssemblyMetadataChoice>
                             <GapInfo py:if="'gap_min_size' in library and 'gap_unknown_size' in library and 'gap_linkage_evidence' in library" min_gap_size="${library.gap_min_size}" unknown_gap_size="${library.gap_unknown_size}" linkage_evidence="${library.gap_linkage_evidence}" />
                             <GenomeRepresentation py:attrs="library.genome_representation_attrs">${library.genome_representation}</GenomeRepresentation>
+                            <py:if test="not library.data_type.endswith('-sqn')">
                             <SequenceAuthors>
                                 <Author>
                                     <Name>
@@ -42,6 +43,7 @@
                                 <Reference>${library.publication_title}</Reference>
                                 <DbType>${library.publication_db_type}</DbType>
                             </Publication>
+                            </py:if>
                             <ExpectedFinalVersion>${library.expected_final_version}</ExpectedFinalVersion>
                             <AnnotateWithPGAP>${library.annotate_with_pgap}</AnnotateWithPGAP>
                             <Notes>${library.notes}</Notes>
