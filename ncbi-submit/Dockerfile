@@ -18,7 +18,7 @@ RUN chmod 755 aspera-connect-install.sh
 RUN ./aspera-connect-install.sh \
     && rm aspera-connect-install.sh
 
-COPY bioproject.py metadata_client.py ncbi_report_download.py ncbi_submit.py ncbi_validate.py ./
+COPY bioproject.py metadata_client.py ncbi_report_download.py ncbi_submit.py ./
 
 VOLUME [ "/root/config", "/root/templates", "/root/schemas" ]
 

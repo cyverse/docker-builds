@@ -133,7 +133,7 @@ class MetadataClient:
     }
     """
 
-    def __init__(self, target_database):
+    def __init__(self, target_database='NONE'):
         self.target_database = target_database
         self.bio_sample_reserved_attributes = config.ncbi_submit_properties.bio_sample_reserved_attributes
         self.bio_sample_dup_attributes = config.ncbi_submit_properties.bio_sample_dup_attributes

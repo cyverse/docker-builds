@@ -26,7 +26,21 @@
                                     </Name>
                                 </Author>
                             </SequenceAuthors>
-                            <Publication py:if="library.publication_status != 'eUnpublished'" status="${library.publication_status}" id="${library.publication_id}">
+                            <Publication py:if="library.publication_status != 'eUnpublished' and 'publication_id' in library" status="${library.publication_status}" id="${library.publication_id}">
+                                <DbType>${library.publication_db_type}</DbType>
+                            </Publication>
+                            <Publication py:if="library.publication_status != 'eUnpublished' and 'publication_id' not in library" status="${library.publication_status}">
+                                <StructuredCitation>
+                                    <Title>${library.get('publication_title', '')}</Title>
+                                    <Journal>
+                                        <JournalTitle>${library.get('publication_journal', '')}</JournalTitle>
+                                        <Year>${library.get('publication_year', '')}</Year>
+                                        <Volume>${library.get('publication_volume', '')}</Volume>
+                                        <Issue>${library.get('publication_issue', '')}</Issue>
+                                        <PagesFrom>${library.get('publication_pages_from', '')}</PagesFrom>
+                                        <PagesTo>${library.get('publication_pages_to', '')}</PagesTo>
+                                    </Journal>
+                                </StructuredCitation>
                                 <DbType>${library.publication_db_type}</DbType>
                             </Publication>
                             <Publication py:if="library.publication_status == 'eUnpublished'" status="eUnpublished">
@@ -40,7 +54,7 @@
                                         </Name>
                                     </Author>
                                 </AuthorSet>
-                                <Reference>${library.publication_title}</Reference>
+                                <Reference>${library.get('publication_title', '')}</Reference>
                                 <DbType>${library.publication_db_type}</DbType>
                             </Publication>
                             </py:if>
