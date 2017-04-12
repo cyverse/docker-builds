@@ -32,7 +32,7 @@ parser.add_argument('-?', '--help', action = 'help')
 args = parser.parse_args()
 
 # Create the metadata client and template loader.
-metadata_client = MetadataClient()
+metadata_client = MetadataClient(require_files=False)
 loader = TemplateLoader(config.ncbi_submit_properties.templates_dir)
 
 # Load the metadata and template.

@@ -133,8 +133,9 @@ class MetadataClient:
     }
     """
 
-    def __init__(self, target_database='NONE'):
+    def __init__(self, target_database='NONE', require_files=True):
         self.target_database = target_database
+        self.require_files = require_files
         self.bio_sample_reserved_attributes = config.ncbi_submit_properties.bio_sample_reserved_attributes
         self.bio_sample_dup_attributes = config.ncbi_submit_properties.bio_sample_dup_attributes
         self.library_reserved_attributes = config.ncbi_submit_properties.library_reserved_attributes
@@ -222,7 +223,7 @@ class MetadataClient:
             raise Exception("Could not find Bio Sample Library ID: {0}".format(library_name))
         if not library_folder.get('metadata'):
             raise Exception("Could not load Bio Sample Library metadata: {0}".format(library_name))
-        if not library_folder.get('files'):
+        if self.require_files and not library_folder.get('files'):
             raise Exception("Could not find Bio Sample Library file metadata: {0}".format(library_name))
 
         library = {"library_id": library_folder['id'],
