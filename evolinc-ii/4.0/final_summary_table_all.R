@@ -12,14 +12,14 @@ filenames = list.files(path = "../Homology_Search", pattern = "*mod.annotation.*
 if (length(files) > 0 && length(filenames) > 0) {
    myfiles = lapply(files, read.delim)  
    data2 = Reduce(function(x, y) merge(x, y, all=TRUE), myfiles)
-   full = read.csv("final_summary_table.tsv", sep="\t")
+   full = read.csv("final_summary_table.csv", sep="\t")
    full2 <- full[ , !names(full) %in% names(data2)]
    final_final <- merge(data2, full2, by = 1)
    full.n <- sub("id", "ID", names(full))
    final_final_2 <- final_final[,full.n]
-   write.table(final_final_2, file = "final_summary_table.mod.tsv", sep = "\t", quote = F, row.names = F)
+   write.table(final_final_2, file = "final_summary_table.mod.csv", sep = "\t", quote = F, row.names = F)
    
-   final <- read.csv("final_summary_table.mod.tsv", sep = "\t", stringsAsFactors = F)
+   final <- read.csv("final_summary_table.mod.csv", sep = "\t", stringsAsFactors = F)
    info = file.info(filenames)
    non_empty = rownames(info[info$size != 0, ])  
 	 for (f in non_empty) {
@@ -36,22 +36,22 @@ if (length(files) > 0 && length(filenames) > 0) {
       }
    }
 }
-  write.table(final, file = "final_summary_table.mod2.tsv", quote = F, row.names = F, sep = "\t")	
+  write.table(final, file = "final_summary_table.mod2.csv", quote = F, row.names = F, sep = "\t")	
 
 } else if (length(files) > 0 || length(filenames) < 0) {
   myfiles = lapply(files, read.delim)  
   data2 = Reduce(function(x, y) merge(x, y, all=TRUE), myfiles)
-  full = read.csv("final_summary_table.tsv", sep="\t")
+  full = read.csv("final_summary_table.csv", sep="\t")
   full2 <- full[ , !names(full) %in% names(data2)]
   final_final <- merge(data2, full2, by = 1)
   full.n <- sub("id", "ID", names(full))
   final_final_2 <- final_final[,full.n]
-  write.table(final_final2, file = "final_summary_table.mod.tsv", sep = "\t", quote = F, row.names = F)
-  final <- read.csv("final_summary_table.mod.tsv", sep = "\t", stringsAsFactors = F)
-  write.table(final, file = "final_summary_table.mod2.tsv", quote = F, row.names = F, sep = "\t")	
+  write.table(final_final2, file = "final_summary_table.mod.csv", sep = "\t", quote = F, row.names = F)
+  final <- read.csv("final_summary_table.mod.csv", sep = "\t", stringsAsFactors = F)
+  write.table(final, file = "final_summary_table.mod2.csv", quote = F, row.names = F, sep = "\t")	
 
 } else if (length(files) < 0 || length(filenames) > 0) {
-  final <- read.csv("final_summary_table.tsv", sep = "\t", stringsAsFactors = F)
+  final <- read.csv("final_summary_table.csv", sep = "\t", stringsAsFactors = F)
   info = file.info(filenames)
   non_empty = rownames(info[info$size != 0, ])  
   for (f in non_empty) {
@@ -68,6 +68,6 @@ if (length(files) > 0 && length(filenames) > 0) {
       }
     }
   }
-  write.table(final, file = "final_summary_table.mod.tsv", quote = F, row.names = F, sep = "\t")
+  write.table(final, file = "final_summary_table.mod.csv", quote = F, row.names = F, sep = "\t")
 }
 

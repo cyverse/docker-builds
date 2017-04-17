@@ -6,6 +6,7 @@ library(reshape2)
 args<-commandArgs(TRUE)
 
 options<-matrix(c('spe', 's', 1,   "character",
+		  'query_sp', 'q', 2,	"character", 	
                   'help', 'h', 0,   "logical"),
                 ncol=4,byrow=TRUE)
 
@@ -16,17 +17,19 @@ if ( !is.null(ret.opts$help) ) {
   q(status=1);
 }
 
+td <- ret.opts$query_sp
+
+td1 <- paste0("^",td,".*$")
+
 species <- ret.opts$spe
 
 species_list <- read.table(species)
 
-td <- species_list[1,]
+myvars <- species_list$V1 %in% td
 
-td1 <- paste0("^",td,".*$")
+species_list <- data.frame(species_list$V1[!myvars])
 
-species_list <- species_list[-1,]
-
-species_list <- data.frame(species_list)
+names(species_list) <- "V1"
 
 result = c()
 
@@ -74,4 +77,4 @@ df1[df1=="KL"] <- "Known_lincRNA"
 df1[df1=="KGSKL"] <- "Known_Gene_Sense_Known_lincRNA"
 df1[df1=="KGAKL"] <- "Known_Gene_Antisense_Known_lincRNA"
 
-write.table(df1, "final_summary_table.tsv", row.names = F, col.names = T, quote = F, sep = "\t")
+write.table(df1, "final_summary_table.csv", row.names = F, col.names = T, quote = F, sep = "\t")

@@ -79,7 +79,6 @@ START_TIME=$SECONDS
 
 # Make all necessary folders
 mkdir $output
-
 mkdir BLAST_DB
 mkdir Homology_Search
 mkdir Reciprocal_BLAST
@@ -109,7 +108,6 @@ sed -i 's~\t\t~\t~g' Reciprocal_list.txt
 sed -i "s/$/\t$query_species.$query_species.coords.gff/" Reciprocal_list.txt
 sed -i "s/$/\t$query_species/" Reciprocal_list.txt
 sed -i "s/$/\t$query_species.genome.fasta/" Reciprocal_list.txt
-#sed -i "s~\.putative~_putative~g" Reciprocal_list.txt
 sed -i "s~\.genome~_genome~g" Reciprocal_list.txt
 rm Reciprocal_chrom_list.txt
 rm Reciprocal_lincRNAs_list.txt
@@ -171,7 +169,6 @@ then
   fi
 
   #RAxML step
-
   echo "starting tree building"
   mkdir -p ../RAxML_families 
   perl /Batch_RAxML.pl aligned_list.txt
@@ -188,38 +185,37 @@ then
   echo "Generating summary of aligned linRNA"
   python /Family_division_and_summary.py ../../../$sp_list
   grep -v "aligned_list.txt" summary.txt > final_summary.txt
-  Rscript /final_summary.R -q ../../../$sp_list
+  Rscript /final_summary.R -s ../../../$sp_list -q $query_species
   rm summary.txt
   mv lincRNA_barplot.png ../../../$output
   cd ../../
-  Rscript /final_summary_table_gen.R -s ../$sp_list
+  Rscript /final_summary_table_gen.R -s ../$sp_list -q $query_species
   echo "Finished summary"
   
 ### End of phylogenetic step, the below code is if there is no phylogenetic step picked
-
 else
   echo "Generating summary of aligned linRNA"
   python /Family_division_and_summary.py ../../$sp_list
   grep -v "aligned_list.txt" summary.txt > final_summary.txt
   cp final_summary.txt ../../$output/Instance_count.txt
-  Rscript /final_summary.R -q ../../$sp_list
+  Rscript /final_summary.R -s ../../$sp_list -q $query_species
   cp -r */*.fasta .
   rm summary.txt
   mv lincRNA_barplot.png ../../$output
   cd ../
-  Rscript /final_summary_table_gen.R -s ../$sp_list
+  Rscript /final_summary_table_gen.R -s ../$sp_list -q $query_species
+
   echo "Finished summary"
 fi
 
 # Modifying the final summary table to add ID's of knonw lincRNA and ID's of knonw sense and known antisense ID's
-
 if compgen -G "../Homology_Search/*tested.out" > /dev/null && compgen -G "../Homology_Search/*mod.annotation.*sense.gff" > /dev/null;
 then
         for i in ../Homology_Search/*tested.out; do
                 if [[ -s $i ]] ; then
                    python /filter_lincRNA_sequences_annotation2.py "$i" "$i".mod
                    sed 's/_TBH_1//g' "$i".mod > temp && mv temp "$i".mod
-                   python /filter_lincRNA_sequences_annotation3.py "$i".mod final_summary_table.tsv "$i".mod.sp.csv
+                   python /filter_lincRNA_sequences_annotation3.py "$i".mod final_summary_table.csv "$i".mod.sp.csv
                 fi
         done
         for i in ../Homology_Search/*mod.annotation.*sense.gff; do
@@ -228,9 +224,9 @@ then
                 fi
         done
         Rscript /final_summary_table_all.R
-        rm final_summary_table.tsv final_summary_table.mod.tsv
-        mv final_summary_table.mod2.tsv final_summary_table.tsv
-        mv final_summary_table.tsv ../$output
+        rm final_summary_table.csv final_summary_table.mod.csv
+        mv final_summary_table.mod2.csv final_summary_table.csv
+        mv final_summary_table.csv ../$output
 
 elif compgen -G "../Homology_Search/*tested.out" > /dev/null && ! compgen -G  "../Homology_Search/*mod.annotation.*sense.gff" > /dev/null
 then
@@ -238,32 +234,30 @@ then
                 if [[ -s $i ]] ; then
                    python /filter_lincRNA_sequences_annotation2.py "$i" "$i".mod
                    sed 's/_TBH_1//g' "$i".mod > temp && mv temp "$i".mod
-                   python /filter_lincRNA_sequences_annotation3.py "$i".mod final_summary_table.tsv "$i".mod.sp.csv
+                   python /filter_lincRNA_sequences_annotation3.py "$i".mod final_summary_table.csv "$i".mod.sp.csv
                 fi
         done    
         Rscript /final_summary_table_all.R       
-        rm final_summary_table.tsv
-        mv final_summary_table.mod.tsv final_summary_table.tsv
-        mv final_summary_table.tsv ../$output
+        rm final_summary_table.csv
+        mv final_summary_table.mod.csv final_summary_table.csv
+        mv final_summary_table.csv ../$output
 
 
 elif ! compgen -G "../Homology_Search/*tested.out" > /dev/null && compgen -G  "../Homology_Search/*mod.annotation.*sense.gff" > /dev/null
-then
-   
+then  
         for i in ../Homology_Search/*mod.annotation.*sense.gff; do
                 if [[ -s $i ]] ; then
                    sed 's/_TBH_1//g' "$i" > temp && mv temp "$i"
                 fi
         done     
         Rscript /final_summary_table_all.R
-        rm final_summary_table.tsv
-        mv final_summary_table.mod.tsv final_summary_table.tsv
-        mv final_summary_table.tsv ../$output
+        rm final_summary_table.csv
+        mv final_summary_table.mod.csv final_summary_table.csv
+        mv final_summary_table.csv ../$output
 
 elif ! compgen -G "../Homology_Search/*tested.out" > /dev/null && ! compgen -G  "../Homology_Search/*mod.annotation.*sense.gff" > /dev/null
-then
-       
-       mv final_summary_table.tsv ../$output  
+then       
+       mv final_summary_table.csv ../$output  
 
 fi
 

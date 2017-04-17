@@ -4,7 +4,8 @@ library(getopt)
 
 args<-commandArgs(TRUE)
 
-options<-matrix(c('spe', 'q', 1,   "character",
+options<-matrix(c('spe', 's', 1,   "character",
+                  'query_sp', 'q', 1, "character",
                   'help', 'h', 0,   "logical"),
                    ncol=4,byrow=TRUE)
 
@@ -16,17 +17,22 @@ if ( !is.null(ret.opts$help) ) {
 }
 
 species <- read.table(ret.opts$spe)
-species.1 <- species[1,]
 
-a1 <- substring(species.1,1,1)
+a1 <- substring(ret.opts$query_sp,1,1)
 
-a2 <- substring(species.1,2:3)[1]
+a2 <- substring(ret.opts$query_sp,2:3)[1]
 
 a3 <- paste(a1, a2, sep = ".")
 
 dataFile <- read.table("final_summary.txt", sep = "\t", header = TRUE)
 
 dataFile$File.Name <- NULL
+
+query_column <- dataFile[ret.opts$query_sp]
+
+dataFile[ret.opts$query_sp] <- NULL
+
+dataFile <- cbind(query_column, dataFile)
 
 dataMatrix <- data.matrix(dataFile)
 
