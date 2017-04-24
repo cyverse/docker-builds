@@ -133,13 +133,14 @@ class MetadataClient:
     }
     """
 
-    def __init__(self, target_database='NONE', require_files=True):
+    def __init__(self, target_database='NONE', require_files=True, require_compression=True):
         self.target_database = target_database
         self.require_files = require_files
         self.bio_sample_reserved_attributes = config.ncbi_submit_properties.bio_sample_reserved_attributes
         self.bio_sample_dup_attributes = config.ncbi_submit_properties.bio_sample_dup_attributes
         self.library_reserved_attributes = config.ncbi_submit_properties.library_reserved_attributes
         self.library_categorized_attributes = config.ncbi_submit_properties.library_categorized_attributes
+        self.require_compression = require_compression
         self.compressed_content_types = config.ncbi_submit_properties.compressed_content_types
 
     def get_metadata(self, json_file):
@@ -266,7 +267,7 @@ class MetadataClient:
 
         if not file_metadata.get('content-type'):
             raise Exception("Could not find Bio Sample Library file content-type metadata: {0}".format(os.path.join(library_name, filename)))
-        if file_metadata['content-type'] not in self.compressed_content_types:
+        if self.require_compression and file_metadata['content-type'] not in self.compressed_content_types:
             raise Exception("Bio Sample Library file does not appear to be compressed: {0}".format(os.path.join(library_name, filename)))
 
         if not file_metadata.get('md5'):

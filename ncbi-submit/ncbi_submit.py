@@ -61,8 +61,17 @@ parser.add_argument(
 parser.add_argument('-?', '--help', action = 'help')
 args = parser.parse_args()
 
+# Indicates whether or not compression is required for various submission types.
+require_compression_for = {
+    'SRA': True,
+    'WGS': False
+}
+
 # Define the objects we need.
-metadata_client = MetadataClient(args.target_database)
+metadata_client = MetadataClient(
+    args.target_database,
+    require_compression=require_compression_for[args.target_database]
+)
 loader = TemplateLoader(config.ncbi_submit_properties.templates_dir)
 
 # Parse iPlant Data Store metadata into format usable by the submission templates
