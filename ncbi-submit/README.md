@@ -29,12 +29,6 @@ template, Bio Sample templates, and Bio Sample Library templates.
 * **Note:** If a BioProject folder is not selected, then this App will only validate the given metadata file, and no
             data will be submitted to the NCBI SRA.
 
-#### Parameters Used in App
-
-By default the `Create a new Bio Project Submission` checkbox is selected.  Uncheck this checkbox to submit an update to
-an existing BioProject.  Note that an existing Bio Project ID must be set as a metadata attribute on the BioProject
-folder in the metadata export file for `Update` submissions.
-
 #### Output File(s)
 
 This App will generate a folder, named with the username of the submitter and the BioProject folder ID, which contains a

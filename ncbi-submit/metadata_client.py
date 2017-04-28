@@ -249,7 +249,7 @@ class MetadataClient:
 
                 library[attr] = value
             elif attr in self.library_categorized_attributes:
-                category_name = self.library_reserved_attributes[attr]
+                category_name = self.library_categorized_attributes[attr]
                 library[category_name][attr] = value
             else:
                 library['attributes'].append({'name': attr, 'value': value})
