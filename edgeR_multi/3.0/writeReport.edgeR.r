@@ -37,6 +37,5 @@ writeReport.edgeR <- function(target,counts,out.edgeR,summaryResults,majSequence
   unlink("cache",force=TRUE,recursive=TRUE)
   unlink(paste0("report_edgeR.md"),force=TRUE)
   cat("HTML report created\n")
-  grep -v "HTML report created" features_summary.txt > temp && mv temp features_summary.txt
 }
 
