@@ -391,10 +391,10 @@ cufflinks_non_SRA()
 cuff_merge_fun()
 {
     if [ ! -z "$user_referenceannotation" ] && [ -z "$referenceannotation" ] && [ "$cuff_merge" != 0 ]; then
-        ls "$bam_out"/*combined.gtf | tr "\t" "\n" >> "$bam_out"/gtf_file.txt 
+        ls "$bam_out"/*filtered.gtf | tr "\t" "\n" >> "$bam_out"/gtf_file.txt 
         cuffmerge -o "$bam_out"/merged_out -g $user_referenceannotation "$bam_out"/gtf_file.txt -p $num_threads
     elif [ -z "$user_referenceannotation" ] && [ ! -z "$referenceannotation" ] && [ "$cuff_merge" != 0 ]; then
-        ls "$bam_out"/*combined.gtf | tr "\t" "\n" >> "$bam_out"/gtf_file.txt 
+        ls "$bam_out"/*filtered.gtf | tr "\t" "\n" >> "$bam_out"/gtf_file.txt 
         cuffmerge -o "$bam_out"/merged_out -g $referenceannotation "$bam_out"/gtf_file.txt -p $num_threads
     fi
 }
@@ -402,21 +402,20 @@ cuff_merge_fun()
 # ############################################################################################################################################################################################################################
 # # Reference genome/Index
 # ############################################################################################################################################################################################################################
-# Index folder
 
+# Reference genome from CyVerse
 if [ ! -z "$referencegenome" ] && [ -z "$user_referencegenome" ] && [ -z "$index_folder" ]; then
   hisat2-build $referencegenome ref_genome -p $num_threads
   fbname=$(basename "ref_genome" .ht2 | cut -d. -f1)
-  $fbname
 
-# Custom reference
+# Custom reference genome
 elif [ -z "$referencegenome" ] && [ ! -z "$user_referencegenome" ] && [ -z "$index_folder" ]; then
   cp "$user_referencegenome" .
   hisat2-build genome.fas ref_genome -p $num_threads
   fbname=$(basename "ref_genome" .ht2 | cut -d. -f1)
   rm genome.fas
 
-# Reference genomes from CyVerse
+# Indexed folder
 elif [ -z "$referencegenome" ] && [ -z "$user_referencegenome" ] && [ ! -z "$index_folder" ]; then
   for i in $index_folder/*; do
       cp $i .
