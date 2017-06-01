@@ -127,12 +127,21 @@ Figure 6 shows the dendrogram obtained from `r typeTrans`-transformed data. An e
 </center>
 </figure>
 
-Another way of visualizing the experiment variability is to look at the first principal components of the PCA, as shown on the figure 7. On this figure, the first principal component (PC1) is expected to separate samples from the different biological conditions, meaning that the biological variability is the main source of variance in the data.
+The second method of visaulizing the experiment variability is to look at the heatmaps of the two conditions as show on figure 7. On this figure the x-axis represents the two conditions (along with the replicates) and the y-axis represent the top 20 genes with the top variance over all samples.
+
+<figure>
+<center>
+    <img src="heatmap.png" alt="Heatmap" width="60%" />
+        <figcaption> Figure 7: Heatmap based on normalized data. </figcaption>
+</center>
+</figure>
+
+Another way of visualizing the experiment variability is to look at the first principal components of the PCA, as shown on the figure 8. On this figure, the first principal component (PC1) is expected to separate samples from the different biological conditions, meaning that the biological variability is the main source of variance in the data.
 
 <figure>
 <center>
     <img src="PCAplot.png" alt="Principal component analysis" />
-	<figcaption> Figure 7: First two components of a Principal Component Analysis, with percentages of variance associated with each axis. </figcaption>
+	<figcaption> Figure 8: First two components of a Principal Component Analysis, with percentages of variance associated with each axis. </figcaption>
 </center>
 </figure>
 
@@ -152,30 +161,30 @@ Normalization aims at correcting systematic technical biases in the data, in ord
 print(xtable(t(matrix(out.DESeq2$sf, dimnames=list(target$label,"Size factor"))),caption="Table 5: Normalization factors."), type="html", html.table.attributes = "align='center'")
 ```
 
-The histograms (figure 8) can help to validate the choice of the normalization parameter ("median" or "shorth"). Under the hypothesis that most features are not differentially expressed, each size factor represented by a red line is expected to be close to the mode of the distribution of the counts divided by their geometric means across samples.
+The histograms (figure 9) can help to validate the choice of the normalization parameter ("median" or "shorth"). Under the hypothesis that most features are not differentially expressed, each size factor represented by a red line is expected to be close to the mode of the distribution of the counts divided by their geometric means across samples.
 
 <figure>
 <center>
     <img src="diagSizeFactorsHist.png" alt="Diagnostic of size factors" />
-	<figcaption> Figure 8: Diagnostic of the estimation of the size factors. </figcaption>
+	<figcaption> Figure 9: Diagnostic of the estimation of the size factors. </figcaption>
 </center>
 </figure>
 
-The figure 9 shows that the scaling factors of DESeq2 and the total count normalization factors may not perform similarly.
+The figure 10 shows that the scaling factors of DESeq2 and the total count normalization factors may not perform similarly.
 
 <figure>
 <center>
     <img src="diagSizeFactorsTC.png" alt="Size factors vs total counts" width="60%" />
-	<figcaption> Figure 9: Plot of the estimated size factors and the total number of reads per sample. </figcaption>
+	<figcaption> Figure 10: Plot of the estimated size factors and the total number of reads per sample. </figcaption>
 </center>
 </figure>
 
-Boxplots are often used as a qualitative measure of the quality of the normalization process, as they show how distributions are globally affected during this process. We expect normalization to stabilize distributions across samples. Figure 10 shows boxplots of raw (left) and normalized (right) data respectively.
+Boxplots are often used as a qualitative measure of the quality of the normalization process, as they show how distributions are globally affected during this process. We expect normalization to stabilize distributions across samples. Figure 11 shows boxplots of raw (left) and normalized (right) data respectively.
 
 <figure>
 <center>
     <img src="countsBoxplots.png" alt="Boxplots of raw and normalized counts" />
-	<figcaption> Figure 10: Boxplots of raw (left) and normalized (right) read counts. </figcaption>
+	<figcaption> Figure 11: Boxplots of raw (left) and normalized (right) read counts. </figcaption>
 </center>
 </figure>
 
@@ -198,20 +207,20 @@ The DESeq2 model assumes that the count data follow a negative binomial distribu
 <figure>
 <center>
     <img src="dispersionsPlot.png" alt="Dispersions estimations" />
-	<figcaption> Figure 11: Dispersion estimates (left) and diagnostic of log-normality (right). </figcaption>
+	<figcaption> Figure 12: Dispersion estimates (left) and diagnostic of log-normality (right). </figcaption>
 </center>
 </figure>
 
-The left panel on figure 11 shows the result of the dispersion estimation step. The x- and y-axes represent the mean count value and the estimated dispersion respectively. Black dots represent empirical dispersion estimates for each feature (from the observed counts). The red dots show the mean-variance relationship function (fitted dispersion value) as estimated by the model. The blue dots are the final estimates from the maximum _a posteriori_ and are used to perform the statistical test. Blue circles (if any) point out dispersion outliers. These are features with a very high empirical variance (computed from observed counts). These high dispersion values fall far from the model estimation. For these features, the statistical test is based on the empirical variance in order to be more conservative than with the MAP dispersion. These features will have low chance to be declared significant. The figure on the right panel allows to check the hypothesis of log-normality of the dispersions.
+The left panel on figure 12 shows the result of the dispersion estimation step. The x- and y-axes represent the mean count value and the estimated dispersion respectively. Black dots represent empirical dispersion estimates for each feature (from the observed counts). The red dots show the mean-variance relationship function (fitted dispersion value) as estimated by the model. The blue dots are the final estimates from the maximum _a posteriori_ and are used to perform the statistical test. Blue circles (if any) point out dispersion outliers. These are features with a very high empirical variance (computed from observed counts). These high dispersion values fall far from the model estimation. For these features, the statistical test is based on the empirical variance in order to be more conservative than with the MAP dispersion. These features will have low chance to be declared significant. The figure on the right panel allows to check the hypothesis of log-normality of the dispersions.
 
 ### 5.4 Statistical test for differential expression
 
-Once the dispersion estimation and the model fitting have been done, DESeq2 can perform the statistical testing. Figure 12 shows the distributions of raw p-values computed by the statistical test for the comparison(s) done. This distribution is expected to be a mixture of a uniform distribution on $[0,1]$ and a peak around 0 corresponding to the differentially expressed features.
+Once the dispersion estimation and the model fitting have been done, DESeq2 can perform the statistical testing. Figure 13 shows the distributions of raw p-values computed by the statistical test for the comparison(s) done. This distribution is expected to be a mixture of a uniform distribution on $[0,1]$ and a peak around 0 corresponding to the differentially expressed features.
 
 <figure>
 <center>
     <img src="rawpHist.png" alt="Histogram(s) of raw p-values" width="60%" />
-	<figcaption> Figure 12: Distribution(s) of raw p-values. </figcaption>
+	<figcaption> Figure 13: Distribution(s) of raw p-values. </figcaption>
 </center>
 </figure>
 
@@ -236,21 +245,21 @@ A p-value adjustment is performed to take into account multiple testing and cont
 print(xtable(summaryResults$nDiffTotal,caption=paste0(ifelse(independentFiltering,"Table 7: ","Table 6: "),"Number of up-, down- and total number of differentially expressed features for each comparison.")),type="html",include.rownames=FALSE, html.table.attributes = "align='center'")
 ```
 
-Figure 13 represents the MA-plot of the data for the comparisons done, where differentially expressed features are highlighted in red. A MA-plot represents the log ratio of differential expression as a function of the mean intensity for each feature. Triangles correspond to features having a too low/high $\log_2(\text{FC})$ to be displayed on the plot.
+Figure 14 represents the MA-plot of the data for the comparisons done, where differentially expressed features are highlighted in red. A MA-plot represents the log ratio of differential expression as a function of the mean intensity for each feature. Triangles correspond to features having a too low/high $\log_2(\text{FC})$ to be displayed on the plot.
 
 <figure>
 <center>
     <img src="MAPlot.png" alt="MA-plot(s)" width="60%" />
-	<figcaption> Figure 13: MA-plot(s) of each comparison. Red dots represent significantly differentially expressed features. </figcaption>
+	<figcaption> Figure 14: MA-plot(s) of each comparison. Red dots represent significantly differentially expressed features. </figcaption>
 </center>
 </figure>
 
-Figure 14 shows the volcano plots for the comparisons performed and differentially expressed features are still highlighted in red. A volcano plot represents the log of the adjusted P value as a function of the log ratio of differential expression.
+Figure 15 shows the volcano plots for the comparisons performed and differentially expressed features are still highlighted in red. A volcano plot represents the log of the adjusted P value as a function of the log ratio of differential expression.
 
 <figure>
 <center>
     <img src="volcanoPlot.png" alt="Volcano plot(s)" width="60%" />
-	<figcaption> Figure 14: Volcano plot(s) of each comparison. Red dots represent significantly differentially expressed features. </figcaption>
+	<figcaption> Figure 15: Volcano plot(s) of each comparison. Red dots represent significantly differentially expressed features. </figcaption>
 </center>
 </figure>
 
@@ -272,10 +281,10 @@ These files contain the following columns:
   + negative: the feature is down-regulated ($\text{Test} < \text{Ref}$);
 - pvalue: raw p-value from the statistical test;
 - padj: adjusted p-value on which the cut-off $\alpha$ is applied;
-- dispGeneEst: dispersion parameter estimated from feature counts (i.e. black dots on figure 11);
-- dispFit: dispersion parameter estimated from the model (i.e. red dots on figure 11);
+- dispGeneEst: dispersion parameter estimated from feature counts (i.e. black dots on figure 12);
+- dispFit: dispersion parameter estimated from the model (i.e. red dots on figure 12);
 - dispMAP: dispersion parameter estimated from the Maximum _A Posteriori_ model;
-- dispersion: final dispersion parameter used to perform the test (i.e. blue dots and circles on figure 11);
+- dispersion: final dispersion parameter used to perform the test (i.e. blue dots and circles on figure 12);
 - betaConv: convergence of the coefficients of the model (TRUE or FALSE);
 - maxCooks: maximum Cook's distance of the feature.
 
