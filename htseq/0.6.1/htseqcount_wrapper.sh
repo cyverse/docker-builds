@@ -107,13 +107,13 @@ function no_out_sam()
     if [ $extension = "sam" ];
       then
         filename="${filename%.*}"
-        feat_out=$filename.out
+        feat_out=$filename.txt
         htseq-count -f $types -r "$pos" -m "$mode" -i "$attribute" -s "$strand" -t "$feature" -a "$qual" "$file" "$input_gff" > "$feat_out"
         mv "$feat_out" "$counts_folder"
     elif [ $extension = "bam" ];
       then
         filename="${filename%.*}"
-        feat_out=$filename.out
+        feat_out=$filename.txt
         htseq-count -f $types -r "$pos" -m "$mode" -i "$attribute" -s "$strand" -t "$feature" -a "$qual" "$file" "$input_gff" > "$feat_out"
         mv "$feat_out" "$counts_folder"
     fi    
