@@ -20,7 +20,7 @@ WORKDIR HTSeq-0.6.1
 RUN python setup.py build && python setup.py install
 
 # Install pysam
-RUN pip install 'pysam'
+RUN pip install pysam==0.9.0
 
 # Cleanup
 RUN apt-get clean
