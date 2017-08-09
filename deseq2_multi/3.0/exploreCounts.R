@@ -13,9 +13,9 @@
 exploreCounts <- function(object, group=target[,varInt], typeTrans, gene.selection, col){
     if (typeTrans == "VST") counts.trans <- assay(varianceStabilizingTransformation(object))
     else counts.trans <- assay(rlogTransformation(object))
-    source("../PCAPlot.R")
-    source("../clusterPlot.R")
-    source("../heatmap.R")
+    source("/PCAPlot.R")
+    source("/clusterPlot.R")
+    source("/heatmap.R")
     PCAPlot(counts.trans=counts.trans, group=target[,varInt], col=col, output.file="PCAplot.png")
     clusterPlot(counts.trans=counts.trans, group=target[,varInt], output.file="cluster.png")
     Heatmap(object=out.DESeq2$dds,output.file="heatmap.png")  
