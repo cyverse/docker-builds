@@ -84,11 +84,14 @@ def viewinwwt(filename, imageurl):
     outfile = os.path.join(public_folder, fname)
     header = fits.getheader(filename)
     reqd = {'imageurl': imageurl}
-    reqd['x'] = header['CRPIX1']
-    reqd['y'] = header['CRPIX2']
-    ra_str = header['RA']
-    dec_str = header['DEC']
-
+    try:
+        reqd['x'] = header['CRPIX1']
+        reqd['y'] = header['CRPIX2']
+        ra_str = header['RA']
+        dec_str = header['DEC']
+    except:
+        print('{:s} does not have the needed header keys'.format(filename))
+        return
     coord = SkyCoord('{} {}'.format(ra_str, dec_str), unit=(u.hourangle, u.deg))
     reqd['ra'] = coord.ra.value
     reqd['dec'] = coord.dec.value
