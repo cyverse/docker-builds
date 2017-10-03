@@ -4,12 +4,14 @@
 
 usage() {
       echo ""
-      echo "Usage : sh $0 -c chromosome -b bamfile(s) -r referencegenome -i histogram_bin_size -s stat_bin_size -p partition_bin_size -a call_bin_size -f prefix -o output"
+      echo "Usage : sh $0 -c chromosome -u -b bamfile(s) -r referencegenome -i histogram_bin_size -s stat_bin_size -p partition_bin_size -a call_bin_size -f prefix -o output"
       echo ""
 
 cat <<'EOF'
 
   -c <chromosome id>
+
+  -u unique to get the correct fraction of reads mapped with q0 quality
 
   -b </path/to/bam file(s)>
 
@@ -33,10 +35,15 @@ EOF
     exit 0
 }
 
-while getopts ":c:hb:r:i:s:p:a:f:o:" opt; do
+unique=0
+
+while getopts ":c:hb:ur:i:s:p:a:f:o:" opt; do
   case $opt in
     c)
      chromosome=$OPTARG
+      ;;
+    u)
+     unique=$OPTARG
       ;;
     b)
      bamfile+=("$OPTARG")
@@ -91,16 +98,18 @@ if [[ -f $chromosome ]]; then
     mv $line.txt.fa $line.fa
 
   done
+  
+  if [ "$unique" != 0 ]; then
 
-  for val in "${bamfile[@]}"
+    for val in "${bamfile[@]}"
 
-  do
+      do
 
-    echo "${val}"
+        cnvnator -root cnvnator.root -unique -chrom $new -tree $val 
 
-    cnvnator -root cnvnator.root -chrom $new -tree $val 
+      done
 
-  done
+  fi
 
   cnvnator -root cnvnator.root -genome $referencegenome -chrom $new -his $hist
 
@@ -118,15 +127,17 @@ else
 
     mv $chromosome.txt.fa $chromosome.fa
 
-  for val in "${bamfile[@]}"
+  if [ "$unique" != 0 ]; then
 
-  do
+    for val in "${bamfile[@]}"
 
-    echo "${val}"
+      do
 
-    cnvnator -root cnvnator.root -chrom $chromosome -tree $val
+        cnvnator -root cnvnator.root -unique -chrom $chromosome -tree $val 
 
-  done
+      done
+
+  fi
 
   cnvnator -root cnvnator.root -genome $referencegenome -chrom $chromosome -his $hist
 
