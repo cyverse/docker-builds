@@ -1,8 +1,5 @@
 #!/bin/bash
 
-set -e
-set -x
-
 usage() {
       echo ""
       echo "Usage : sh $0 -g <reference_genome> [-I <Index_folder>] -U <reads> -A <aligner> -t <number> -s <subset> -o <output>"
@@ -93,7 +90,7 @@ if [ ! -z "$referencegenome" ] && [ ! -z "$index" ]; then # Reference Genomes an
             echo "DATABASE        $prefix $prefix/$prefix BOWTIE" >> fastq_screen.conf
           elif [[ "$aligner" == "bowtie2" ]]; then
             bowtie2-build $filename $prefix
-            mv $prefix*bt2 $prefix
+            mv $prefix*bt2* $prefix
             echo "DATABASE        $prefix $prefix/$prefix BOWTIE2" >> fastq_screen.conf
           elif [[ "$aligner" == "bwa" ]]; then
             bwa index $filename -p $prefix
@@ -108,7 +105,7 @@ if [ ! -z "$referencegenome" ] && [ ! -z "$index" ]; then # Reference Genomes an
             echo "DATABASE        $filename $filename/$filename BOWTIE" >> fastq_screen.conf
           elif [[ "$aligner" == "bowtie2" ]]; then
             bowtie2-build $f $filename
-            mv $filename*bt2 $filename
+            mv $filename*bt2* $filename
             echo "DATABASE        $filename $filename/$filename BOWTIE2" >> fastq_screen.conf
           elif [[ "$aligner" == "bwa" ]]; then
             bwa index $f -p $filename
@@ -128,7 +125,7 @@ if [ ! -z "$referencegenome" ] && [ ! -z "$index" ]; then # Reference Genomes an
         done
       elif [[ "$aligner" == "bowtie2" ]]; then
         for x in "${index[@]}"; do
-          fil=$(ls $x/*bt2 | head -n 1)
+          fil=$(ls $x/*bt2* | head -n 1)
           filename="${fil%.*.*}"
           ind=$(echo $filename | cut -d "/" -f 1 )
           px=$(echo $filename | cut -d "/" -f 2 )
@@ -162,7 +159,7 @@ elif [ ! -z "$referencegenome" ] && [ -z "$index" ]; then # Reference Genomes on
             echo "DATABASE        $prefix $prefix/$prefix BOWTIE" >> fastq_screen.conf
           elif [[ "$aligner" == "bowtie2" ]]; then
             bowtie2-build $filename $prefix
-            mv $prefix*bt2 $prefix
+            mv $prefix*bt2* $prefix
             echo "DATABASE        $prefix $prefix/$prefix BOWTIE2" >> fastq_screen.conf
           elif [[ "$aligner" == "bwa" ]]; then
             bwa index $filename -p $prefix
@@ -177,7 +174,7 @@ elif [ ! -z "$referencegenome" ] && [ -z "$index" ]; then # Reference Genomes on
             echo "DATABASE        $filename $filename/$filename BOWTIE" >> fastq_screen.conf
           elif [[ "$aligner" == "bowtie2" ]]; then
             bowtie2-build $f $filename
-            mv $filename*bt2 $filename
+            mv $filename*bt2* $filename
             echo "DATABASE        $filename $filename/$filename BOWTIE2" >> fastq_screen.conf
           elif [[ "$aligner" == "bwa" ]]; then
             bwa index $f -p $filename
@@ -199,7 +196,7 @@ elif [  -z "$referencegenome" ] && [ ! -z "$index" ]; then # Indexes only
         done
       elif [[ "$aligner" == "bowtie2" ]]; then
         for x in "${index[@]}"; do
-          fil=$(ls $x/*bt2 | head -n 1)
+          fil=$(ls $x/*bt2* | head -n 1)
           filename="${fil%.*.*}"
           ind=$(echo $filename | cut -d "/" -f 1 )
           px=$(echo $filename | cut -d "/" -f 2 )
@@ -223,3 +220,5 @@ if [ "$illumina1_3" == 0 ]; then
 elif [ "$illumina1_3" != 0 ]; then
   fastq_screen --conf fastq_screen.conf $reads --aligner $aligner --threads $threads --outdir $output --illumina1_3 --subset $subset
 fi
+
+rm fastq_screen.conf
