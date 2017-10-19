@@ -1,6 +1,6 @@
 FROM ubuntu:14.04
 MAINTAINER Upendra Devisetty <upendra@cyverse.org> 
-LABEL Description "This Dockerfile is for BUSCO v2.0"
+LABEL Description "This Dockerfile is for BUSCO v3.0"
 
 RUN \
     sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
