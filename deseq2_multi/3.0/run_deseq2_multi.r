@@ -68,6 +68,7 @@ col <- ret.opts$colors
 
 
 # loading target file
+source("/loadTargetFile.R")
 target <- loadTargetFile(targetFile=targetFile, varInt=varInt, condRef=condRef, batch=batch)
 
 # loading counts
