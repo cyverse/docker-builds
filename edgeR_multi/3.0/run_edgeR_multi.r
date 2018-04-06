@@ -17,7 +17,6 @@ library(RColorBrewer)
 library(genefilter)
 library(pheatmap)
 
-
 args<-commandArgs(TRUE)
 
 options<-matrix(c('project',  'pn', 1,  "character",    # project name
@@ -66,6 +65,7 @@ pAdjustMethod <- ret.opts$pAdjust
 col <- ret.opts$colors
 
 # loading target file
+source("/loadTargetFile.R")
 target <- loadTargetFile(targetFile=targetFile, varInt=varInt, condRef=condRef, batch=batch)
 
 # Raw counts directory
@@ -80,7 +80,7 @@ source("/loadCountDatarc.R")
 counts <- loadCountDatarc(target=target, rawCounts=rawCounts, header=TRUE, skip=0, featuresToRemove=featuresToRemove)
 }
 
-# description plots
+# # description plots
 source("/descriptionPlots.r")
 majSequences <- descriptionPlots(counts, n=3, group=target[,varInt], output.file=output.file, col)
 
@@ -88,15 +88,19 @@ majSequences <- descriptionPlots(counts, n=3, group=target[,varInt], output.file
 source("/run.edgeR.r")
 out.edgeR <- run.edgeR(counts, target, varInt, condRef, batch, cpmCutoff, minReplicates, normalizationMethod, pAdjustMethod)
 
-# MDS + clustering plots
-source("/mdsclusteringPlots.r")
-clustplots <- mdsclusteringPlots(group=target[,varInt], gene.selection, output.file=output.file, col)
+# MDS + clustering
+source("/clusterPlot.R")
+source("/MDSPlot.R")
+source("/heatmap.R")
+clusterPlot(group=target[,varInt], output.file="cluster.png")  
+MDSPlot(group=target[,varInt], gene.selection, col, output.file="MDS.png")
+Heatmap(output.file="heatmap.png")
 
 # summary of the analysis (boxplots, dispersions, export table, nDiffTotal, histograms, MA plot)
 source("/summarizeResults.edgeR.r")
 summaryResults <- summarizeResults.edgeR(out.edgeR, group=target[,varInt], counts, alpha, col)
 
-# # generating HTML report
+# generating HTML report
 source("/writeReport.edgeR.r")
 writeReport.edgeR(target=target, counts=counts, out.edgeR=out.edgeR, summaryResults=summaryResults,
                   majSequences=majSequences, OutDir=OutDir, projectName=projectName, author=author,
@@ -104,4 +108,4 @@ writeReport.edgeR(target=target, counts=counts, out.edgeR=out.edgeR, summaryResu
                   condRef=condRef, batch=batch, alpha=alpha, pAdjustMethod=pAdjustMethod, colors=colors,
                   gene.selection=gene.selection, normalizationMethod=normalizationMethod)
 
-# # End
+# End
