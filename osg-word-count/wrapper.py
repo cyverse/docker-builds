@@ -8,6 +8,7 @@ import itertools
 import json
 import os
 import requests
+import socket
 import subprocess
 import sys
 
@@ -59,7 +60,7 @@ class JobStatusUpdater:
 
     def send_update(self, status, message):
         self.print_update(status, message)
-        body = {"status": status, "message": message}
+        body = {"status": status, "message": message, "hostname": socket.gethostname()}
         r = requests.post(self.url, json=body)
         if r.status_code < 200 or r.status_code > 299:
             eprint("unable to send job status update: {0} {1}".format(status, message))
