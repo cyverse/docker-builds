@@ -14,7 +14,7 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - 
     && apt-get install -y irods-icommands
 
 # Install the wrapper script.
-ADD wrapper.py /usr/bin/wrapper.py
+ADD wrapper /usr/bin/wrapper
 
 # Make the wrapper script the default command.
-CMD ["/usr/bin/wrapper.py"]
+CMD ["wrapper"]
