@@ -63,7 +63,7 @@ class JobStatusUpdater:
         body = {"state": status, "message": message, "hostname": socket.gethostname()}
         r = requests.post(self.url, json=body)
         if r.status_code < 200 or r.status_code > 299:
-            eprint("unable to send job status update: {0} {1}".format(status, message))
+            eprint("unable to send job status update: {0} {1}: {2}".format(status, message), r.content)
 
     def failed(self, message):
         self.send_update("failed", message)
