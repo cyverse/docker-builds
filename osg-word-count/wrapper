@@ -118,17 +118,23 @@ def run_job(arguments, output_filename, error_filename):
             raise Exception("wc returned exit code {0}".format(rc))
 
 # Upload a file or directory to iRODS.
-def upload_file(ticket, owner, src, dest):
+def upload_file(ticket, irods_user, owner, src, dest):
     rc = subprocess.call(["iput", "-rt", ticket, src, dest])
     if rc != 0:
         raise Exception("could not upload {0} to {1}".format(src, dest))
+
+    # Don't bother modifying the file permissions if the iRODS user and file owner are the same.
+    if irods_user == owner:
+        return
+
+    # Update the file permissions so that the person who submitted the job can see the output files.
     fullpath = os.path.join(dest, src)
     rc = subprocess.call(["ichmod", "own", owner, fullpath])
     if rc != 0:
         raise Exception("could not change the owner of {0} to {1}".format(fullpath, owner))
-    rc = subprocess.call(["ichmod", "null", "anonymous", fullpath])
+    rc = subprocess.call(["ichmod", "null", irods_user, fullpath])
     if rc != 0:
-        raise Exception("could not remove anonymous permissions on {0}".format(fullpath))
+        raise Exception("could not remove {0} permissions on {1}".format(irods_user, fullpath))
 
 # Upload a set of files to the directories referenced in a ticket list file to iRODS.
 def upload_files(ticket_list_path, owner, files):
