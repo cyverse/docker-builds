@@ -116,7 +116,7 @@ def download_files(ticket_list_path):
 # Run the word count job.
 def run_job(arguments, input_files, output_filename, error_filename):
     with open(output_filename, "w") as out, open(error_filename, "w") as err:
-        rc = subprocess.call(["wc"] + input_files, stdout=out, stderr=err)
+        rc = subprocess.call(["wc"] + arguments + input_files, stdout=out, stderr=err)
         if rc != 0:
             raise Exception("wc returned exit code {0}".format(rc))
 
