@@ -96,7 +96,7 @@ def init_irods(host, port, user):
     }
     ensuredir(expanduser("~/.irods"), 0755)
     with open(expanduser("~/.irods/irods_environment.json"), "w") as f:
-         json.dump(irods_config, f, indent=4, separators=(",", ": "))
+        json.dump(irods_config, f, indent=4, separators=(",", ": "))
 
 # Download a file or directory from iRODS.
 def download_file(ticket, src):
