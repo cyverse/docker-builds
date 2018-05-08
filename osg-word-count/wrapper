@@ -19,9 +19,11 @@ def eprint(*args, **kwargs):
 # A class to load configuration settings.
 class Config:
     def __init__(self, config_json):
+        self.arguments = self.extract_setting(config_json, "arguments", default=[])
         self.irods_host = self.extract_setting(config_json, "irods_host")
         self.irods_port = self.extract_setting(config_json, "irods_port", default=1247)
         self.irods_job_user = self.extract_setting(config_json, "irods_job_user")
+        self.irods_user = self.extract_setting(config_json, "irods_user")
         self.input_ticket_list = self.extract_setting(config_json, "input_ticket_list", default="input_ticket.list")
         self.output_ticket_list = self.extract_setting(config_json, "output_ticket_list", default="output_ticket.list")
         self.status_update_url = self.extract_setting(config_json, "status_update_url")
@@ -85,16 +87,16 @@ def ensuredir(path, mode):
         os.mkdir(path, mode)
 
 # Initialize iRODS.
-def init_irods(host, port):
+def init_irods(host, port, user):
     irods_config = {
-        "irods_user_name": "anonymous",
+        "irods_user_name": user,
         "irods_host": host,
         "irods_port": port,
         "irods_zone_name": ""
     }
     ensuredir(expanduser("~/.irods"), 0755)
     with open(expanduser("~/.irods/irods_environment.json"), "w") as f:
-        json.dump(irods_config, f, indent=4, separators=(",", ": "))
+         json.dump(irods_config, f, indent=4, separators=(",", ": "))
 
 # Download a file or directory from iRODS.
 def download_file(ticket, src):
@@ -112,7 +114,7 @@ def download_files(ticket_list_path):
     return result
 
 # Run the word count job.
-def run_job(input_files, output_filename, error_filename):
+def run_job(arguments, input_files, output_filename, error_filename):
     with open(output_filename, "w") as out, open(error_filename, "w") as err:
         rc = subprocess.call(["wc"] + input_files, stdout=out, stderr=err)
         if rc != 0:
@@ -149,7 +151,7 @@ if __name__ == "__main__":
     # Initialize iRODS.
     try:
         updater.running("initializing the iRODS connection")
-        init_irods(cfg.irods_host, cfg.irods_port)
+        init_irods(cfg.irods_host, cfg.irods_port, cfg.irods_user)
     except Exception as e:
         updater.failed("unable to initialize the iRODS connection: {0}".format(e))
         sys.exit(1)
@@ -168,7 +170,7 @@ if __name__ == "__main__":
     # Run the job.
     try:
         updater.running("processing the input files")
-        run_job(input_files, cfg.stdout, cfg.stderr)
+        run_job(cfg.arguments, input_files, cfg.stdout, cfg.stderr)
     except Exception as e:
         updater.running("job encountered an error: {0}".format(e))
         job_failed = True
