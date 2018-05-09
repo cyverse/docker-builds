@@ -3,7 +3,6 @@
 from __future__ import print_function
 from os.path import expanduser
 
-import csv
 import itertools
 import json
 import os
@@ -45,8 +44,8 @@ class TicketListReader:
         self.path = path
 
     def __enter__(self):
-        self.fd = open(self.path, "rb")
-        self.r = csv.reader(itertools.ifilter(lambda l: l[0] != '#', self.fd))
+        self.fd = open(self.path, "r")
+        self.r = itertools.imap(lambda l: l.strip().split(",", 1), (itertools.ifilter(lambda l: l[0] != '#', self.fd)))
         return self.r
 
     def __exit__(self, type, value, traceback):
@@ -137,11 +136,11 @@ def upload_file(ticket, irods_user, owner, src, dest):
         raise Exception("could not remove {0} permissions on {1}".format(irods_user, fullpath))
 
 # Upload a set of files to the directories referenced in a ticket list file to iRODS.
-def upload_files(ticket_list_path, owner, files):
+def upload_files(ticket_list_path, irods_user, owner, files):
     with TicketListReader(ticket_list_path) as tlr:
         for ticket, dest in tlr:
             for src in files:
-                upload_file(ticket, owner, src, dest)
+                upload_file(ticket, irods_user, owner, src, dest)
 
 if __name__ == "__main__":
     # Load the configuration file.
@@ -181,7 +180,7 @@ if __name__ == "__main__":
     # Upload the output file.
     try:
         updater.running("uploading the output files")
-        upload_files(cfg.output_ticket_list, cfg.irods_job_user, [cfg.stdout, cfg.stderr])
+        upload_files(cfg.output_ticket_list, cfg.irods_user, cfg.irods_job_user, [cfg.stdout, cfg.stderr])
     except Exception as e:
         updater.running("unable to upload output file: {0}".format(e))
         job_failed = True
