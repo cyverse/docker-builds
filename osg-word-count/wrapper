@@ -45,7 +45,7 @@ class TicketListReader:
 
     def __enter__(self):
         self.fd = open(self.path, "r")
-        self.r = itertools.imap(lambda l: l.strip().split(",", 1), (itertools.ifilter(lambda l: l[0] != '#', self.fd)))
+        self.r = itertools.imap(lambda l: l.strip().split(",", 1), itertools.ifilter(lambda l: l[0] != '#', self.fd))
         return self.r
 
     def __exit__(self, type, value, traceback):
