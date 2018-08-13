@@ -1,0 +1,2 @@
+/iplant/home/upendra_35/osg-gl-upendra/TE_RNA_transcripts.fa
+/iplant/home/upendra_35/osg-gl-upendra/sample.fa
