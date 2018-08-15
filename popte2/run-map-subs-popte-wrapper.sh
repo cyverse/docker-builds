@@ -93,17 +93,17 @@ mkdir $of
 ########################    map     #########################################################
 bwa bwasw -t $threads $refg $left_reads |samtools view -Sb - > $of/map-read1.bam
 bwa bwasw -t $threads $refg $right_reads |samtools view -Sb - > $of/map-read2.bam
-java -jar popte2-v1.10.04.jar se2pe --fastq1 $left_reads --fastq2 $right_reads --bam1  $of/map-read1.bam --bam2 $of/map-read2.bam --sort --output $of/map-pe.sort.bam
+java -jar /popte2-v1.10.04.jar se2pe --fastq1 $left_reads --fastq2 $right_reads --bam1  $of/map-read1.bam --bam2 $of/map-read2.bam --sort --output $of/map-pe.sort.bam
 
 #####################    POPTE2    ###########################################################
 # ppileup
-java -jar popte2-v1.10.04.jar ppileup --bam $of/map-pe.sort.bam --map-qual $mapqual --hier $hier --output $of/pp.gz
+java -jar /popte2-v1.10.04.jar ppileup --bam $of/map-pe.sort.bam --map-qual $mapqual --hier $hier --output $of/pp.gz
 
 # subsample
-java -jar popte2-v1.10.04.jar subsamplePpileup --ppileup $of/pp.gz --output $of/pp.subs.gz --target-coverage $targetcov
+java -jar /popte2-v1.10.04.jar subsamplePpileup --ppileup $of/pp.gz --output $of/pp.subs.gz --target-coverage $targetcov
 
 # rest
-java -jar popte2-v1.10.04.jar identifySignatures --ppileup $of/pp.subs.gz --mode $mode --min-count $mincount --output $of/te.signatures
-java -jar popte2-v1.10.04.jar updatestrand --bam $of/map-pe.sort.bam --signature $of/te.signatures --output $of/testrand.signatures --hier $hier --map-qual $mapqual --max-disagreement $maxdi
-java -jar popte2-v1.10.04.jar frequency --ppileup $of/pp.subs.gz --signature $of/testrand.signatures --output $of/te.freqsignatures
-java -jar popte2-v1.10.04.jar pairupsignatures --signature $of/te.freqsignatures --ref-genome $refg --hier $hier --min-distance $mind --max-distance $maxd --output $of/tes.finalresult.txt
+java -jar /popte2-v1.10.04.jar identifySignatures --ppileup $of/pp.subs.gz --mode $mode --min-count $mincount --output $of/te.signatures
+java -jar /popte2-v1.10.04.jar updatestrand --bam $of/map-pe.sort.bam --signature $of/te.signatures --output $of/testrand.signatures --hier $hier --map-qual $mapqual --max-disagreement $maxdi
+java -jar /popte2-v1.10.04.jar frequency --ppileup $of/pp.subs.gz --signature $of/testrand.signatures --output $of/te.freqsignatures
+java -jar /popte2-v1.10.04.jar pairupsignatures --signature $of/te.freqsignatures --ref-genome $refg --hier $hier --min-distance $mind --max-distance $maxd --output $of/tes.finalresult.txt
