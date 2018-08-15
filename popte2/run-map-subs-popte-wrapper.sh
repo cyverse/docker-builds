@@ -17,7 +17,6 @@ cat <<'EOF'
   -r fastq file with second read pairs (gziped allowed)
   -o Output folder
   -t Number of threads
-  -5 5' trim 
   -m the minimum count of a TE insertion; default=2.0
   -c the target coverage of the output file [int]	 
   -q minimum mapping quality; default=15
