@@ -89,6 +89,9 @@ done
 ########################    Create directory     ############################################
 mkdir $of
 
+########################    index     #######################################################
+bwa index $refg $refg
+
 ########################    map     #########################################################
 bwa bwasw -t $threads $refg $left_reads |samtools view -Sb - > $of/map-read1.bam
 bwa bwasw -t $threads $refg $right_reads |samtools view -Sb - > $of/map-read2.bam
