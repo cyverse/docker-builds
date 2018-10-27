@@ -12,10 +12,10 @@ RUN Rscript -e 'source("http://bioconductor.org/biocLite.R"); biocLite("biomaRt"
 RUN Rscript -e 'install.packages("getopt");'
 
 # Copy files to the container
-COPY opossom_wrapper.R oposSOM-plants.tar.gz /
+COPY opossom_wrapper.R oposSOM-plants-ensembl_gene_id.tar.gz /
 
 # Install opossom
-RUN R CMD INSTALL --build oposSOM-plants.tar.gz
+RUN R CMD INSTALL --build oposSOM-plants-ensembl_gene_id.tar.gz
 
 # change permissions to the wrapper script
 ENV BINPATH /usr/bin

@@ -58,12 +58,10 @@ if ( !is.null(ret.opts$log10) ) {
   data_log <- cbind(data[,1],data_log);
   names(data_log)[1] <- names(data[1]);
   print("log transformation");
-  print(head(data_log)[1:10]);
   env$indata <- data_log
 } else  {
 # If not log transformation
   print("Not log transformation");
-  print(head(data)[1:10]);
   env$indata <- data
 }
 
