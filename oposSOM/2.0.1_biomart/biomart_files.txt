@@ -1,0 +1,270 @@
+dataset	description	secondary_description	full_name	Host	Biomart
+aaegypti_eg_gene	Aedes	aegypti	Aedes_aegypti	metazoa.ensembl.org	metazoa_mart
+acephalotes_eg_gene	Atta	cephalotes	Atta_cephalotes	metazoa.ensembl.org	metazoa_mart
+adarlingi_eg_gene	Anopheles	darlingi	Anopheles_darlingi	metazoa.ensembl.org	metazoa_mart
+agambiae_eg_gene	Anopheles	gambiae	Anopheles_gambiae	metazoa.ensembl.org	metazoa_mart
+aglabripennis_eg_gene	Anoplophora	glabripennis	Anoplophora_glabripennis	metazoa.ensembl.org	metazoa_mart
+amellifera_eg_gene	Apis	mellifera	Apis_mellifera	metazoa.ensembl.org	metazoa_mart
+apisum_eg_gene	Acyrthosiphon	pisum	Acyrthosiphon_pisum	metazoa.ensembl.org	metazoa_mart
+aqueenslandica_eg_gene	Amphimedon	queenslandica	Amphimedon_queenslandica	metazoa.ensembl.org	metazoa_mart
+avaga_eg_gene	Adineta	vaga	Adineta_vaga	metazoa.ensembl.org	metazoa_mart
+bantarctica_eg_gene	Belgica	antarctica	Belgica_antarctica	metazoa.ensembl.org	metazoa_mart
+bimpatiens_eg_gene	Bombus	impatiens	Bombus_impatiens	metazoa.ensembl.org	metazoa_mart
+bmalayi_eg_gene	Brugia	malayi	Brugia_malayi	metazoa.ensembl.org	metazoa_mart
+bmori_eg_gene	Bombyx	mori	Bombyx_mori	metazoa.ensembl.org	metazoa_mart
+bterrestris_eg_gene	Bombus	terrestris	Bombus_terrestris	metazoa.ensembl.org	metazoa_mart
+cbrenneri_eg_gene	Caenorhabditis	brenneri	Caenorhabditis_brenneri	metazoa.ensembl.org	metazoa_mart
+cbriggsae_eg_gene	Caenorhabditis	briggsae	Caenorhabditis_briggsae	metazoa.ensembl.org	metazoa_mart
+celegans_eg_gene	Caenorhabditis	elegans	Caenorhabditis_elegans	metazoa.ensembl.org	metazoa_mart
+cgigas_eg_gene	Crassostrea	gigas	Crassostrea_gigas	metazoa.ensembl.org	metazoa_mart
+cjaponica_eg_gene	Caenorhabditis	japonica	Caenorhabditis_japonica	metazoa.ensembl.org	metazoa_mart
+cquinquefasciatus_eg_gene	Culex	quinquefasciatus	Culex_quinquefasciatus	metazoa.ensembl.org	metazoa_mart
+cremanei_eg_gene	Caenorhabditis	remanei	Caenorhabditis_remanei	metazoa.ensembl.org	metazoa_mart
+cteleta_eg_gene	Capitella	teleta	Capitella_teleta	metazoa.ensembl.org	metazoa_mart
+dananassae_eg_gene	Drosophila	ananassae	Drosophila_ananassae	metazoa.ensembl.org	metazoa_mart
+derecta_eg_gene	Drosophila	erecta	Drosophila_erecta	metazoa.ensembl.org	metazoa_mart
+dgrimshawi_eg_gene	Drosophila	grimshawi	Drosophila_grimshawi	metazoa.ensembl.org	metazoa_mart
+dmagna_eg_gene	Daphnia	magna	Daphnia_magna	metazoa.ensembl.org	metazoa_mart
+dmelanogaster_eg_gene	Drosophila	melanogaster	Drosophila_melanogaster	metazoa.ensembl.org	metazoa_mart
+dmojavensis_eg_gene	Drosophila	mojavensis	Drosophila_mojavensis	metazoa.ensembl.org	metazoa_mart
+dpersimilis_eg_gene	Drosophila	persimilis	Drosophila_persimilis	metazoa.ensembl.org	metazoa_mart
+dplexippus_eg_gene	Danaus	plexippus	Danaus_plexippus	metazoa.ensembl.org	metazoa_mart
+dponderosae_eg_gene	Dendroctonus	ponderosae	Dendroctonus_ponderosae	metazoa.ensembl.org	metazoa_mart
+dpseudoobscura_eg_gene	Drosophila	pseudoobscura	Drosophila_pseudoobscura	metazoa.ensembl.org	metazoa_mart
+dpulex_eg_gene	Daphnia	pulex	Daphnia_pulex	metazoa.ensembl.org	metazoa_mart
+dsechellia_eg_gene	Drosophila	sechellia	Drosophila_sechellia	metazoa.ensembl.org	metazoa_mart
+dsimulans_eg_gene	Drosophila	simulans	Drosophila_simulans	metazoa.ensembl.org	metazoa_mart
+dvirilis_eg_gene	Drosophila	virilis	Drosophila_virilis	metazoa.ensembl.org	metazoa_mart
+dwillistoni_eg_gene	Drosophila	willistoni	Drosophila_willistoni	metazoa.ensembl.org	metazoa_mart
+dyakuba_eg_gene	Drosophila	yakuba	Drosophila_yakuba	metazoa.ensembl.org	metazoa_mart
+hmelpomene_eg_gene	Heliconius	melpomene	Heliconius_melpomene	metazoa.ensembl.org	metazoa_mart
+hrobusta_eg_gene	Helobdella	robusta	Helobdella_robusta	metazoa.ensembl.org	metazoa_mart
+iscapularis_eg_gene	Ixodes	scapularis	Ixodes_scapularis	metazoa.ensembl.org	metazoa_mart
+lanatina_eg_gene	Lingula	anatina	Lingula_anatina	metazoa.ensembl.org	metazoa_mart
+lcuprina_eg_gene	Lucilia	cuprina	Lucilia_cuprina	metazoa.ensembl.org	metazoa_mart
+lgigantea_eg_gene	Lottia	gigantea	Lottia_gigantea	metazoa.ensembl.org	metazoa_mart
+lloa_eg_gene	Loa	loa	Loa_loa	metazoa.ensembl.org	metazoa_mart
+lsalmonis_eg_gene	Lepeophtheirus	salmonis	Lepeophtheirus_salmonis	metazoa.ensembl.org	metazoa_mart
+mcinxia_eg_gene	Melitaea	cinxia	Melitaea_cinxia	metazoa.ensembl.org	metazoa_mart
+mdestructor_eg_gene	Mayetiola	destructor	Mayetiola_destructor	metazoa.ensembl.org	metazoa_mart
+mleidyi_eg_gene	Mnemiopsis	leidyi	Mnemiopsis_leidyi	metazoa.ensembl.org	metazoa_mart
+mscalaris_eg_gene	Megaselia	scalaris	Megaselia_scalaris	metazoa.ensembl.org	metazoa_mart
+nvectensis_eg_gene	Nematostella	vectensis	Nematostella_vectensis	metazoa.ensembl.org	metazoa_mart
+nvitripennis_eg_gene	Nasonia	vitripennis	Nasonia_vitripennis	metazoa.ensembl.org	metazoa_mart
+obimaculoides_eg_gene	Octopus	bimaculoides	Octopus_bimaculoides	metazoa.ensembl.org	metazoa_mart
+ovolvulus_eg_gene	Onchocerca	volvulus	Onchocerca_volvulus	metazoa.ensembl.org	metazoa_mart
+phumanus_eg_gene	Pediculus	humanus	Pediculus_humanus	metazoa.ensembl.org	metazoa_mart
+ppacificus_eg_gene	Pristionchus	pacificus	Pristionchus_pacificus	metazoa.ensembl.org	metazoa_mart
+rprolixus_eg_gene	Rhodnius	prolixus	Rhodnius_prolixus	metazoa.ensembl.org	metazoa_mart
+sinvicta_eg_gene	Solenopsis	invicta	Solenopsis_invicta	metazoa.ensembl.org	metazoa_mart
+smansoni_eg_gene	Schistosoma	mansoni	Schistosoma_mansoni	metazoa.ensembl.org	metazoa_mart
+smaritima_eg_gene	Strigamia	maritima	Strigamia_maritima	metazoa.ensembl.org	metazoa_mart
+smimosarum_eg_gene	Stegodyphus	mimosarum	Stegodyphus_mimosarum	metazoa.ensembl.org	metazoa_mart
+spurpuratus_eg_gene	Strongylocentrotus	purpuratus	Strongylocentrotus_purpuratus	metazoa.ensembl.org	metazoa_mart
+sratti_eg_gene	Strongyloides	ratti	Strongyloides_ratti	metazoa.ensembl.org	metazoa_mart
+sscabiei_eg_gene	Sarcoptes	scabiei	Sarcoptes_scabiei	metazoa.ensembl.org	metazoa_mart
+tadhaerens_eg_gene	Trichoplax	adhaerens	Trichoplax_adhaerens	metazoa.ensembl.org	metazoa_mart
+tcastaneum_eg_gene	Tribolium	castaneum	Tribolium_castaneum	metazoa.ensembl.org	metazoa_mart
+tdalmanni_eg_gene	Teleopsis	dalmanni	Teleopsis_dalmanni	metazoa.ensembl.org	metazoa_mart
+tkitauei_eg_gene	Thelohanellus	kitauei	Thelohanellus_kitauei	metazoa.ensembl.org	metazoa_mart
+tspiralis_eg_gene	Trichinella	spiralis	Trichinella_spiralis	metazoa.ensembl.org	metazoa_mart
+turticae_eg_gene	Tetranychus	urticae	Tetranychus_urticae	metazoa.ensembl.org	metazoa_mart
+znevadensis_eg_gene	Zootermopsis	nevadensis	Zootermopsis_nevadensis	metazoa.ensembl.org	metazoa_mart
+aclavatus_eg_gene	Aspergillus	clavatus	Aspergillus_clavatus	fungi.ensembl.org	fungi_mart
+aflavus_eg_gene	Aspergillus	flavus	Aspergillus_flavus	fungi.ensembl.org	fungi_mart
+afumigatus_eg_gene	Aspergillus	fumigatus	Aspergillus_fumigatus	fungi.ensembl.org	fungi_mart
+afumigatusa1163_eg_gene	Aspergillus	fumigatus	Aspergillus_fumigatus	fungi.ensembl.org	fungi_mart
+agossypii_eg_gene	Ashbya	gossypii	Ashbya_gossypii	fungi.ensembl.org	fungi_mart
+anidulans_eg_gene	Aspergillus	nidulans	Aspergillus_nidulans	fungi.ensembl.org	fungi_mart
+aniger_eg_gene	Aspergillus	niger	Aspergillus_niger	fungi.ensembl.org	fungi_mart
+aoryzae_eg_gene	Aspergillus	oryzae	Aspergillus_oryzae	fungi.ensembl.org	fungi_mart
+aterreus_eg_gene	Aspergillus	terreus	Aspergillus_terreus	fungi.ensembl.org	fungi_mart
+bbassiana_eg_gene	Beauveria	bassiana	Beauveria_bassiana	fungi.ensembl.org	fungi_mart
+bcinerea_eg_gene	Botrytis	cinerea	Botrytis_cinerea	fungi.ensembl.org	fungi_mart
+bgraminis_eg_gene	Blumeria	graminis	Blumeria_graminis	fungi.ensembl.org	fungi_mart
+cgloeosporioides_eg_gene	Colletotrichum	gloeosporioides	Colletotrichum_gloeosporioides	fungi.ensembl.org	fungi_mart
+cgraminicola_eg_gene	Colletotrichum	graminicola	Colletotrichum_graminicola	fungi.ensembl.org	fungi_mart
+chigginsianum_eg_gene	Colletotrichum	higginsianum	Colletotrichum_higginsianum	fungi.ensembl.org	fungi_mart
+cneoformans_eg_gene	Cryptococcus	neoformans	Cryptococcus_neoformans	fungi.ensembl.org	fungi_mart
+corbiculare_eg_gene	Colletotrichum	orbiculare	Colletotrichum_orbiculare	fungi.ensembl.org	fungi_mart
+dseptosporum_eg_gene	Dothistroma	septosporum	Dothistroma_septosporum	fungi.ensembl.org	fungi_mart
+fculmorum_eg_gene	Fusarium	culmorum	Fusarium_culmorum	fungi.ensembl.org	fungi_mart
+ffujikuroi_eg_gene	Fusarium	fujikuroi	Fusarium_fujikuroi	fungi.ensembl.org	fungi_mart
+fgraminearum_eg_gene	Fusarium	graminearum	Fusarium_graminearum	fungi.ensembl.org	fungi_mart
+foxysporum_eg_gene	Fusarium	oxysporum	Fusarium_oxysporum	fungi.ensembl.org	fungi_mart
+fpseudograminearum_eg_gene	Fusarium	pseudograminearum	Fusarium_pseudograminearum	fungi.ensembl.org	fungi_mart
+fsolani_eg_gene	Fusarium	solani	Fusarium_solani	fungi.ensembl.org	fungi_mart
+fverticillioides_eg_gene	Fusarium	verticillioides	Fusarium_verticillioides	fungi.ensembl.org	fungi_mart
+ggraminis_eg_gene	Gaeumannomyces	tritici	Gaeumannomyces_tritici	fungi.ensembl.org	fungi_mart
+kpastoris_eg_gene	Komagataella	pastoris	Komagataella_pastoris	fungi.ensembl.org	fungi_mart
+lmaculans_eg_gene	Leptosphaeria	maculans	Leptosphaeria_maculans	fungi.ensembl.org	fungi_mart
+mlaricipopulina_eg_gene	Melampsora	larici-populina	Melampsora_larici-populina	fungi.ensembl.org	fungi_mart
+moryzae_eg_gene	Magnaporthe	oryzae	Magnaporthe_oryzae	fungi.ensembl.org	fungi_mart
+mpoae_eg_gene	Magnaporthe	poae	Magnaporthe_poae	fungi.ensembl.org	fungi_mart
+mviolaceum_eg_gene	Microbotryum	violaceum	Microbotryum_violaceum	fungi.ensembl.org	fungi_mart
+ncrassa_eg_gene	Neurospora	crassa	Neurospora_crassa	fungi.ensembl.org	fungi_mart
+nfischeri_eg_gene	Aspergillus	fischeri	Aspergillus_fischeri	fungi.ensembl.org	fungi_mart
+pgraminis_eg_gene	Puccinia	graminis	Puccinia_graminis	fungi.ensembl.org	fungi_mart
+pgraminisug99_eg_gene	Puccinia	graminis	Puccinia_graminis	fungi.ensembl.org	fungi_mart
+pnodorum_eg_gene	Phaeosphaeria	nodorum	Phaeosphaeria_nodorum	fungi.ensembl.org	fungi_mart
+pstriiformis_eg_gene	Puccinia	striiformis	Puccinia_striiformis	fungi.ensembl.org	fungi_mart
+pteres_eg_gene	Pyrenophora	teres	Pyrenophora_teres	fungi.ensembl.org	fungi_mart
+ptriticina_eg_gene	Puccinia	triticina	Puccinia_triticina	fungi.ensembl.org	fungi_mart
+ptriticirepentis_eg_gene	Pyrenophora	tritici-repentis	Pyrenophora_tritici-repentis	fungi.ensembl.org	fungi_mart
+scerevisiae_eg_gene	Saccharomyces	cerevisiae	Saccharomyces_cerevisiae	fungi.ensembl.org	fungi_mart
+scryophilus_eg_gene	Schizosaccharomyces	cryophilus	Schizosaccharomyces_cryophilus	fungi.ensembl.org	fungi_mart
+sjaponicus_eg_gene	Schizosaccharomyces	japonicus	Schizosaccharomyces_japonicus	fungi.ensembl.org	fungi_mart
+soctosporus_eg_gene	Schizosaccharomyces	octosporus	Schizosaccharomyces_octosporus	fungi.ensembl.org	fungi_mart
+spombe_eg_gene	Schizosaccharomyces	pombe	Schizosaccharomyces_pombe	fungi.ensembl.org	fungi_mart
+sreilianum_eg_gene	Sporisorium	reilianum	Sporisorium_reilianum	fungi.ensembl.org	fungi_mart
+ssclerotiorum_eg_gene	Sclerotinia	sclerotiorum	Sclerotinia_sclerotiorum	fungi.ensembl.org	fungi_mart
+tmelanosporum_eg_gene	Tuber	melanosporum	Tuber_melanosporum	fungi.ensembl.org	fungi_mart
+treesei_eg_gene	Trichoderma	reesei	Trichoderma_reesei	fungi.ensembl.org	fungi_mart
+tvirens_eg_gene	Trichoderma	virens	Trichoderma_virens	fungi.ensembl.org	fungi_mart
+umaydis_eg_gene	Ustilago	maydis	Ustilago_maydis	fungi.ensembl.org	fungi_mart
+vdahliae_eg_gene	Verticillium	dahliae	Verticillium_dahliae	fungi.ensembl.org	fungi_mart
+vdahliaejr2_eg_gene	Verticillium	dahliae	Verticillium_dahliae	fungi.ensembl.org	fungi_mart
+ylipolytica_eg_gene	Yarrowia	lipolytica	Yarrowia_lipolytica	fungi.ensembl.org	fungi_mart
+ztritici_eg_gene	Zymoseptoria	tritici	Zymoseptoria_tritici	fungi.ensembl.org	fungi_mart
+alyrata_eg_gene	Arabidopsis	lyrata	Arabidopsis_lyrata	plants.ensembl.org	plants_mart
+atauschii_eg_gene	Aegilops	tauschii	Aegilops_tauschii	plants.ensembl.org	plants_mart
+athaliana_eg_gene	Arabidopsis	thaliana	Arabidopsis_thaliana	plants.ensembl.org	plants_mart
+atrichopoda_eg_gene	Amborella	trichopoda	Amborella_trichopoda	plants.ensembl.org	plants_mart
+bdistachyon_eg_gene	Brachypodium	distachyon	Brachypodium_distachyon	plants.ensembl.org	plants_mart
+bnapus_eg_gene	Brassica	napus	Brassica_napus	plants.ensembl.org	plants_mart
+boleracea_eg_gene	Brassica	oleracea	Brassica_oleracea	plants.ensembl.org	plants_mart
+brapa_eg_gene	Brassica	rapa	Brassica_rapa	plants.ensembl.org	plants_mart
+bvulgaris_eg_gene	Beta	vulgaris	Beta_vulgaris	plants.ensembl.org	plants_mart
+ccapsularis_eg_gene	Corchorus	capsularis	Corchorus_capsularis	plants.ensembl.org	plants_mart
+ccrispus_eg_gene	Chondrus	crispus	Chondrus_crispus	plants.ensembl.org	plants_mart
+cmerolae_eg_gene	Cyanidioschyzon	merolae	Cyanidioschyzon_merolae	plants.ensembl.org	plants_mart
+creinhardtii_eg_gene	Chlamydomonas	reinhardtii	Chlamydomonas_reinhardtii	plants.ensembl.org	plants_mart
+csativus_eg_gene	Cucumis	sativus	Cucumis_sativus	plants.ensembl.org	plants_mart
+dcarota_eg_gene	Daucus	carota	Daucus_carota	plants.ensembl.org	plants_mart
+drotundata_eg_gene	Dioscorea	rotundata	Dioscorea_rotundata	plants.ensembl.org	plants_mart
+gmax_eg_gene	Glycine	max	Glycine_max	plants.ensembl.org	plants_mart
+graimondii_eg_gene	Gossypium	raimondii	Gossypium_raimondii	plants.ensembl.org	plants_mart
+gsulphuraria_eg_gene	Galdieria	sulphuraria	Galdieria_sulphuraria	plants.ensembl.org	plants_mart
+hannuus_eg_gene	Helianthus	annuus	Helianthus_annuus	plants.ensembl.org	plants_mart
+hvulgare_eg_gene	Hordeum	vulgare	Hordeum_vulgare	plants.ensembl.org	plants_mart
+langustifolius_eg_gene	Lupinus	angustifolius	Lupinus_angustifolius	plants.ensembl.org	plants_mart
+lperrieri_eg_gene	Leersia	perrieri	Leersia_perrieri	plants.ensembl.org	plants_mart
+macuminata_eg_gene	Musa	acuminata	Musa_acuminata	plants.ensembl.org	plants_mart
+mesculenta_eg_gene	Manihot	esculenta	Manihot_esculenta	plants.ensembl.org	plants_mart
+mtruncatula_eg_gene	Medicago	truncatula	Medicago_truncatula	plants.ensembl.org	plants_mart
+nattenuata_eg_gene	Nicotiana	attenuata	Nicotiana_attenuata	plants.ensembl.org	plants_mart
+obarthii_eg_gene	Oryza	barthii	Oryza_barthii	plants.ensembl.org	plants_mart
+obrachyantha_eg_gene	Oryza	brachyantha	Oryza_brachyantha	plants.ensembl.org	plants_mart
+oglaberrima_eg_gene	Oryza	glaberrima	Oryza_glaberrima	plants.ensembl.org	plants_mart
+oglumipatula_eg_gene	Oryza	glumipatula	Oryza_glumipatula	plants.ensembl.org	plants_mart
+oindica_eg_gene	Oryza	sativa	Oryza_sativa	plants.ensembl.org	plants_mart
+olongistaminata_eg_gene	Oryza	longistaminata	Oryza_longistaminata	plants.ensembl.org	plants_mart
+olucimarinus_eg_gene	Ostreococcus	lucimarinus	Ostreococcus_lucimarinus	plants.ensembl.org	plants_mart
+omeridionalis_eg_gene	Oryza	meridionalis	Oryza_meridionalis	plants.ensembl.org	plants_mart
+onivara_eg_gene	Oryza	nivara	Oryza_nivara	plants.ensembl.org	plants_mart
+opunctata_eg_gene	Oryza	punctata	Oryza_punctata	plants.ensembl.org	plants_mart
+orufipogon_eg_gene	Oryza	rufipogon	Oryza_rufipogon	plants.ensembl.org	plants_mart
+osativa_eg_gene	Oryza	sativa	Oryza_sativa	plants.ensembl.org	plants_mart
+ppatens_eg_gene	Physcomitrella	patens	Physcomitrella_patens	plants.ensembl.org	plants_mart
+ppersica_eg_gene	Prunus	persica	Prunus_persica	plants.ensembl.org	plants_mart
+ptrichocarpa_eg_gene	Populus	trichocarpa	Populus_trichocarpa	plants.ensembl.org	plants_mart
+pvulgaris_eg_gene	Phaseolus	vulgaris	Phaseolus_vulgaris	plants.ensembl.org	plants_mart
+sbicolor_eg_gene	Sorghum	bicolor	Sorghum_bicolor	plants.ensembl.org	plants_mart
+sitalica_eg_gene	Setaria	italica	Setaria_italica	plants.ensembl.org	plants_mart
+slycopersicum_eg_gene	Solanum	lycopersicum	Solanum_lycopersicum	plants.ensembl.org	plants_mart
+smoellendorffii_eg_gene	Selaginella	moellendorffii	Selaginella_moellendorffii	plants.ensembl.org	plants_mart
+stuberosum_eg_gene	Solanum	tuberosum	Solanum_tuberosum	plants.ensembl.org	plants_mart
+taestivum_eg_gene	Triticum	aestivum	Triticum_aestivum	plants.ensembl.org	plants_mart
+tcacao_eg_gene	Theobroma	cacao	Theobroma_cacao	plants.ensembl.org	plants_mart
+tdicoccoides_eg_gene	Triticum	dicoccoides	Triticum_dicoccoides	plants.ensembl.org	plants_mart
+tpratense_eg_gene	Trifolium	pratense	Trifolium_pratense	plants.ensembl.org	plants_mart
+turartu_eg_gene	Triticum	urartu	Triticum_urartu	plants.ensembl.org	plants_mart
+vangularis_eg_gene	Vigna	angularis	Vigna_angularis	plants.ensembl.org	plants_mart
+vradiata_eg_gene	Vigna	radiata	Vigna_radiata	plants.ensembl.org	plants_mart
+vvinifera_eg_gene	Vitis	vinifera	Vitis_vinifera	plants.ensembl.org	plants_mart
+zmays_eg_gene	Zea	mays	Zea_mays	plants.ensembl.org	plants_mart
+acarolinensis_gene_ensembl	Anole lizard		Anole lizard	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+amelanoleuca_gene_ensembl	Panda		Panda	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+amexicanus_gene_ensembl	Cave fish		Cave fish	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+aplatyrhynchos_gene_ensembl	Duck		Duck	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+btaurus_gene_ensembl	Cow		Cow	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+caperea_gene_ensembl	Brazilian guinea pig		Brazilian guinea pig	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+cchok1gshd_gene_ensembl	Chinese hamster		Chinese hamster	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+ccrigri_gene_ensembl	Chinese hamster		Chinese hamster	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+celegans_gene_ensembl	Caenorhabditis elegans		Caenorhabditis elegans	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+cfamiliaris_gene_ensembl	Dog		Dog	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+choffmanni_gene_ensembl	Sloth		Sloth	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+cintestinalis_gene_ensembl	C.intestinalis		C.intestinalis	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+cjacchus_gene_ensembl	Marmoset		Marmoset	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+clanigera_gene_ensembl	Long-tailed chinchilla		Long-tailed chinchilla	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+cporcellus_gene_ensembl	Guinea Pig		Guinea Pig	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+csabaeus_gene_ensembl	Vervet-AGM		Vervet-AGM	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+csavignyi_gene_ensembl	C.savignyi		C.savignyi	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+csyrichta_gene_ensembl	Tarsier		Tarsier	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+dmelanogaster_gene_ensembl	Fruitfly		Fruitfly	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+dnovemcinctus_gene_ensembl	Armadillo		Armadillo	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+dordii_gene_ensembl	Kangaroo rat		Kangaroo rat	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+drerio_gene_ensembl	Zebrafish		Zebrafish	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+ecaballus_gene_ensembl	Horse		Horse	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+eeuropaeus_gene_ensembl	Hedgehog		Hedgehog	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+etelfairi_gene_ensembl	Lesser hedgehog		Lesser hedgehog	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+falbicollis_gene_ensembl	Flycatcher		Flycatcher	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+fcatus_gene_ensembl	Cat		Cat	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+fdamarensis_gene_ensembl	Damara mole rat		Damara mole rat	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+gaculeatus_gene_ensembl	Stickleback		Stickleback	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+ggallus_gene_ensembl	Chicken		Chicken	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+ggorilla_gene_ensembl	Gorilla		Gorilla	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+gmorhua_gene_ensembl	Cod		Cod	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+hfemale_gene_ensembl	Naked mole-rat female		Naked mole-rat female	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+hmale_gene_ensembl	Naked mole-rat male		Naked mole-rat male	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+hsapiens_gene_ensembl	Human		Human	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+itridecemlineatus_gene_ensembl	Squirrel		Squirrel	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+jjaculus_gene_ensembl	Lesser Egyptian jerboa		Lesser Egyptian jerboa	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+lafricana_gene_ensembl	Elephant		Elephant	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+lchalumnae_gene_ensembl	Coelacanth		Coelacanth	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+loculatus_gene_ensembl	Spotted gar		Spotted gar	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mauratus_gene_ensembl	Golden Hamster		Golden Hamster	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mcaroli_gene_ensembl	Ryukyu mouse		Ryukyu mouse	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mdomestica_gene_ensembl	Opossum		Opossum	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mfuro_gene_ensembl	Ferret		Ferret	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mgallopavo_gene_ensembl	Turkey		Turkey	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mlucifugus_gene_ensembl	Microbat		Microbat	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mmulatta_gene_ensembl	Macaque		Macaque	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mmurinus_gene_ensembl	Mouse Lemur		Mouse Lemur	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mmusculus_gene_ensembl	Mouse		Mouse	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mochrogaster_gene_ensembl	Prairie vole		Prairie vole	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mpahari_gene_ensembl	Shrew mouse		Shrew mouse	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+mspreteij_gene_ensembl	Algerian mouse		Algerian mouse	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+neugenii_gene_ensembl	Wallaby		Wallaby	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+ngalili_gene_ensembl	Upper Galilee mountains		Upper Galilee mountains	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+nleucogenys_gene_ensembl	Gibbon		Gibbon	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+oanatinus_gene_ensembl	Platypus		Platypus	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+oaries_gene_ensembl	Sheep		Sheep	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+ocuniculus_gene_ensembl	Rabbit		Rabbit	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+odegus_gene_ensembl	Degu		Degu	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+ogarnettii_gene_ensembl	Bushbaby		Bushbaby	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+olatipes_gene_ensembl	Medaka		Medaka	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+oniloticus_gene_ensembl	Tilapia		Tilapia	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+oprinceps_gene_ensembl	Pika		Pika	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+pabelii_gene_ensembl	Orangutan		Orangutan	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+panubis_gene_ensembl	Olive baboon		Olive baboon	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+pbairdii_gene_ensembl	Northern American deer		Northern American deer	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+pcapensis_gene_ensembl	Hyrax		Hyrax	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+pformosa_gene_ensembl	Amazon molly		Amazon molly	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+pmarinus_gene_ensembl	Lamprey		Lamprey	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+psinensis_gene_ensembl	Chinese softshell turtle		Chinese softshell turtle	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+ptroglodytes_gene_ensembl	Chimpanzee		Chimpanzee	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+pvampyrus_gene_ensembl	Megabat		Megabat	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+rnorvegicus_gene_ensembl	Rat		Rat	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+saraneus_gene_ensembl	Shrew		Shrew	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+scerevisiae_gene_ensembl	Saccharomyces cerevisiae		Saccharomyces cerevisiae	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+sharrisii_gene_ensembl	Tasmanian devil		Tasmanian devil	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+sscrofa_gene_ensembl	Pig		Pig	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+tbelangeri_gene_ensembl	Tree Shrew		Tree Shrew	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+tguttata_gene_ensembl	Zebra Finch		Zebra Finch	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+tnigroviridis_gene_ensembl	Tetraodon		Tetraodon	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+trubripes_gene_ensembl	Fugu		Fugu	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+ttruncatus_gene_ensembl	Dolphin		Dolphin	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+vpacos_gene_ensembl	Alpaca		Alpaca	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+xmaculatus_gene_ensembl	Platyfish		Platyfish	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
+xtropicalis_gene_ensembl	Xenopus		Xenopus	aug2017.archive.ensembl.org	ENSEMBL_MART_ENSEMBL
