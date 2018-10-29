@@ -13,8 +13,9 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - 
     && apt-get update \
     && apt-get install -y irods-icommands
 
-# Install the wrapper script.
+# Install the wrapper script and the script to upload the output files.
 ADD wrapper /usr/bin/wrapper
+ADD upload-files /usr/bin/upload-files
 
 # Make the wrapper script the default command.
 CMD ["wrapper"]
