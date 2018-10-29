@@ -1,0 +1,109 @@
+#!/usr/bin/env python
+
+# Note: this script is only supported on unix-like operating systems.
+
+import argparse
+import os
+import os.path
+import re
+import stat
+import subprocess
+import sys
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Upload files to the data store.")
+    parser.add_argument("-t", "--ticket", required=True, help="The iRODS ticket to use")
+    parser.add_argument("-s", "--sources", nargs="+", help="The files and directories to upload")
+    parser.add_argument("-d", "--dest", required=True, help="The destination directory in iRODS")
+    parser.add_argument("-o", "--owner", required=True, help="The user who should own the uplaoded files")
+    parser.add_argument("-u", "--uploader", required=True, help="The user who is uploading the files")
+    return parser.parse_args()
+
+# Builds the path to an uploaded file.
+def build_upload_path(src, dest):
+    return os.path.join(dest, os.path.basename(src))
+
+# Grants ownership on an iRODS path to a user.
+def grant_ownership(path, user, recursive=False):
+    cmd = ["ichmod", "-r", "own", user, path] if recursive else ["ichmod", "own", user, path]
+    rc = subprocess.call(cmd)
+    if rc != 0:
+        raise Exception("unable to grant ownership permissions for {0} to {1}".format(path, user))
+
+# Revokes permissions on an iRODS path from a user.
+def revoke_permissions(path, user, recursive=False):
+    cmd = ["ichmod", "-r", "null", user, path] if recursive else ["ichmod", "null", user, path]
+    rc = subprocess.call(cmd)
+    if rc != 0:
+        raise Exception("unable to revoke permissions for {0} from {1}").format(path, user)
+
+# Fixes permissions on a path in the data store.
+def fix_permissions(src, dest, owner, uploader, recursive=False):
+    if owner != uploader:
+        path = build_upload_path(src, dest)
+        grant_ownership(path, owner, recursive=recursive)
+        revoke_permissions(path, uploader, recursive=recursive)
+
+# Creates a directory in the data store using a ticket. We can't use imkdir here because imkdir doesn't
+# support tickets. We also can't check for errors because the contents of the subdirectory can't be uploaded
+# and will result in a non-zero exit status.
+def create_directory(src, dest, ticket, owner, uploader):
+    with open("/dev/null", "w") as f:
+        subprocess.call(["iput", "-rt", ticket, src, dest], stdout=f, stderr=f)
+
+# Recursively uploads a file or directory to the data store.
+def upload_recursive(src, dest):
+    mode = os.stat(src).st_mode
+    cmd = None
+    if stat.S_ISDIR(mode):
+        cmd = ["iput", "-r", src, dest]
+    elif stat.S_ISREG(mode):
+        cmd = ["iput", src, dest]
+    else:
+        print >> sys.stderr, "not uploading {0}: unsupported file type".format(src)
+
+    if cmd is not None:
+        rc = subprocess.call(cmd)
+        if rc != 0:
+            raise Exception("unable to upload {0} to {1}".format(src, dest))
+
+# Uploads the contents of a file or directory
+def upload_contents(src, dest):
+    for f in os.listdir(src):
+        upload_recursive(os.path.join(src, f), dest)
+
+# Uploads a single file to the data store.
+def upload_file(src, dest, ticket, owner, uploader):
+    rc = subprocess.call(["iput", "-t", ticket, src, dest])
+    if rc != 0:
+        raise Exception("unable to upload {0} to {1}".format(src, dest))
+    fix_permissions(src, dest, owner, uploader)
+
+# Uploads a directory to the data store.
+def upload_directory(src, dest, ticket, owner, uploader):
+    create_directory(src, dest, ticket, owner, uploader)
+
+    # Build the path to the upload directory.
+    subdir = build_upload_path(src, dest)
+
+    # We have to explicitly grant ownership in case inheritance is enabled.
+    grant_ownership(subdir, uploader)
+
+    # Upload the contents and fix the permissions.
+    upload_contents(src, subdir)
+    fix_permissions(src, dest, owner, uploader, recursive=True)
+
+# Uploads files and directories to the data store.
+def do_upload(sources, dest, ticket, owner, uploader):
+    for src in sources:
+        mode = os.stat(src).st_mode
+        if stat.S_ISDIR(mode):
+            upload_directory(src, dest, ticket, owner, uploader)
+        elif stat.S_ISREG(mode):
+            upload_file(src, dest, ticket, owner, uploader)
+        else:
+            print >> sys.stderr, "not uploading {0}: unsupported file type".format(src)
+
+if __name__ == "__main__":
+    args = parse_args()
+    do_upload(args.sources, args.dest, args.ticket, args.owner, args.uploader)
