@@ -103,9 +103,10 @@ def download_file(ticket, src):
 
 # Download a set of files referenced in a ticket list file from iRODS, returning a list of downloaded files.
 def download_files(ticket_list_path):
-    with TicketListReader(ticket_list_path) as tlr:
-        for ticket, src in tlr:
-            download_file(ticket, src)
+    if os.path.isfile(ticket_list_path):
+        with TicketListReader(ticket_list_path) as tlr:
+            for ticket, src in tlr:
+                download_file(ticket, src)
 
 # Run the word count job.
 def run_job(arguments, output_filename, error_filename):
