@@ -1,0 +1,52 @@
+#!/bin/bash
+
+function build-request-body() {
+    jq -n \
+       --arg state "$state" \
+       --arg message "$message" \
+       --arg hostname "$(hostname)" \
+       '{"state": $state, "message": $message, "hostname": $hostname}'
+}
+
+usage_msg="Usage: $(basename $0) [-r|-c|-f] message"
+
+# Determine the job state.
+state="Running"
+while getopts ":rcf" opt; do
+    case "$opt" in
+        r)
+            state="Running"
+            ;;
+        c)
+            state="Completed"
+            ;;
+        f)
+            state="Failed"
+            ;;
+        \?)
+            echo "$usage_msg" >&2
+            exit 1
+            ;;
+    esac
+done
+shift "$(($OPTIND - 1))"
+
+# Determine the message.
+message="$1"
+if [[ -z "$message" ]]; then
+    echo "$usage_msg" >&2
+    exit 1
+fi
+
+# Determine the state update URL.
+update_url="$STATUS_UPDATE_URL"
+if [[ -z "$update_url" ]]; then
+    echo "STATUS_UDPATE_URL must be set before calling $(basename $0)"
+    exit 1;
+fi
+
+# Build the request body.
+body=$(build-request-body "$state" "$message")
+
+# Send the job status update.
+curl -sH "Content-Type: application/json" -d "$body" "STATUS_UPDATE_URL"
