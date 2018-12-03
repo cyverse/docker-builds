@@ -2,7 +2,7 @@
 
 # Initialize the iRODS connection.
 mkdir -p "$HOME/.irods"
-cp config.json "$HOME/.irods/irods_environment.json"
+cp config.json "$HOME/.irods"
 
 # Extract the information we need from the config file.
 export INPUT_TICKET_LIST=$(jq -r .input_ticket_list config.json)
