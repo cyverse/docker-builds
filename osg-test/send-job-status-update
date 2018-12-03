@@ -49,4 +49,4 @@ fi
 body=$(build-request-body "$state" "$message")
 
 # Send the job status update.
-curl -sH "Content-Type: application/json" -d "$body" "STATUS_UPDATE_URL"
+curl -sH "Content-Type: application/json" -d "$body" "$STATUS_UPDATE_URL"
