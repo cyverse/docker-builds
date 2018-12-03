@@ -31,14 +31,11 @@ case $var in
         # 3) Grant user permissions to master directory
         # 4) Revoke anonymous user's permissions to directory
         iput -Vrt $ticket $sourcedir/$sourcefldr $target > /dev/null 2>&1
-
-        # Replace spaces in path names to '\ ' with sed
-        #ls $source | xargs -I % iput -Vr $PWD/$source/% $target/$source
-        ls "$sourcedir/$sourcefldr" | sed 's| |\\ |g' | xargs -t -I % iput -Vr $sourcedir/$sourcefldr/% "$target/$sourcefldr"
+        for file in "$sourcedir/$sourcefldr"/*; do
+            iput -Vr "$file" "$target/$sourcefldr/"
+        done
 
         ichmod -r own $username  "$target/$sourcefldr"
-        #hostname=$(jq '.irods_user_name' $target)
-        #hostname=anonymous
         hostname=job
         ichmod -r null $hostname "$target/$sourcefldr"
         ;;
