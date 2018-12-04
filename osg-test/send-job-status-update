@@ -1,6 +1,8 @@
 #!/bin/bash
 
 function build-request-body() {
+    local state="$1"
+    local message="$2"
     jq -n \
        --arg state "$state" \
        --arg message "$message" \
