@@ -26,11 +26,13 @@ case $var in
 
         # Upload output structure to CyVerse
         # 1) Create master output directory into user's CyVerse directory
-        # 2) List master directory structure then call xargs to recursively iput each
+        # 2) Grant ownership permission to the `job` user in case inheritance is enabled.
+        # 3) List master directory structure then call xargs to recursively iput each
         #       file/folder into user's master directory
-        # 3) Grant user permissions to master directory
-        # 4) Revoke anonymous user's permissions to directory
-        iput -Vrt $ticket $sourcedir/$sourcefldr $target > /dev/null 2>&1
+        # 4) Grant user permissions to master directory
+        # 5) Revoke anonymous user's permissions to directory
+        iput -Vrt "$ticket" "$sourcedir/$sourcefldr" "$target" > /dev/null 2>&1
+        ichmod -r own job "$target/$sourcefldr"
         for file in "$sourcedir/$sourcefldr"/*; do
             iput -Vr "$file" "$target/$sourcefldr/"
         done
