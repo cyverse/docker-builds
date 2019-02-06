@@ -44,5 +44,5 @@ mkdir -p $foldername
 # Loop over the patterns in the input directory and move the files into target directory
 for type in "${filetype[@]}"
 do
-        find $input_directory/. -name "$type" -exec mv {} ./$foldername \;
+        find $input_directory/. -name "$type" -exec mv --backup=t {} ./$foldername \;
 done
