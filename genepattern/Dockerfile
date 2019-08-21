@@ -1,14 +1,13 @@
-FROM cyversevice/jupyterlab-scipy:latest
+FROM genepattern/genepattern-notebook:19.08
 
 USER root
 
-RUN pip install genepattern-notebook && \
-    jupyter nbextension enable --py widgetsnbextension && \
-    jupyter nbextension install --py genepattern && \
-    jupyter nbextension enable --py genepattern && \
-    jupyter serverextension enable --py genepattern && \
-    jupyter nbextension install --py nbtools && \
-    jupyter nbextension enable --py nbtools && \
-    jupyter serverextension enable --py nbtools
+RUN apt-get update \
+        && apt-get install -y jq \
+        && cd /opt/conda/etc/jupyter \
+        && mv jupyter_notebook_config.json jupyter_notebook_config.json.bak \
+        && jq '.NotebookApp = .NotebookApp + {"token":"","password":""}' jupyter_notebook_config.json.bak \
+            > jupyter_notebook_config.json \
+        && rm jupyter_notebook_config.json.bak
 
-USER jovyan
+USER $NB_USER
