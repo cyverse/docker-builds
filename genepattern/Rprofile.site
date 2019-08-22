@@ -1,3 +1,3 @@
 options(install.packages.compile.from.source = "always")
 options(repos = "http://cran.us.r-project.org")
-options(bitmapType="cairo")\n' > /opt/R3.6/lib/R/etc/Rprofile.site
+options(bitmapType="cairo")
