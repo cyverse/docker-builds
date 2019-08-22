@@ -1,0 +1,370 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito|PT+Sans');
+
+body {
+    font-family: 'PT Sans', sans-serif;
+    background: url(background.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+}
+
+h1, h2, h3, h4, h5, h6, h7, h8 {
+    font-family: 'Nunito', sans-serif;
+}
+
+#header {
+	background: rgba(0, 0, 0, 0.2) !important;
+	background-color: transparent;
+	padding-bottom: 4px;
+}
+
+body > #header #header-container {
+	padding-right: 0;
+	padding-left: 0;
+	padding-bottom: 2px;
+}
+
+body > #header #header-container > span > a.btn {
+	margin-right: 0 !important;
+}
+
+#header .btn {
+	border-radius: 10px;
+}
+
+.header-bar {
+    display: none !important;
+}
+
+#save_widget {
+	max-width: calc(100% - 540px);
+	position: relative;
+	height: 20px;
+	top: 6px;
+}
+
+.checkpoint_status {
+	display: none;
+}
+
+#menus {
+	border-radius: 10px !important;
+}
+
+#menubar-container::before {
+	content: ""
+}
+
+#maintoolbar-container {
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+#cut_copy_paste > button.btn,
+#move_up_down > button.btn,
+#run_int > button.btn {
+	border-radius: 0;
+}
+
+#cut_copy_paste > .btn:first-child:not(:last-child),
+#move_up_down > .btn:first-child:not(:last-child),
+#run_int > .btn:first-child:not(:last-child) {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+#cut_copy_paste > .btn:last-child:not(:first-child),
+#move_up_down > .btn:last-child:not(:first-child),
+#run_int > .btn:last-child:not(:first-child) {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#cell_type {
+	border-radius: 10px;
+}
+
+#site {
+	background-color: transparent !important;
+}
+
+#notebook {
+	padding-top: 5px !important;
+	background-color: transparent !important;
+}
+
+#notebook-container {
+	border-radius: 25px;
+	position: relative;
+	left: 7px;
+}
+
+#ipython-main-app {
+	background: transparent;
+}
+
+.input_area, .CodeMirror, .inner_cell {
+    border-radius: 10px !important;
+}
+
+.cell.code_cell div.inner_cell {
+	margin-left: 16px;
+	margin-right: 5px;
+}
+
+div.cell.selected, div.cell.selected.jupyter-soft-selected {
+    border-color: #5B8AE7;
+    border-radius: 10px;
+}
+
+div.cell.selected::before, div.cell.selected.jupyter-soft-selected::before {
+	background-color: #5B8AE7;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+
+div.cell.selected::after, div.cell.selected.jupyter-soft-selected::after {
+	position: absolute;
+	display: block;
+	top: -1px;
+	right: -1px;
+	width: 5px;
+	height: calc(100% + 2px);
+	content: '';
+	background-color: #5B8AE7;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+div.cell {
+    position: relative;
+    padding: 2px;
+}
+
+div.cell.text_cell .input_area > .CodeMirror {
+	min-height: 60px;
+}
+
+.rendered_html h1:first-child {
+    margin-top: 0.1em;
+}
+
+div.prompt_container {
+	max-width: 60px;
+}
+
+div.cell > .output_wrapper > .out_prompt_overlay.prompt {
+	min-width: 40px;
+}
+
+.prompt {
+    padding: 0.1em;
+}
+
+.prompt.input_prompt {
+	padding: 0;
+	font-size: 0.8em;
+	text-align: left;
+	line-height: 2.3em;
+	min-width: 40px;
+}
+
+.prompt.input_prompt > bdi {
+	display: none;
+}
+
+.prompt.input_prompt > div > button.btn:first-child {
+	margin-right: 0px;
+	position: absolute;
+	top: 5px;
+	border-radius: 10px;
+	left: 6px;
+	width: 30px;
+}
+
+.prompt.input_prompt > div > button.btn:last-child {
+	position: absolute;
+	top: 37px;
+	border-radius: 10px;
+	left: 6px;
+	width: 30px;
+}
+
+div.run_this_cell {
+	display: block;
+	width: 20px;
+	padding-left: 0;
+	padding-right: 5px;
+	position: absolute;
+	left: 40px;
+}
+
+div.output_area > .prompt {
+	min-width: 40px;
+}
+
+div.output_subarea {
+	max-width: calc(100% - 40px);
+}
+
+.collapsible_headings_toggle .h1 {
+    margin: 0.2em 0 0 0;
+}
+
+.end_space {
+    min-height: 20px;
+    transition: height .2s ease;
+}
+
+
+/* TOC STUFF */
+
+#toc-wrapper {
+    border-top-right-radius: 25px;
+}
+
+#toc-wrapper.float-wrapper {
+    border-top-left-radius: 25px;
+	border-bottom-left-radius: 25px;
+	border-bottom-right-radius: 25px;
+}
+
+.highlight_on_scroll {
+    border-left: solid 4px #58A7F8;
+}
+
+.toc-item-highlight-select {
+    background-color: #58A7F8;
+}
+
+
+/* GP STUFF */
+
+div.nbtools-widget .alert {
+	padding: 8px;
+}
+
+div.gp-widget.gp-widget-auth > .panel-body {
+	padding: 10px;
+}
+
+div.gp-widget.gp-widget-auth .form-group {
+    margin-bottom: 5px;
+}
+
+div.gp-widget-task-subheader,
+div.nbtools-uibuilder-subheader {
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.gp-widget-task > .panel-body > div.alert {
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+div.gp-widget-task-desc {
+    padding-bottom: 5px;
+}
+
+div.gp-widget-task-run,
+div.nbtools-uibuilder-run {
+    padding-top: 0;
+}
+
+div.gp-widget-task-run-button,
+div.nbtools-uibuilder-run > button.btn {
+	float: right;
+	margin-bottom: 5px;
+	margin-left: 5px;
+	top: 0;
+}
+
+div.gp-widget-task-param,
+div.nbtools-uibuilder-param {
+    margin-top: 5px;
+	padding-right: 10px;
+	margin-bottom: 10px;
+}
+
+div.gp-widget-task-footer,
+div.nbtools-uibuilder-footer {
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+div.nbtools-file {
+    border: none;
+    padding: 0;
+}
+
+div.nbtools-file-value {
+    margin-top: 2px;
+}
+
+div.gp-widget-task-param-desc {
+    line-height: 14px;
+}
+
+div.gp-widget.gp-widget-job > div.panel-body {
+	padding: 5px;
+}
+
+.nbtools-uibuilder-form > div.nbtools-uibuilder-param {
+	margin-top: 0;
+	margin-bottom: 5px;
+}
+
+div.nbtools-uibuilder-footer {
+	padding-top: 0;
+	height: 78px;
+	position: relative;
+}
+
+.nbtools-uibuilder-footer div.form-group.nbtools-uibuilder-param {
+	padding-right: 0px;
+}
+
+.nbtools-uibuilder-footer > div.nbtools-uibuilder-run {
+	position: absolute;
+	right: 5px;
+	top: 40px;
+}
+
+/* FILES PAGE */
+
+#tab_content {
+	background: white;
+	border-radius: 25px;
+	margin-bottom: 20px;
+}
+
+/* TEXT EDITOR PAGE */
+
+#texteditor-backdrop {
+    background-color: transparent !important;
+
+}
+
+/* TERMINAL PAGE */
+
+.terminal-app {
+    background: url(background.jpg) !important;
+}
+
+/* TOKEN PAGE */
+
+body[dir=ltr] #ipython-main-app > .rendered_html {
+    color: #000;
+    background: white;
+    padding: 10px;
+}

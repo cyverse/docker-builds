@@ -39,3 +39,60 @@ RUN /opt/R3.6/bin/Rscript -e "install.packages('openssl')" \
         && /opt/R3.6/bin/Rscript -e "install.packages('ggplot2')" \
         && /opt/R3.6/bin/Rscript -e "install.packages('BiocManager')" \
         && /opt/R3.6/bin/Rscript -e "install.packages('IRkernel')"
+
+# Restore the environment after R compilation
+USER root
+ENV PATH=$OLD_PATH
+RUN chmod 755 /opt && \
+rm -r /opt/r-tmp
+
+#############################################
+##  $NB_USER                               ##
+##      Update the theme                   ##
+#############################################
+
+USER $NB_USER
+
+# Copy the logo and favicon
+COPY logo.png favicon.ico /opt/conda/lib/python3.6/site-packages/notebook/static/base/images/
+
+# Install the custom theme
+COPY custom.css custom.js theme.css background.jpg /opt/conda/lib/python3.6/site-packages/notebook/static/custom/
+
+#############################################
+##  ROOT                                   ##
+##      Configure nbextensions             ##
+#############################################
+
+USER root
+
+# Install GenePattern nbextensions in default Python environment
+RUN pip install -v nbtools genepattern-notebook jupyter_wysiwyg
+
+# Enable the extensions
+RUN jupyter nbextension enable --sys-prefix --py nbtools \
+        && jupyter nbextension enable --sys-prefix --py genepattern \
+        && jupyter nbextension enable --sys-prefix --py jupyter_wysiwyg
+
+# Enable Notebook Repository frontend
+RUN git clone https://github.com/genepattern/notebook-repository-frontend.git \
+        && cd notebook-repository-frontend \
+        && jupyter nbextension install repo \
+        && jupyter nbextension enable --sys-prefix repo/js/main \
+        && jupyter nbextension enable --sys-prefix --section=tree repo/js/main \
+        && rm -r ../notebook-repository-frontend
+
+# Enable Notebook Repository hints
+RUN git clone https://github.com/genepattern/notebook-tour.git \
+        && cd notebook-tour \
+        && jupyter nbextension install hints \
+        && jupyter nbextension enable --sys-prefix --section=tree hints/js/main \
+        && rm -r ../notebook-tour
+
+# Install the collapsible_headings extension
+ENV JC_BASE=https://github.com/ipython-contrib/jupyter_contrib_nbextensions/raw/master/src
+ENV CH_BASE=$JC_BASE/jupyter_contrib_nbextensions/nbextensions/collapsible_headings
+ENV CH_DEST=/opt/conda/share/jupyter/nbextensions/collapsible_headings
+ADD $CH_BASE/main.js $CH_DEST
+ADD $CH_BASE/main.css $CH_DEST
+COPY collapsible_headings.json $CH_DEST
