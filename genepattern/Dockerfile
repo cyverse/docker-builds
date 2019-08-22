@@ -116,3 +116,40 @@ RUN pip install -v igv-jupyter==0.9.7 \
 # Install the cytoscape extension
 RUN pip install -v cyjupyter==0.2.0 \
         && jupyter nbextension enable --sys-prefix --py cyjupyter
+
+##########################################
+##  $NB_USER                            ##
+##      Create the Python environments  ##
+##########################################
+
+USER $NB_USER
+
+# Create the Python 3.6 environment
+RUN conda create -y --name python3.6 python=3.6 anaconda ipykernel==5.1.0
+
+# Install the GenePattern Notebook Environment packages. Running these commands in a new shell isolates
+# the conda environment.
+RUN /bin/bash -c "source activate python3.6 && \
+    conda install -y -c conda-forge 'biopython==1.70' 'igraph==0.7.1' 'babel==2.4.0' 'louvain==0.6.1'"
+RUN /bin/bash -c "source activate python3.6 && \
+    pip install nbtools genepattern-python genepattern-notebook jupyter_wysiwyg 'igv-jupyter==0.9.7' \
+    'cyjupyter==0.2.0' 'ccalnoir==2.6' 'cuzcatlan==0.9.0' 'ndex2==1.2.0.*' 'anndata==0.5.10' 'enum34==1.1.6' \
+    'ijson==2.3' 'joblib==0.11' 'natsort==5.2.0' 'plotly==2.4.1' 'beakerx==1.2.0' 'pysolr==3.7.0' 'rpy2==2.8.5' \
+    'scanpy==0.4.2' 'tqdm==4.23.4' 'validators==0.12.0' 'pysam==0.15.1' 'hca==4.4.10' 'simplegeneric==0.8.1'"
+
+# Create the Python 3.7 environment
+RUN conda create -y --name python3.7 python=3.7 anaconda ipykernel==5.1.0
+
+# Install the GenePattern Notebook Environment packages. Running these commands in a new shell isolates
+# the conda environment.
+RUN /bin/bash -c "source activate python3.7 && \
+    conda install -y -c conda-forge 'biopython' 'igraph' 'babel' 'louvain' 'tzlocal' "
+RUN /bin/bash -c "source activate python3.7 && \
+    conda install -y -c bioconda 'pysam'"
+RUN /bin/bash -c "source activate python3.7 && \
+    pip install nbtools genepattern-python genepattern-notebook jupyter_wysiwyg \
+    'igv-jupyter==0.9.7' 'cyjupyter==0.2.0' 'ccalnoir==2.7' 'cuzcatlan==0.9.3' 'ndex2==1.2.0.*' 'py2cytoscape==0.7.0' \
+    'plotly==2.4.1' 'rpy2==2.8.5' 'opencv-python==4.0.0.21' 'hca==4.8.0' 'humanfriendly==4.12.1' scanpy memory_profiler"
+RUN /bin/bash -c "source activate python3.7 && \
+    pip install -e git://github.com/LankyCyril/genefab.git#egg=genefab \
+    --src=/opt/conda/envs/python3.7/lib/python3.7/site-packages/"
