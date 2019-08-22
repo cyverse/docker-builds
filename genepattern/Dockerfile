@@ -22,9 +22,20 @@ ADD --chown=jovyan:users http://cran.r-project.org/src/base/R-3/R-3.6.1.tar.gz /
 RUN cd /opt/r-tmp \
         && tar xvf R-3.6.1.tar.gz \
         && cd R-3.6.1 \
-        && ./configure LIBnn=lib --with-x --with-readline --prefix=/opt/r3.6 --enable-R-shlib \
+        && ./configure LIBnn=lib --with-x --with-readline --prefix=/opt/R3.6 --enable-R-shlib \
             --with-cairo --with-libpng --with-blas --with-lapack \
         && make \
         && make install \
         && ln -s /opt/R3.6/bin/r /opt/conda/bin/R \
         && ln -s /opt/R3.6/bin/Rscript /opt/conda/bin/Rscript
+
+# Place the new Rprofile.site file.
+COPY --chown=jovyan:users Rprofile.site /opt/R3.6/lib/R/etc/Rprofile.site
+
+# Install common R libraries.
+RUN /opt/R3.6/bin/Rscript -e "install.packages('openssl')" \
+        && /opt/R3.6/bin/Rscript -e "install.packages('curl')" \
+        && /opt/R3.6/bin/Rscript -e "install.packages('httr')" \
+        && /opt/R3.6/bin/Rscript -e "install.packages('ggplot2')" \
+        && /opt/R3.6/bin/Rscript -e "install.packages('BiocManager')" \
+        && /opt/R3.6/bin/Rscript -e "install.packages('IRkernel')"
