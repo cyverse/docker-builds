@@ -153,3 +153,55 @@ RUN /bin/bash -c "source activate python3.7 && \
 RUN /bin/bash -c "source activate python3.7 && \
     pip install -e git://github.com/LankyCyril/genefab.git#egg=genefab \
     --src=/opt/conda/envs/python3.7/lib/python3.7/site-packages/"
+
+#############################################
+##  ROOT                                   ##
+##      Configure Jupyter kernels          ##
+#############################################
+
+USER root
+
+# Add the environments as Jupyter kernels
+RUN /bin/bash -c "source activate python3.6 && python -m ipykernel install --name python3.6 --display-name 'Python 3.6'"
+RUN /bin/bash -c "source activate python3.7 && python -m ipykernel install --name python3.7 --display-name 'Python 3.7'"
+RUN /opt/R3.6/bin/Rscript -e "IRkernel::installspec(user = FALSE, name = 'r3.6', displayname = 'R 3.6')"
+
+# Remove the default Python kernel
+RUN rm -r /opt/conda/share/jupyter/kernels/python3 \
+        && cd /etc/jupyter \
+        && echo >> jupyter_notebook_config.py \
+        && echo 'c.KernelSpecManager.ensure_native_kernel = False' >> jupyter_notebook_config.py
+
+#############################################
+##  root                                   ##
+##      Clean up build environment         ##
+#############################################
+
+USER root
+
+RUN rm -r work \
+        && chown -R $NB_USER:users /home/$NB_USER/.local
+
+#############################################
+##  root                                   ##
+##      Disable the token prompt           ##
+#############################################
+
+USER root
+
+RUN apt-get update \
+        && apt-get install -y jq \
+        && cd /opt/conda/etc/jupyter \
+        && mv jupyter_notebook_config.json jupyter_notebook_config.json.bak \
+        && jq '.NotebookApp = .NotebookApp + {"token":"","password":""}' jupyter_notebook_config.json.bak \
+            > jupyter_notebook_config.json \
+        && rm jupyter_notebook_config.json.bak
+
+#############################################
+##  $NB_USER                               ##
+##      Enable nano and vi                 ##
+#############################################
+
+USER $NB_USER
+
+ENV TERM xterm
