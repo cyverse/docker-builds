@@ -106,3 +106,13 @@ ADD $TOC2_BASE/toc2.js $TOC2_DEST/
 COPY toc2.json $TOC2_DEST/
 RUN sed -i "s/number_sections: true/number_sections: false/" $TOC2_DEST/toc2.js \
         && sed -i "s/moveMenuLeft: true/moveMenuLeft: false/" $TOC2_DEST/toc2.js
+
+# Install the igv.js extension
+RUN pip install -v igv-jupyter==0.9.7 \
+        && jupyter serverextension enable --sys-prefix --py igv \
+        && jupyter nbextension install --sys-prefix --py igv \
+        && jupyter nbextension enable --sys-prefix --py igv
+
+# Install the cytoscape extension
+RUN pip install -v cyjupyter==0.2.0 \
+        && jupyter nbextension enable --sys-prefix --py cyjupyter
