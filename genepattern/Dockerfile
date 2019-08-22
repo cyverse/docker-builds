@@ -93,6 +93,16 @@ RUN git clone https://github.com/genepattern/notebook-tour.git \
 ENV JC_BASE=https://github.com/ipython-contrib/jupyter_contrib_nbextensions/raw/master/src
 ENV CH_BASE=$JC_BASE/jupyter_contrib_nbextensions/nbextensions/collapsible_headings
 ENV CH_DEST=/opt/conda/share/jupyter/nbextensions/collapsible_headings
-ADD $CH_BASE/main.js $CH_DEST
-ADD $CH_BASE/main.css $CH_DEST
-COPY collapsible_headings.json $CH_DEST
+ADD $CH_BASE/main.js $CH_DEST/
+ADD $CH_BASE/main.css $CH_DEST/
+COPY collapsible_headings.json $CH_DEST/
+
+# Install the toc2 extension
+ENV TOC2_BASE=$JC_BASE/jupyter_contrib_nbextensions/nbextensions/toc2
+ENV TOC2_DEST=/opt/conda/share/jupyter/nbextensions/toc2
+ADD $TOC2_BASE/main.js $TOC2_DEST/
+ADD $TOC2_BASE/main.css $TOC2_DEST/
+ADD $TOC2_BASE/toc2.js $TOC2_DEST/
+COPY toc2.json $TOC2_DEST/
+RUN sed -i "s/number_sections: true/number_sections: false/" $TOC2_DEST/toc2.js \
+        && sed -i "s/moveMenuLeft: true/moveMenuLeft: false/" $TOC2_DEST/toc2.js
