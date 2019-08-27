@@ -54,10 +54,10 @@ rm -r /opt/r-tmp
 USER $NB_USER
 
 # Copy the logo and favicon
-COPY logo.png favicon.ico /opt/conda/lib/python3.6/site-packages/notebook/static/base/images/
+COPY logo.png favicon.ico /opt/conda/lib/python3.7/site-packages/notebook/static/base/images/
 
 # Install the custom theme
-COPY custom.css custom.js theme.css background.jpg /opt/conda/lib/python3.6/site-packages/notebook/static/custom/
+COPY custom.css custom.js theme.css background.jpg /opt/conda/lib/python3.7/site-packages/notebook/static/custom/
 
 #############################################
 ##  ROOT                                   ##
@@ -205,3 +205,5 @@ RUN apt-get update \
 USER $NB_USER
 
 ENV TERM xterm
+
+CMD ["notebook", "--no-browser"]
