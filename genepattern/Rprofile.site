@@ -1,0 +1,3 @@
+options(install.packages.compile.from.source = "always")
+options(repos = "http://cran.us.r-project.org")
+options(bitmapType="cairo")

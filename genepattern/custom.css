@@ -1,0 +1,114 @@
+@import url('theme.css');
+
+/*
+ * Hide old kernels
+ */
+
+[id='kernel-python3.6'] {
+    display: none;
+}
+
+[id='kernel-r3.6'] {
+    display: none;
+}
+
+
+/**
+ * Loading screen styles
+ */
+
+.loading-screen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12pt;
+    background: #eeeeee url("background.jpg") center center;
+    background-size: cover;
+    color: white;
+    padding-top: 200px;
+
+}
+
+/**
+ * General theme styles
+ */
+
+.terminal-app #header, #header {
+    background: url("../nbextensions/genepattern/resources/background.png") center center;
+    padding: 0 15px 5px 15px;
+}
+
+/* Don't expand header on main notebook listing page */
+body[data-terminals-available='True'] #header,
+body.edit_app #header {
+    min-height: unset;
+}
+
+.header-bar {
+	display: none;
+}
+
+img.current_kernel_logo {
+    display: none !important;
+}
+
+body {
+    overflow: hidden;
+}
+
+/* Hide the clusters tab */
+#tabs .clusters_tab_link {
+	display:none
+}
+
+#save_widget {
+	color: white;
+	text-shadow: 0 0 6px #002244;
+}
+
+#save_widget #notebook_name:hover {
+	color: #f1f2f2;
+}
+
+.navbar-text {
+	color: white;
+	text-shadow: 0 0 6px #002244;
+}
+
+#kernel_indicator, #modal_indicator.modal_indicator {
+	text-shadow: none;
+}
+
+#current-mode {
+    text-shadow: none;
+}
+
+
+#notebook, #site {
+	background-color: #f1f2f2;
+}
+
+#tab_content {
+    padding: 15px;
+}
+
+#slider {
+    top: 129px;
+}
+
+.sidebar-button-main {
+    top: 230px;
+}
+
+button.btn[title='Publish...'], button.btn[title='Run all initialization cells']  {
+    display: none;
+}
+
+#shutdown {
+    display: none;
+}

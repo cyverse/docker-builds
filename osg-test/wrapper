@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Initialize the iRODS connection.
+mkdir -p "$HOME/.irods"
+cp config.json "$HOME/.irods/irods_environment.json"
+
+# Extract the information we need from the config file.
+export INPUT_TICKET_LIST=$(jq -r .input_ticket_list config.json)
+export OUTPUT_TICKET_LIST=$(jq -r .output_ticket_list config.json)
+export STATUS_UPDATE_URL=$(jq -r .status_update_url config.json)
+export STDOUT_FILE=$(jq -r .stdout config.json)
+export STDERR_FILE=$(jq -r .stderr config.json)
+
+# Send the initial job status update.
+send-job-status-update -r "Configuration file successfully parsed."
+
+# This is just a test app, so create an output file and upload it.
+output_dir=loadingdock/userdata/dataout/testing
+mkdir -p "$output_dir"
+echo "This is a test of the File Upload System. This is only a test." > "$output_dir/foo.txt"
+ticketParser.sh output_ticket.list iput
+exit_status="$?"
+
+# Send the completed job status update.
+if [[ "$exit_status" -eq "0" ]]; then
+    send-job-status-update -c "Job completed successfully"
+else
+    send-job-status-update -f "Job failed"
+fi

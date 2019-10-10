@@ -16,12 +16,12 @@ parser.add_option('-s', '--string', default="MSTRG", help="if a different prefix
 parser.add_option('-k', '--key', default="prepG", help="if clustering, what prefix to use for geneIDs assigned by this script [default: %default]")
 parser.add_option('--legend', default="legend.csv", help="if clustering, where to output the legend file mapping transcripts to assigned geneIDs [defaukt: %default]")
 (opts, args)=parser.parse_args()
-#opts.cluster=True
+
 if not os.path.isdir(opts.input):
-  parser.print_help()
-  print " "
-  print "Error: sub-directory '%s' not found!" % ( opts.input)
-  sys.exit(1)
+    parser.print_help()
+    print " "
+    print "Error: sub-directory '%s' not found!" % ( opts.input)
+    sys.exit(1)
 RE_GENE_ID=re.compile('gene_id "([^"]+)"')
 RE_TRANSCRIPT_ID=re.compile('transcript_id "([^"]+)"')
 RE_COVERAGE=re.compile('cov "([\d.]+)"')
@@ -29,10 +29,10 @@ RE_STRING=re.compile(re.escape(opts.string))
 
 samples = [i for i in next(os.walk(opts.input))[1] if re.search(opts.pattern,i)]
 if len(samples) == 0:
-  parser.print_help()
-  print " "
-  print "Error: no GTF files found under ./%s !" % ( opts.input)
-  sys.exit(1)
+    parser.print_help()
+    print " "
+    print "Error: no GTF files found under ./%s !" % ( opts.input)
+    sys.exit(1)
 
 samples.sort()
 
@@ -52,6 +52,12 @@ def t_overlap(t1, t2): #from badGenes: chromosome, strand, cluster, start, end, 
             if is_overlap(t1[i], t2[j]): return True
     return False
 
+def list_gtf_files(dir_path):
+    glob_pattern = os.path.join(dir_path, "*.gtf")
+    return [
+        x for x in glob.glob(glob_pattern)
+        if not re.search(r"[.]refs[.]gtf$", x)
+    ]
 
 read_len=opts.length
 t_count_matrix, g_count_matrix=[],[]
@@ -61,9 +67,14 @@ geneIDs={} #key=transcript, value=cluster/gene_id
 
 for s in samples:
     badGenes=[] #list of bad genes (just ones that aren't MSTRG)
-    
-    try:
-        with open(glob.iglob(os.path.join(opts.input,s,"*.gtf")).next()) as f:
+
+    # Find a GTF file in the sample directory.
+    sample_path = os.path.join(opts.input, s)
+    gtf_file = next(iter(list_gtf_files(sample_path)), None)
+
+    # Build the list of bad genes if the GTF file is present.
+    if gtf_file is not None:
+        with open(gtf_file) as f:
             split=[l.split('\t') for l in f.readlines()]
         for i,v in enumerate(split):
             if is_transcript(v):
@@ -76,12 +87,9 @@ for s in samples:
                     while j<len(split) and split[j][2]=="exon":
                         badGenes[len(badGenes)-1].append((min(int(split[j][3]), int(split[j][4])), max(int(split[j][3]), int(split[j][4]))))
                         j+=1
-
-    except StopIteration:
-        warnings.warn("Didn't get a GTF in that directory. Looking in another...")
-
-    else:
         break
+    else:
+        warnings.warn("Didn't get a GTF in that directory. Looking in another...")
 
 ##THE CLUSTERING BEGINS!##
 if opts.cluster and len(badGenes)>0:
@@ -100,7 +108,7 @@ if opts.cluster and len(badGenes)>0:
                     del badGenes[j]
                 else:
                     j+=1
-            k+=1            
+            k+=1
         if len(temp_cluster)>1:
             clusters.append([t[2] for t in temp_cluster])
         i+=1
@@ -118,31 +126,27 @@ if opts.cluster and len(badGenes)>0:
         my_ID=opts.key+str((u+1))
         print my_ID
         legend.append(list(itertools.chain.from_iterable([[my_ID],c]))) #my_ID, clustered transcript IDs
-#        print c
         for t in c:
-            geneIDs[t]=my_ID            
-##            geneIDs[t]="|".join(c) #duct-tape transcript IDs together, disregarding ref_gene_names and things like that
+            geneIDs[t]=my_ID
 
     print legend
-    
+
     with open(opts.legend, 'w') as l_file:
         my_writer=csv.writer(l_file)
         my_writer.writerows(sortedClusters)
-    
+
 geneDict={} #key=gene/cluster, value=dictionary with key=sample, value=summed counts
 t_dict={}
 for q, s in enumerate(samples):
     print q,s
 
-    try:
-        with open(glob.iglob(os.path.join(opts.input,s,"*.gtf")).next()) as f: #grabs first .gtf file it finds inside the sample subdirectory
+    # Find a GTF file in the sample directory.
+    sample_path = os.path.join(opts.input, s)
+    gtf_file = next(iter(list_gtf_files(sample_path)), None)
 
-##        split=[t[:len(t)-1]+t[len(t)-1].split(";") for t in split]
-##        split=[t[:len(t)-1] for t in split] #eliminate '\n' at end
-##        split=[[e.lstrip() for e in t] for t in split]
-        #should consider making stuff into dictionaries, maybe each split line
-
-##            transcriptList=[]
+    # Process the GTF file if it's present.
+    if gtf_file is not None:
+        with open(gtf_file) as f:
             transcript_len=0
             for l in f:
                 if l.startswith("#"):
@@ -150,27 +154,23 @@ for q, s in enumerate(samples):
                 v=l.split('\t')
                 if v[2]=="transcript":
                     if transcript_len>0:
-##                        transcriptList.append((g_id, t_id, int(ceil(coverage*transcript_len/read_len))))
                         t_dict.setdefault(t_id, {})
                         t_dict[t_id].setdefault(s, int(ceil(coverage*transcript_len/read_len)))
                     t_id=RE_TRANSCRIPT_ID.search(v[len(v)-1]).group(1)
                     g_id=RE_GENE_ID.search(v[len(v)-1]).group(1)
                     coverage=float(RE_COVERAGE.search(v[len(v)-1]).group(1))
-                    transcript_len=0                
+                    transcript_len=0
                 if v[2]=="exon":
-                    transcript_len+=int(v[4])-int(v[3])                 
+                    transcript_len+=int(v[4])-int(v[3])
 
-##            transcriptList.append((g_id, t_id, int(ceil(coverage*transcript_len/read_len))))
             t_dict.setdefault(t_id, {})
             t_dict[t_id].setdefault(s, int(ceil(coverage*transcript_len/read_len)))
 
-    except StopIteration:
+    else:
         warnings.warn("No GTF file found in "+os.path.join(opts.input,s))
 
-##        transcriptList.sort(key=lambda bla: bla[1]) #gene_id
 
     for i,v in t_dict.iteritems():
-##        print i,v
         geneDict.setdefault(geneIDs[i],{}) #gene_id
         geneDict[geneIDs[i]].setdefault(s,0)
         geneDict[geneIDs[i]][s]+=v[s]
@@ -184,8 +184,6 @@ with open(opts.t, 'w') as csvfile:
 
 with open(opts.g, 'w') as csvfile:
     my_writer=csv.DictWriter(csvfile, fieldnames=[""]+samples)
-##    my_writer.writerow([""]+samples)
-##    my_writer.writerows(geneDict)
     my_writer.writerow(dict((fn,fn) for fn in my_writer.fieldnames))
     for i in geneDict:
         geneDict[i][""]=i #add gene_id to row

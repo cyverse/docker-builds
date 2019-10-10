@@ -1,0 +1,67 @@
+            <Meta py:if="metadata.target_database == 'WGS'" content_type="XML" xmlns:py="http://genshi.edgewall.org/" xmlns:xi="http://www.w3.org/2001/XInclude">
+                <XmlContent>
+                    <Genome>
+                        <Description>
+                            <GenomeAssemblyMetadataChoice>
+                               <GenomeAssemblyMetadata>
+                                    <SequencingTechnologies coverage="${library.genome_coverage}">
+                                        <Technology>${library.sequencing_technology}</Technology>
+                                    </SequencingTechnologies>
+                                    <Assembly>
+                                        <Method version="${library.assembly_method_version}">${library.assembly_method}</Method>
+                                    </Assembly>
+                                    <AssemblyName py:if="'assembly_name' in library">${library.assembly_name}</AssemblyName>
+                                </GenomeAssemblyMetadata>
+                            </GenomeAssemblyMetadataChoice>
+                            <GapInfo py:if="'gap_min_size' in library and 'gap_unknown_size' in library and 'gap_linkage_evidence' in library" min_gap_size="${library.gap_min_size}" unknown_gap_size="${library.gap_unknown_size}" linkage_evidence="${library.gap_linkage_evidence}" />
+                            <GenomeRepresentation py:attrs="library.genome_representation_attrs">${library.genome_representation}</GenomeRepresentation>
+                            <py:if test="not library.data_type.endswith('-sqn')">
+                            <SequenceAuthors>
+                                <Author>
+                                    <Name>
+                                        <First>${library.author_first_name}</First>
+                                        <Last>${library.author_last_name}</Last>
+                                        <Middle py:if="'author_middle_name' in library">${library.author_middle_name}</Middle>
+                                        <Suffix py:if="'author_name_suffix' in library">${library.author_name_suffix}</Suffix>
+                                    </Name>
+                                </Author>
+                            </SequenceAuthors>
+                            <Publication py:if="library.publication_status != 'eUnpublished' and 'publication_id' in library" status="${library.publication_status}" id="${library.publication_id}">
+                                <DbType>${library.publication_db_type}</DbType>
+                            </Publication>
+                            <Publication py:if="library.publication_status != 'eUnpublished' and 'publication_id' not in library" status="${library.publication_status}">
+                                <StructuredCitation>
+                                    <Title>${library.get('publication_title', '')}</Title>
+                                    <Journal>
+                                        <JournalTitle>${library.get('publication_journal', '')}</JournalTitle>
+                                        <Year>${library.get('publication_year', '')}</Year>
+                                        <Volume>${library.get('publication_volume', '')}</Volume>
+                                        <Issue>${library.get('publication_issue', '')}</Issue>
+                                        <PagesFrom>${library.get('publication_pages_from', '')}</PagesFrom>
+                                        <PagesTo>${library.get('publication_pages_to', '')}</PagesTo>
+                                    </Journal>
+                                </StructuredCitation>
+                                <DbType>${library.publication_db_type}</DbType>
+                            </Publication>
+                            <Publication py:if="library.publication_status == 'eUnpublished'" status="eUnpublished">
+                                <AuthorSet>
+                                    <Author>
+                                        <Name>
+                                            <First>${library.author_first_name}</First>
+                                            <Last>${library.author_last_name}</Last>
+                                            <Middle py:if="'author_middle_name' in library">${library.author_middle_name}</Middle>
+                                            <Suffix py:if="'author_name_suffix' in library">${library.author_name_suffix}</Suffix>
+                                        </Name>
+                                    </Author>
+                                </AuthorSet>
+                                <Reference>${library.get('publication_title', '')}</Reference>
+                                <DbType>${library.publication_db_type}</DbType>
+                            </Publication>
+                            </py:if>
+                            <ExpectedFinalVersion>${library.expected_final_version}</ExpectedFinalVersion>
+                            <AnnotateWithPGAP>${library.annotate_with_pgap}</AnnotateWithPGAP>
+                            <Notes>${library.notes}</Notes>
+                        </Description>
+                    </Genome>
+                </XmlContent>
+            </Meta>

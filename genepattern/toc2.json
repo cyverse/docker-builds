@@ -1,0 +1,5 @@
+{
+    "load_extensions": {
+        "toc2/main": true
+    }
+}

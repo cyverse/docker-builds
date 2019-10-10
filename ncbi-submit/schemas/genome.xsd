@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns:com="SP.common" version="2.0">
+    <xs:import
+        schemaLocation="http://www.ncbi.nlm.nih.gov/viewvc/v1/trunk/submit/public-docs/common/SP.common.xsd?view=co"
+        namespace="SP.common"/>
+    <xs:element name="Genome">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Description" minOccurs="1" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation> Common description of a genome </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="GenomeAssemblyMetadataChoice">
+                                <xs:complexType>
+                                    <xs:choice>
+                                        <xs:element name="GenomeAssemblyMetadata">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="SequencingTechnologies">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="Technology" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:simpleContent>
+                                                                            <xs:extension base="typeSequencingTechnology">
+                                                                                <xs:attribute name="other_description"
+                                                                                    type="typeNonEmptyString"/>
+                                                                                <xs:attribute name="coverage" type="typeCoverage"/>
+                                                                            </xs:extension>
+                                                                        </xs:simpleContent>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                            <xs:attribute name="coverage" type="typeCoverage" use="required">
+                                                                <xs:annotation><xs:documentation>Overall sequencing coverage across all used technologies.</xs:documentation></xs:annotation>
+                                                            </xs:attribute>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="Assembly" maxOccurs="1">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="Method" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:simpleContent>
+                                                                            <xs:extension base="typeAssemblyMethod">
+                                                                                <xs:attribute name="other_description" type="typeNonEmptyString"/>
+                                                                                <xs:attribute name="version" type="typeNonEmptyString" use="required">
+                                                                                    <xs:annotation><xs:documentation>Provide the version of the program or the approximate date the program was run.</xs:documentation>
+                                                                                    </xs:annotation>
+                                                                                </xs:attribute>
+                                                                            </xs:extension>
+                                                                        </xs:simpleContent>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                            <xs:attribute name="reference_assembly" type="xs:string" use="optional">
+                                                                <xs:annotation>
+                                                                    <xs:documentation> If this genome was assembled using
+                                                                        another genome as a guide, rather than by a de novo
+                                                                        strategy, provide reference assembly accession in
+                                                                        reference_assembly attribute. Use NCBI Assembly
+                                                                        accession (eg, GCA_0012345.1) or INSD accession (eg,
+                                                                        U00096.2). </xs:documentation>
+                                                                </xs:annotation>
+                                                            </xs:attribute>
+                                                            <xs:attribute name="assembly_date" type="xs:date" use="optional">
+                                                                <xs:annotation><xs:documentation>Provide the approximate date the assembly was created.</xs:documentation>
+                                                                </xs:annotation>
+                                                            </xs:attribute>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="AssemblyName" type="typeNonEmptyString" maxOccurs="1" minOccurs="0">
+                                                        <xs:annotation><xs:documentation>Provide a short acronym for the assembly name, eg LoxAfr3.0 for the 3rd version of the Loxodonta africana assembly</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="StructuredComment" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>Used when Genome Assembly Metadata is provided in structured comment.</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        
+                                    </xs:choice>
+                                </xs:complexType>
+                            </xs:element>
+                            
+                            <xs:element name="GapInfo" type="typeGapInfo" minOccurs="0">
+                            </xs:element>
+                            
+
+                            <xs:element name="GenomeRepresentation" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation> GenomeRepresentation indicates whether the
+                                        assembly is known to be only part of the genome, eg is just
+                                        one chromosome or is expected to be the full genome. The
+                                        only allowed values for GenomeRepresentation are Full and
+                                        Partial. Note “Full” means that nothing was intentionally
+                                        excluded, except perhaps for organellar or plasmid
+                                        sequences. Genomes from single-cell amplification should be
+                                        ‘Partial’ since the amplification techniques are known to
+                                        produce much less than the full genomic complement. Use
+                                        genome_representation_description to provide additional
+                                        details if Partial is selected. </xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="typeGenomeRepresentation">
+                                            <xs:attribute name="genome_representation_description"
+                                                use="optional" type="typeNonEmptyString"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+
+                            <xs:element name="SequenceAuthors" type="com:typeAuthorSet" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="Publication" type="com:typePublication" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="ExpectedFinalVersion" type="typeYesNo" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation> ExpectedFinalVersion indicates whether the
+                                        submitter is done (value = Yes) or expects to continue
+                                        sequencing and to submit an updated assembly (value = No).
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="SingleCellAmplification" type="xs:string" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation> SingleCellAmplification is used when the DNA
+                                        source was amplified from a single cell. The value is the
+                                        amplification method used, eg MDA. NOTE: the
+                                        GenomeRepresentation for these should be “Partial”.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="AnnotateWithPGAP" type="typeYesNo" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Set to Yes to request annotation with NCBI Prokaryotic Genome Annotation Pipeline.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="ExistingWGSAccession" type="xs:string" minOccurs="0" maxOccurs="1">
+                                <xs:annotation><xs:documentation>Provide the WGS accession when submitting an update. BioProject, BioSample and organism should match the current version.</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="Corresponding16SrRNA" type="xs:string" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation> Corresponding16SrRNA is an optional field to
+                                        indicate the INSD record that is the 16S ribosomal RNA gene
+                                        for this strain, when that information is known. The value
+                                        is the INSD accession.version, eg AY123456.1.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="BacteriaAndSourceDNAIsAvailableFrom" type="xs:string"
+                                minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="Notes" type="xs:string" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>Comments for curators</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:simpleType name="typeNonEmptyString">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[\s\S]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="typeCoverage">
+        <xs:restriction base="xs:decimal">
+            <xs:minExclusive value="0"/>
+            <xs:maxExclusive value="10000"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+
+    <xs:simpleType name="typeYesNo">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="Yes"/>
+            <xs:enumeration value="No"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="typeGapInfo">
+        <xs:annotation>
+            <xs:documentation>
+                Minimum number of Ns in a row that represents a gap of estimated, approximate length = min_gap_size
+                Number of Ns in a row that represents a gap of unknown size = unknown_gap_size
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="min_gap_size" type="com:typeNumber" use="required"/>
+        <xs:attribute name="unknown_gap_size" type="com:typeNumber" use="required"/>
+        <xs:attribute name="linkage_evidence" type="typeLinkageEvidence" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="typeLinkageEvidence">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="paired-ends"/>
+            <xs:enumeration value="align-genus"/>
+            <xs:enumeration value="align-xgenus"/>
+            <xs:enumeration value="strobe"/>
+            <xs:enumeration value="map"/>
+            <xs:enumeration value="within-clone"/>
+            <xs:enumeration value="clone-contig"/>
+            <xs:enumeration value="align-trnscpt"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="typeGenomeRepresentation">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="Full"/>
+            <xs:enumeration value="Partial"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="typeSequencingTechnology">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ABI3730"/>
+            <xs:enumeration value="Sanger"/>
+            <xs:enumeration value="454"/>
+            <xs:enumeration value="Illumina"/>
+            <xs:enumeration value="Illumina GAII"/>
+            <xs:enumeration value="Illumina GAIIx"/>
+            <xs:enumeration value="Illumina HiSeq"/>
+            <xs:enumeration value="SOLiD"/>
+            <xs:enumeration value="Illumina MiSeq"/>
+            <xs:enumeration value="PacBio"/>
+            <xs:enumeration value="IonTorrent"/>
+            <xs:enumeration value="Helicos"/>
+            <xs:enumeration value="Complete Genomics"/>
+            <xs:enumeration value="Other"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="typeAssemblyMethod">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Newbler"/>
+            <xs:enumeration value="Celera Assembler"/>
+            <xs:enumeration value="SOAPdenovo"/>
+            <xs:enumeration value="Velvet"/>
+            <xs:enumeration value="AllPaths"/>
+            <xs:enumeration value="GS De Novo Assembler"/>
+            <xs:enumeration value="MIRA"/>
+            <xs:enumeration value="phredPhrap"/>
+            <xs:enumeration value="ABySS"/>
+            <xs:enumeration value="CLC NGS Cell"/>
+            <xs:enumeration value="Arachne"/>
+            <xs:enumeration value="JAZZ"/>
+            <xs:enumeration value="Other"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="typeChromosomeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Chromosome"/>
+            <xs:enumeration value="Plasmid"/>
+            <xs:enumeration value="Mitochondrion"/>
+            <xs:enumeration value="Chloroplast"/>
+            <xs:enumeration value="Apicoplast"/>
+            <xs:enumeration value="Leucoplast"/>
+            <xs:enumeration value="Plastid"/>
+            <xs:enumeration value="Proplastid"/>
+            <xs:enumeration value="Hydrogenosome"/>
+            <xs:enumeration value="Kinetoplast"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="typeRepliconMolType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="eChromosome"/>
+            <xs:enumeration value="ePlasmid"/>
+            <xs:enumeration value="eLinkageGroup"/>
+            <xs:enumeration value="eSegment"/>
+            <xs:enumeration value="eExtrachrom"/>
+            <xs:enumeration value="eOther"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="typeRepliconLocation">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="eNuclearProkaryote"/>
+            <xs:enumeration value="eMacronuclear"/>
+            <xs:enumeration value="eNucleomorph"/>
+            <xs:enumeration value="eMitochondrion"/>
+            <xs:enumeration value="eKinetoplast"/>
+            <xs:enumeration value="eChloroplast"/>
+            <xs:enumeration value="eChromoplast"/>
+            <xs:enumeration value="ePlastid"/>
+            <xs:enumeration value="eVirionPhage"/>
+            <xs:enumeration value="eProviralProphage"/>
+            <xs:enumeration value="eViroid"/>
+            <xs:enumeration value="eCyanelle"/>
+            <xs:enumeration value="eApicoplast"/>
+            <xs:enumeration value="eLeucoplast"/>
+            <xs:enumeration value="eProplastid"/>
+            <xs:enumeration value="eHydrogenosome"/>
+            <xs:enumeration value="eChromatophore"/>
+            <xs:enumeration value="eOther"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

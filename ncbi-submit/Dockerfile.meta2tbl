@@ -1,0 +1,13 @@
+FROM python:2.7.10-slim
+
+WORKDIR /root
+
+RUN set -x \
+    && pip install genshi
+
+COPY metadata_client.py meta2tbl.py ./
+
+VOLUME [ "/root/config" ]
+
+ENTRYPOINT [ "python", "/root/meta2tbl.py" ]
+CMD [ "--help" ]

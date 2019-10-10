@@ -1,0 +1,9 @@
+*.pyc
+testing/
+Dockerfile.local
+bpt/
+bpt.json
+sbt.json
+sqn/
+sqn.json
+sqn.tar.gz
