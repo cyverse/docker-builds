@@ -4,7 +4,7 @@ RUN ln -snf /usr/share/zoneinfo/Etc/UTC /etc/localtime \
     && echo "Etc/UTC" > /etc/timezone \
     && apt-get update \
     && apt-get upgrade -y \
-    && apt-get install python3-pip texlive-latex-extra wget git -y \
+    && apt-get install python3-pip texlive-latex-extra wget git dvipng -y \
     && rm -rf /var/lib/apt/lists/*
 RUN pip3 install biopython==1.70 numpy deap networkx matplotlib jcvi
 
