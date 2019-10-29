@@ -4,18 +4,15 @@ set -x
 
 usage() {
       echo ""
-      echo "Usage : sh $0 -d <Maker-Output-dir> -o <gff_out>"
+      echo "Usage : sh $0 -d <Maker-out-log-file>"
       echo ""
 }
 
-while getopts ":hd:o:" opt; do
+while getopts ":hd:" opt; do
   case $opt in
     d)
     maker_out=$OPTARG # Reference genome file
      ;;
-    o)
-	gff_out=$OPTARG
-	 ;;
     h)
     usage
      exit 1
@@ -32,7 +29,7 @@ while getopts ":hd:o:" opt; do
 done
 
 # gff3_merge
-gff3_merge -d $maker_out -o my_assembly.all.gff
+gff3_merge -d $maker_out/*index.log -o my_assembly.all.gff
 
 # maker2zff conversion
 maker2zff my_assembly.all.gff
