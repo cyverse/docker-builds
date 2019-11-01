@@ -117,7 +117,7 @@ elif [ "$quality_64" != 0 ]; then
           filename=$(basename "$f" ".fastq.gz")
           filename2=${filename/_R1/_R2}
           trimmomatic PE -threads $num_threads ${filename}.fastq.gz ${filename2}.fastq.gz 'trmPr_'${filename}.fastq.gz 'trmS_'${filename}.fastq.gz 'trmPr_'${filename2}.fastq.gz 'trmS_'${filename2}.fastq.gz -phred33 ILLUMINACLIP:"$adapter_fle":"$seed":"$clip":"$simple" $cuts
-          mv 'trmPr_'${filename}.fq.gz 'trmS_'${filename}.fastq.gz 'trmPr_'${filename2}.fastq.gz 'trmS_'${filename2}.fastq.gz $outdir
+          mv 'trmPr_'${filename}.fastq.gz 'trmS_'${filename}.fastq.gz 'trmPr_'${filename2}.fastq.gz 'trmS_'${filename2}.fastq.gz $outdir
         elif [[ "$extension" =~ "fq" ]]; then
           filename=$(basename "$f" ".fq")
           filename2=${filename/_R1/_R2}
