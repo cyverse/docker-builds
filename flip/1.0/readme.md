@@ -28,21 +28,25 @@ $ source venv/bin/activate
 
 To install dependancies into the vm, type
 
-`pip install -r requirements.txt` 
-
-<br/><br/>
+```
+$ pip install -r requirements.txt
+```
 
 #### CLI (command line interface)
 
 To run the cli, run 
 
 ```
-$ python FLIP.py -d <ps2 collection path>
+$ python FLIP.py -d <ps2 collection path> -o <output folder>
 ```
 
-This will run through the binary to png conversion, run multithreshold image segmentation, and then generate aggregate and fluorescence files all in one go.
+To run the docker container, type
 
-<br/><br/>
+```
+$ docker run --rm -v $PWD:/data -w /data upendradevisetty/flip:1.0 -d <ps2 collection path> -o final_out
+```
+
+This will run through the binary to png conversion, run multithreshold image segmentation, and then generate aggregate and fluorescence files all in one go and move the output files into the output folder.
 
 #### GUI (graphical user interface)
 
