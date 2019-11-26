@@ -1,0 +1,38 @@
+[
+  {
+    "start_date": "2012-01-01",
+    "sensor_manufacturer": "LemnaTec",
+    "sensor_product name": "PS2 System",
+    "sensor_serial number": "prototype",
+    "sensor_description": "a camera measures red light emitted by chlorophyll fluorescence",
+    "sensor_purpose": "Measures photosynthetic efficiency",
+    "camera_manufacturer": "allied vision",
+    "camera_product name": "manta G-235b",
+    "camera_serial": "50-0503354876",
+    "camera_resolution": "1936x1216",
+    "pixel_format": "mono 8bit",
+    "optics_manufaturer": "todo",
+    "optics_settings": "todo",
+    "bandpass_filter_center_wavelength_nm": "710",
+    "bandpass_filter_center_minimum_bandwidth_nm": "40",
+    "bandpass_filter_center_FWHM_bandwidth_nm": "47.5",
+    "light_source_desctription": "led red panel up to 7000 umol/m^2/s",
+    "light_source_wavelength_nm": "DWL 620-630",
+    "light_source_details_available": "LemnaTec DOE PS2 Camera Manual",
+    "light_on_duration_ms": "1000",
+    "light_source_more_to_follow": "todo",
+    "location_in_gantry_system": "camera box, facing ground",
+    "location_in_camera_box_m": {
+        "x": "0.827",
+        "y": "0.710",
+        "z": "0.374"
+    },
+    "field_of_view_m": {
+       "x": "2.673",
+       "y": "1.647"
+    },
+    "camera_computer_interface": "GigE",
+    "output_data_description": "dark image (prior illumination) in binfile 0 (mono8); timestamps in last binfile (txt/xml); other binfiles -> image series (mono8)",
+    "sensor_id": "ps2Top"
+  }
+]

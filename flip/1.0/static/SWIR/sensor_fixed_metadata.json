@@ -1,0 +1,53 @@
+[
+  {
+    "start_date": "2018-08-18",
+    "sensor_manufacturer": "Headwall Scientific",
+    "sensor_product_name": "SWIR",
+    "sensor_serial_number": "G4-383",
+    "sensor_description": "hyperspectral camera to measure shortwave infrared (SWIR) radiation",
+    "sensor_purpose": "measures spectral reflectance from 950nm to 2500nm",
+    "location_in_gantry_system": "camera box, facing ground",
+    "location_in_camera_box_m": {
+      "x": "0.495",
+      "y": "1.875",
+      "z": "0.635"
+    },
+    "field_of_view_degrees": {
+      "y": "44.5"
+    },
+    "optics_manufactuer": "Stingray optics",
+    "optics_name": "SR-1200-030 F/1.3 0.48-2.5um",
+    "optics_focal_length [mm]": "25",
+    "optics_focus_apperture": "2.0",
+    "output_data_format": "hypercube with preview image and additional information provided by sensor",
+    "max_scan_resolution_width_pixel": "384",
+    "calibration_available": "todo, calibration white/dark reference need to be done constantly during measurements",
+    "sensor_id": "SWIR"
+
+  },
+  {
+    "start_date": "2012-01-01",
+    "sensor_manufacturer": "Headwall Scientific",
+    "sensor_product_name": "SWIR",
+    "sensor_serial_number": "G4-383",
+    "sensor_description": "hyperspectral camera to measure shortwave infrared (SWIR) radiation",
+    "sensor_purpose": "measures spectral reflectance from 950nm to 2500nm",
+    "location_in_gantry_system": "camera box, facing ground",
+    "location_in_camera_box_m": {
+      "x": "0.877",
+      "y": "2.325",
+      "z": "0.635"
+      },
+    "field_of_view_degrees": {
+      "y": "44.5"
+    },
+    "optics_manufactuer": "Stingray optics",
+    "optics_name": "SR-1200-030 F/1.3 0.48-2.5um",
+    "optics_focal_length [mm]": "25",
+    "optics_focus_apperture": "2.0",
+    "output_data_format": "hypercube with preview image and additional information provided by sensor",
+    "max_scan_resolution_width_pixel": "384",
+    "calibration_available": "todo, calibration white/dark reference need to be done constantly during measurements",
+    "sensor_id": "SWIR"
+  }
+]

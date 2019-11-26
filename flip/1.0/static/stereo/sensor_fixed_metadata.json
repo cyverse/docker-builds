@@ -1,0 +1,68 @@
+[
+  {
+    "start_date": "2012-01-01",
+    "sensor_manufacturer": "LemnaTec Corp.",
+    "sensor_product_name": "Stereo RGB camera",
+    "cameras_alignment": "cameras optical axis parallel to X-axis, perpendicular to ground",
+    "camera_manufacturer": "Allied Vision",
+    "camera_product_name": "GT3300C",
+    "camera_serial_number_north": "02-2623A-07141",
+    "camera_serial_number_south": "02-2623A-07142",
+    "optics_description": "Zeiss Distragon 2/35 ZF",
+    "optics_serial_north": "15955109",
+    "optics_serial_south": "15954908",
+    "optics_focus_setting": "2.5m",
+    "optics_apperture_setting": "6.7",
+    "output_data_format": "Bayer GR8 3296x2472",
+    "sensor_purpose": "capture RGB images",
+    "location_in_gantry_system": "camera box, facing ground",
+    "location_in_camera_box_m": {
+       "x": "0.877",
+       "y": "2.276",
+       "z": "0.578"
+    },
+    "field_of_view_at_2m_m": {
+       "x": "1.015",
+       "y": "0.749"
+    },
+    "stereo_offsets_from_center": "0.17",
+    "rail_height_offset": "1.64",
+    "slope_estimation": "0.574",
+    "bounding_box [m]": "[1.857     1.246]",
+    "calibration_available": "false",
+    "sensor_id": "stereo camera box"
+  },
+    {
+    "start_date": "2018-08-18",
+    "sensor_manufacturer": "LemnaTec Corp.",
+    "sensor_product_name": "Stereo RGB camera",
+    "cameras_alignment": "cameras optical axis parallel to X-axis, perpendicular to ground",
+    "camera_manufacturer": "Allied Vision",
+    "camera_product_name": "GT3300C",
+    "camera_serial_number_north": "02-2623A-07141",
+    "camera_serial_number_south": "02-2623A-07142",
+    "optics_description": "Zeiss Distragon 2/35 ZF",
+    "optics_serial_north": "15955109",
+    "optics_serial_south": "15954908",
+    "optics_focus_setting": "2.5m",
+    "optics_apperture_setting": "6.7",
+    "output_data_format": "Bayer GR8 3296x2472",
+    "sensor_purpose": "capture RGB images",
+    "location_in_gantry_system": "camera box, facing ground",
+    "location_in_camera_box_m": {
+       "x": "0.839",
+       "y": "2.238",
+       "z": "0.578"
+    },
+    "field_of_view_at_2m_m": {
+       "x": "1.015",
+       "y": "0.749"
+    },
+    "stereo_offsets_from_center": "0.17",
+    "rail_height_offset": "1.64",
+    "slope_estimation": "0.574",
+    "bounding_box [m]": "[1.857     1.246]",
+    "calibration_available": "false",
+    "sensor_id": "stereo camera box"
+  }
+]

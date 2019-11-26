@@ -1,0 +1,54 @@
+[
+  {
+    "start_date": "2018-08-18",
+    "sensor_manufacturer": "Headwall Scientific",
+    "sensor_product_name": "VNIR",
+    "sensor_serial_number": "G4-384",
+    "sensor_description": "hyperspectral camera to measure visible near infrared (VNIR) radiation",
+    "sensor_purpose": "measures spectral reflectance from 380nm to 1000nm",
+    "location_in_gantry_system": "camera box, facing ground",
+    "location_in_camera_box_m": {
+      "x": "0.867",
+      "y": "1.663",
+      "z": "0.635"
+    },
+    "field_of_view_degrees":{
+       "y": "21.0"
+    },
+    "optics_manufactuer": "Schneider Kreuznach",
+    "optics_name": "Xenoplan 1.4/23-0902 CM 120 BK 15 Compac 21-100 1917 32326",
+    "optics_focal_length_mm": "22.5",
+    "optics_focus_setting_m": "2",
+    "optics_apperture_setting": "f/2",
+    "output_data_format": "hypercube with preview image and additional information provided by sensor",
+    "max_scan_resolution_width_pixel": "1600",
+    "calibration_available": "calibration white/dark reference need to be done constantly during measurements",
+    "sensor_id": "VNIR"
+  },
+  {
+    "start_date" : "2012-01-01",
+    "sensor_manufacturer": "Headwall Scientific",
+    "sensor_product_name": "VNIR",
+    "sensor_serial_number": "G4-384",
+    "sensor_description": "hyperspectral camera to measure visible near infrared (VNIR) radiation",
+    "sensor_purpose": "measures spectral reflectance from 380nm to 1000nm",
+    "location_in_gantry_system": "camera box, facing ground",
+    "location_in_camera_box_m": {
+      "x": "0.877",
+      "y": "2.325",
+      "z": "0.635"
+    },
+    "field_of_view_degrees": {
+      "y": "21.0"
+    },
+    "optics_manufactuer": "Schneider Kreuznach",
+    "optics_name": "Xenoplan 1.4/23-0902 CM 120 BK 15 Compac 21-100 1917 32326",
+    "optics_focal_length_mm": "22.5",
+    "optics_focus_setting_m": "2",
+    "optics_apperture_setting": "f/2",
+    "output_data_format": "hypercube with preview image and additional information provided by sensor",
+    "max_scan_resolution_width_pixel": "1600",
+    "calibration_available": "calibration white/dark reference need to be done constantly during measurements",
+    "sensor_id": "VNIR"
+  }
+]
