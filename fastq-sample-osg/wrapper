@@ -1,0 +1,201 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+from os.path import expanduser
+
+import itertools
+import json
+import os
+import requests
+import shutil
+import socket
+import subprocess
+import sys
+import re
+
+# The name of the configuration file.
+config_file = "config.json"
+
+# The name of the job submission file.
+job_file = "job"
+
+# A clean way to print to stderr.
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+# A class to load configuration settings.
+class Config:
+    def __init__(self, config_json):
+        self.arguments = self.extract_setting(config_json, "arguments", default=[])
+        self.irods_host = self.extract_setting(config_json, "irods_host")
+        self.irods_port = self.extract_setting(config_json, "irods_port", default=1247)
+        self.irods_job_user = self.extract_setting(config_json, "irods_job_user")
+        self.irods_user = self.extract_setting(config_json, "irods_user_name")
+        self.irods_zone = self.extract_setting(config_json, "irods_zone_name", default="")
+        self.input_ticket_list = self.extract_setting(config_json, "input_ticket_list", default="input_ticket.list")
+        self.output_ticket_list = self.extract_setting(config_json, "output_ticket_list", default="output_ticket.list")
+        self.status_update_url = self.extract_setting(config_json, "status_update_url")
+        self.stdout = self.extract_setting(config_json, "stdout", default="out.txt")
+        self.stderr = self.extract_setting(config_json, "stderr", default="err.txt")
+
+    def extract_setting(self, config_json, attribute, default=None):
+        if attribute in config_json:
+            return config_json[attribute]
+        elif default is not None:
+            return default
+        else:
+            eprint("required configuration setting {0} not provided".format(attribute))
+            sys.exit(1)
+
+# This is a simple context manager class designed to make it easier to read and write iRODS ticket list files.
+class TicketListReader:
+    def __init__(self, path):
+        self.path = path
+
+    def __enter__(self):
+        self.fd = open(self.path, "r")
+        self.r = itertools.imap(lambda l: l.strip().split(",", 1), itertools.ifilter(lambda l: l[0] != '#', self.fd))
+        return self.r
+
+    def __exit__(self, type, value, traceback):
+        self.fd.close()
+
+# This is a simple class used to send job status update messages.
+class JobStatusUpdater:
+    def __init__(self, url):
+        self.url = url
+
+    def print_update(self, status, message):
+        print("{0}: {1}".format(status, message))
+
+    def send_update(self, status, message):
+        self.print_update(status, message)
+        body = {"state": status, "message": message, "hostname": socket.gethostname()}
+        r = requests.post(self.url, json=body)
+        if r.status_code < 200 or r.status_code > 299:
+            eprint("unable to send job status update: {0} {1}: {2}".format(status, message, r.content))
+
+    def failed(self, message):
+        self.send_update("failed", message)
+
+    def running(self, message):
+        self.send_update("running", message)
+
+    def completed(self, message):
+        self.send_update("completed", message)
+
+# Load the configuration file.
+def load_config():
+    with open(config_file, "r") as f:
+        return Config(json.load(f))
+
+# Ensure that a directory exists.
+def ensuredir(path, mode):
+    if not os.path.exists(path):
+        os.mkdir(path, mode)
+
+# Initialize iRODS.
+def init_irods(host, port, user):
+    ensuredir(expanduser("~/.irods"), 0755)
+    shutil.copyfile(config_file, expanduser("~/.irods/irods_environment.json"))
+
+# Download a file or directory from iRODS.
+def download_file(ticket, src):
+    rc = subprocess.call(["iget", "-rt", ticket, src])
+    if rc != 0:
+        raise Exception("could not download {0}".format(src))
+
+# Download a set of files referenced in a ticket list file from iRODS, returning a list of downloaded files.
+def download_files(ticket_list_path):
+    downloaded_files = [];
+    with TicketListReader(ticket_list_path) as tlr:
+        for ticket, src in tlr:
+            download_file(ticket, src)
+            downloaded_files += [os.path.basename(src)]
+    return downloaded_files
+
+# Run the job.
+def run_job(arguments, output_filename, error_filename):
+    with open(output_filename, "w") as out, open(error_filename, "w") as err:
+        rc = subprocess.call(["fastq-sample"] + arguments, stdout=out, stderr=err)
+        if rc != 0:
+            raise Exception("fastq-sample returned exit code {0}".format(rc))
+
+# Upload a set of files to the directories referenced in a ticket list file to iRODS.
+def upload_files(ticket_list_path, irods_user, owner, files):
+    failed_uploads = []
+    with TicketListReader(ticket_list_path) as tlr:
+        for ticket, dest in tlr:
+            cmd = ["upload-files", "-t", ticket, "-d", dest, "-o", owner, "-u", irods_user, "-s"] + files
+            rc = subprocess.call(cmd)
+            if rc != 0:
+                raise Exception("upload-files exited with status {0}".format(rc))
+    if len(failed_uploads) > 0:
+        raise Exception("the following files could not be uploaded: {0}".format(failed_uploads))
+
+# Get the list of excluded files.
+def get_excluded_files(cfg):
+    excluded_files = []
+    if os.path.isfile(job_file):
+        with open(job_file, "r") as f:
+            job_config = json.load(f)
+        excluded_files = job_config["filter_files"]
+    return excluded_files + [job_file, config_file, cfg.input_ticket_list, cfg.output_ticket_list]
+
+# Get the list of paths to upload. The list of excluded files may contain files in subdirectories. These
+# will be ignored for the time being.
+def get_paths_to_upload(excluded_files):
+    excluded_files = set(excluded_files)
+    return [f for f in os.listdir(".") if f not in excluded_files and not re.match(r'^[.]', f)]
+
+if __name__ == "__main__":
+    # Load the configuration file.
+    cfg = load_config()
+
+    # Create a job status updater and send the running update.
+    updater = JobStatusUpdater(cfg.status_update_url)
+    updater.running("configuration successfully loaded")
+
+    # Initialize iRODS.
+    try:
+        updater.running("initializing the iRODS connection")
+        init_irods(cfg.irods_host, cfg.irods_port, cfg.irods_user)
+    except Exception as e:
+        updater.failed("unable to initialize the iRODS connection: {0}".format(e))
+        sys.exit(1)
+
+    # Download the files from iRODS, assuming that all tickets refer to regular files for now.
+    downloaded_files = []
+    try:
+        updater.running("downloading the input files")
+        downloaded_files = download_files(cfg.input_ticket_list)
+    except Exception as e:
+        updater.failed("unable to download input files: {0}".format(e))
+        sys.exit(1)
+
+    # Keep track of whether or not the job has failed.
+    job_failed = False
+
+    # Run the job.
+    try:
+        updater.running("processing the input files")
+        run_job(cfg.arguments, cfg.stdout, cfg.stderr)
+    except Exception as e:
+        updater.running("job encountered an error: {0}".format(e))
+        job_failed = True
+
+    # Upload the output files.
+    try:
+        updater.running("uploading the output files")
+        paths = get_paths_to_upload(get_excluded_files(cfg) + downloaded_files)
+        upload_files(cfg.output_ticket_list, cfg.irods_user, cfg.irods_job_user, paths)
+    except Exception as e:
+        updater.running("unable to upload output files: {0}".format(e))
+        job_failed = True
+
+    # Send the final job status update.
+    if job_failed:
+        updater.failed("job failed; see prior status update messages for details")
+        sys.exit(1)
+    else:
+        updater.completed("job completed successfully")

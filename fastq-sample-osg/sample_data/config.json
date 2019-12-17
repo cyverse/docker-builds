@@ -1,0 +1,17 @@
+{
+    "arguments": [
+        "-n",
+        "10",
+	"Read1.fastq"
+    ],
+    "irods_host": "davos.cyverse.org",
+    "irods_port": 1247,
+    "irods_job_user": "upendra_35",
+    "irods_user_name": "job",
+    "irods_zone_name": "",
+    "input_ticket_list": "input_ticket.list",
+    "output_ticket_list": "output_ticket.list",
+    "status_update_url": "https://de.cyverse.org/job/bd1a1b53-9a7e-4031-bf0c-227a0c63f555/status",
+    "stdout": "out.txt",
+    "stderr": "err.txt"
+}
