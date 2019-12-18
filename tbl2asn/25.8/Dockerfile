@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:14.04
 MAINTAINER Upendra Devisetty <upendra@cyverse.org>
 LABEL Description "This Dockerfile is for tbl2asn for converting fasta to .sqn format version 25.8"
 
