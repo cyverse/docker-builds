@@ -24,8 +24,8 @@ schema_paths = {
 
 ncbi_user = "asp-bioci"
 ncbi_host = "upload.ncbi.nlm.nih.gov"
-# ncbi_sumbit_path = "submit/Production"
-ncbi_sumbit_path = "submit/Test"
+ncbi_sumbit_path = "submit/Production"
+# ncbi_sumbit_path = "submit/Test"
 
 bio_sample_reserved_attributes = {'sample_id',
                                   'bio_sample_package'}
