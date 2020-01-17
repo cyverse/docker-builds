@@ -16,7 +16,7 @@ RUN mv twoBitToFa /usr/local/bin
 
 RUN git clone https://github.com/JialiUMassWengLab/TEMP.git
 WORKDIR /TEMP/scripts
-RUN chmod +x ./TEMP_Insertion.sh
+RUN chmod +x ./TEMP_Absence.sh
 ENV PATH="/TEMP/scripts:${PATH}"
 WORKDIR /
 
