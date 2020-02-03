@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-__author__ = 'Dennis Roberts'
+__author__ = 'Sarah Roberts'
 
 import config.ncbi_submit_properties
 
