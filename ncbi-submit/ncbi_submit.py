@@ -102,7 +102,7 @@ xml_validator.validate_bioproject_xml(submission_path)
 if args.validate_only or not args.input_dir:
     submission_validator = bioproject.get_submission_validator()
     submission_validator.validate_submission(submission_path, args.report_file)
-    print "Only validated metadata, no data was submitted to the NCBI SRA."
+    print("Only validated metadata, no data was submitted to the NCBI SRA.")
 else:
     uploader = bioproject.get_uploader(private_key_path=args.private_key_path)
 

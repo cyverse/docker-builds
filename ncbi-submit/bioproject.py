@@ -60,14 +60,14 @@ class SubmissionValidator:
         # Extract and print the messages in the report for convenience.
         messages = report.xpath('//Message') or []
         if len(messages) != 0:
-            print 'Messages found in Report:'
+            print('Messages found in Report:')
             for message in messages:
                 attrs = message.attrib
                 severity = attrs['severity'] if 'severity' in attrs else 'unknown-severity'
-                print '\t', severity, ':', message.text
-            print
-            print 'Please see report.xml for details.'
-            print
+                print('\t', severity, ':', message.text)
+            print()
+            print('Please see report.xml for details.')
+            print()
 
         # Check the report for errors.
         statuses = report.xpath('/BioSampleValidate/Action/@status') or []
