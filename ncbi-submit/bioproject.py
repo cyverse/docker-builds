@@ -11,7 +11,7 @@ from subprocess import call
 
 def load_schema(schemas_dir, path):
     with open(path, 'r') as f:
-        schema_root = etree.XML(f.read(), base_url=schemas_dir)
+        schema_root = etree.XML(f.read().encode("utf-8"), base_url=schemas_dir)
     return etree.XMLSchema(schema_root);
 
 def load_parser(schemas_dir, path):
