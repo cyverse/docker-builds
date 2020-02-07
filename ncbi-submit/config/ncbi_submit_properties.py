@@ -39,10 +39,6 @@ library_reserved_attributes =    {'sample_id',
                                   'assembly_name',
                                   'genome_representation',
                                   'expected_final_version',
-                                  'author_first_name',
-                                  'author_last_name',
-                                  'author_middle_name',
-                                  'author_name_suffix',
                                   'publication_status',
                                   'publication_id',
                                   'publication_db_type',
@@ -58,6 +54,7 @@ library_reserved_attributes =    {'sample_id',
                                   'gap_min_size',
                                   'gap_unknown_size',
                                   'gap_linkage_evidence'}
+library_repeated_attributes =    {'authors'}
 bio_sample_dup_attributes =      {'organism',
                                   'sample_title'}
 
@@ -68,5 +65,9 @@ compressed_content_types = {'application/gzip',
 # Categorized attributes are useful for optional XML element attributes. Search for
 # "genome_representation_attrs" in genome-metadata.xml for an example.
 library_categorized_attributes = {
-    'genome_representation_description': 'genome_representation_attrs'
+    'genome_representation_description': 'genome_representation_attrs',
+    'author_first_name': 'authors',
+    'author_last_name': 'authors',
+    'author_middle_name': 'authors',
+    'author_name_suffix': 'authors'
 }
