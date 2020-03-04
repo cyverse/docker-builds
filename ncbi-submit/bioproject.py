@@ -1,4 +1,4 @@
-__author__ = 'Dennis Roberts'
+__author__ = 'Sarah Roberts'
 
 import config.ncbi_submit_properties
 import os
@@ -11,7 +11,7 @@ from subprocess import call
 
 def load_schema(schemas_dir, path):
     with open(path, 'r') as f:
-        schema_root = etree.XML(f.read(), base_url=schemas_dir)
+        schema_root = etree.XML(f.read().encode("utf-8"), base_url=schemas_dir)
     return etree.XMLSchema(schema_root);
 
 def load_parser(schemas_dir, path):
@@ -60,14 +60,14 @@ class SubmissionValidator:
         # Extract and print the messages in the report for convenience.
         messages = report.xpath('//Message') or []
         if len(messages) != 0:
-            print 'Messages found in Report:'
+            print('Messages found in Report:')
             for message in messages:
                 attrs = message.attrib
                 severity = attrs['severity'] if 'severity' in attrs else 'unknown-severity'
-                print '\t', severity, ':', message.text
-            print
-            print 'Please see report.xml for details.'
-            print
+                print('\t', severity, ':', message.text)
+            print()
+            print('Please see report.xml for details.')
+            print()
 
         # Check the report for errors.
         statuses = report.xpath('/BioSampleValidate/Action/@status') or []

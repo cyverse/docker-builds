@@ -140,6 +140,7 @@ class MetadataClient:
         self.bio_sample_dup_attributes = config.ncbi_submit_properties.bio_sample_dup_attributes
         self.library_reserved_attributes = config.ncbi_submit_properties.library_reserved_attributes
         self.library_categorized_attributes = config.ncbi_submit_properties.library_categorized_attributes
+        self.library_repeated_attributes = config.ncbi_submit_properties.library_repeated_attributes
         self.require_compression = require_compression
         self.compressed_content_types = config.ncbi_submit_properties.compressed_content_types
 
@@ -233,9 +234,18 @@ class MetadataClient:
                    "attributes": []}
         metadata = library_folder['metadata']
 
-        # Initialize categorized attributes.
+        # Initialize unrepeated categorized attributes.
         for category_name in set(self.library_categorized_attributes.values()):
-            library[category_name] = {}
+            if not category_name in self.library_repeated_attributes:
+                library[category_name] = {}
+
+        # Initialize repeated attributes.
+        for attr in self.library_repeated_attributes:
+            library[attr] = []
+
+
+        # Initialize the attribute index dictionary for repeated attributes.
+        attr_indexes = {}
 
         for attribute in metadata:
             if not (attribute.get('attr') and attribute.get('value')):
@@ -244,13 +254,23 @@ class MetadataClient:
             attr = attribute['attr']
             value = attribute['value']
             if attr in self.library_reserved_attributes:
-                if attr in library:
+                if attr in self.library_repeated_attributes:
+                    library[attr].apend(value)
+                elif attr in library:
                     raise Exception("Duplicate '{0}' attribute found in Bio Sample Library metadata.\nValues:\n{1}\n{2}".format(attr, library[attr], value))
 
                 library[attr] = value
             elif attr in self.library_categorized_attributes:
                 category_name = self.library_categorized_attributes[attr]
-                library[category_name][attr] = value
+                if category_name in self.library_repeated_attributes:
+                    attr_index = attr_indexes[attr] + 1 if attr in attr_indexes else 0
+                    attr_indexes[attr] = attr_index
+                    if attr_index >= len(library[category_name]):
+                        library[category_name].append({attr: value})
+                    else:
+                        library[category_name][attr_index][attr] = value
+                else:
+                    library[category_name][attr] = value
             else:
                 library['attributes'].append({'name': attr, 'value': value})
 

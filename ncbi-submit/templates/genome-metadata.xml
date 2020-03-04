@@ -17,12 +17,12 @@
                             <GenomeRepresentation py:attrs="library.genome_representation_attrs">${library.genome_representation}</GenomeRepresentation>
                             <py:if test="not library.data_type.endswith('-sqn')">
                             <SequenceAuthors>
-                                <Author>
+                                <Author py:for="author in library.authors">
                                     <Name>
-                                        <First>${library.author_first_name}</First>
-                                        <Last>${library.author_last_name}</Last>
-                                        <Middle py:if="'author_middle_name' in library">${library.author_middle_name}</Middle>
-                                        <Suffix py:if="'author_name_suffix' in library">${library.author_name_suffix}</Suffix>
+                                        <First>${author.author_first_name}</First>
+                                        <Last>${author.author_last_name}</Last>
+                                        <Middle py:if="'author_middle_name' in author">${author.author_middle_name}</Middle>
+                                        <Suffix py:if="'author_name_suffix' in author">${author.author_name_suffix}</Suffix>
                                     </Name>
                                 </Author>
                             </SequenceAuthors>
@@ -45,14 +45,14 @@
                             </Publication>
                             <Publication py:if="library.publication_status == 'eUnpublished'" status="eUnpublished">
                                 <AuthorSet>
-                                    <Author>
-                                        <Name>
-                                            <First>${library.author_first_name}</First>
-                                            <Last>${library.author_last_name}</Last>
-                                            <Middle py:if="'author_middle_name' in library">${library.author_middle_name}</Middle>
-                                            <Suffix py:if="'author_name_suffix' in library">${library.author_name_suffix}</Suffix>
-                                        </Name>
-                                    </Author>
+                                <Author py:for="author in library.authors">
+                                    <Name>
+                                        <First>${author.author_first_name}</First>
+                                        <Last>${author.author_last_name}</Last>
+                                        <Middle py:if="'author_middle_name' in author">${author.author_middle_name}</Middle>
+                                        <Suffix py:if="'author_name_suffix' in author">${author.author_name_suffix}</Suffix>
+                                    </Name>
+                                </Author>
                                 </AuthorSet>
                                 <Reference>${library.get('publication_title', '')}</Reference>
                                 <DbType>${library.publication_db_type}</DbType>

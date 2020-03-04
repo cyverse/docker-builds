@@ -26,14 +26,16 @@ Submit-block ::= {
     authors {
       names std {
         {
+{% for author in library.authors %}
           name name {
-            last "${library.author_last_name}",
-            first "${library.author_first_name}",
-            middle "${library.get('author_middle_name', '')}",
+            last "${author.author_last_name}",
+            first "${author.author_first_name}",
+            middle "${author.get('author_middle_name', '')}",
             initials "",
-            suffix "${library.get('author_name_suffix', '')}",
+            suffix "${author.get('author_name_suffix', '')}",
             title ""
           }
+{% end %}
         }
       },
       affil std {
@@ -57,14 +59,16 @@ Seqdesc ::= pub {
       authors {
         names std {
           {
+{% for author in library.authors %}
             name name {
-              last "${library.author_last_name}",
-              first "${library.author_first_name}",
-              middle "${library.get('author_middle_name', '')}",
+              last "${author.author_last_name}",
+              first "${author.author_first_name}",
+              middle "${author.get('author_middle_name', '')}",
               initials "",
-              suffix "${library.get('author_name_suffix', '')}",
+              suffix "${author.get('author_name_suffix', '')}",
               title ""
             }
+{% end %}
           }
         }
       },
@@ -79,14 +83,16 @@ Seqdesc ::= pub {
       authors {
         names std {
           {
+{for author in library.authors %}
             name name {
-              last "${library.author_last_name}",
-              first "${library.author_first_name}",
-              middle "${library.get('author_middle_name', '')}",
+              last "${author.author_last_name}",
+              first "${author.author_first_name}",
+              middle "${author.get('author_middle_name', '')}",
               initials "",
-              suffix "${library.get('author_name_suffix', '')}",
+              suffix "${author.get('author_name_suffix', '')}",
               title ""
             }
+{% end %}
           }
         }
       },

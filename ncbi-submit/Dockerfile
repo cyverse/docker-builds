@@ -1,4 +1,4 @@
-FROM python:2.7.10-slim
+FROM python:3-slim
 
 WORKDIR /root
 
