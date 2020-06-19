@@ -49,16 +49,16 @@ def fix_permissions(src, dest, owner, uploader, recursive=False):
 # and will result in a non-zero exit status.
 def create_directory(src, dest, ticket, owner, uploader):
     with open("/dev/null", "w") as f:
-        subprocess.call(["iput", "-rt", ticket, src, dest], stdout=f, stderr=f)
+        subprocess.call(["iput", "-rft", ticket, src, dest], stdout=f, stderr=f)
 
 # Recursively uploads a file or directory to the data store.
 def upload_recursive(src, dest):
     mode = os.stat(src).st_mode
     cmd = None
     if stat.S_ISDIR(mode):
-        cmd = ["iput", "-r", src, dest]
+        cmd = ["iput", "-rf", src, dest]
     elif stat.S_ISREG(mode):
-        cmd = ["iput", src, dest]
+        cmd = ["iput", "-f", src, dest]
     else:
         print >> sys.stderr, "not uploading {0}: unsupported file type".format(src)
 
@@ -74,7 +74,7 @@ def upload_contents(src, dest):
 
 # Uploads a single file to the data store.
 def upload_file(src, dest, ticket, owner, uploader):
-    rc = subprocess.call(["iput", "-t", ticket, src, dest])
+    rc = subprocess.call(["iput", "-ft", ticket, src, dest])
     if rc != 0:
         raise Exception("unable to upload {0} to {1}".format(src, dest))
     fix_permissions(src, dest, owner, uploader)
