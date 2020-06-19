@@ -156,6 +156,9 @@ if __name__ == "__main__":
     updater = JobStatusUpdater(cfg.status_update_url)
     updater.running("configuration successfully loaded")
 
+    # Log the working directory,
+    updater.running("current working directory: {}".format(os.getcwd()))
+
     # Initialize iRODS.
     try:
         updater.running("initializing the iRODS connection")
@@ -188,6 +191,7 @@ if __name__ == "__main__":
     try:
         updater.running("uploading the output files")
         paths = get_paths_to_upload(get_excluded_files(cfg) + downloaded_files)
+        updater.running("will upload the following paths: {}".format(paths))
         upload_files(cfg.output_ticket_list, cfg.irods_user, cfg.irods_job_user, paths)
     except Exception as e:
         updater.running("unable to upload output files: {0}".format(e))
