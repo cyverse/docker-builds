@@ -135,7 +135,7 @@ def upload_files(ticket_list_path, irods_user, owner, files):
 
 # Get the list of excluded files.
 def get_excluded_files(cfg):
-    excluded_files = []
+    excluded_files = ["condor"]
     if os.path.isfile(job_file):
         with open(job_file, "r") as f:
             job_config = json.load(f)
