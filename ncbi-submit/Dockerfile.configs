@@ -1,10 +1,12 @@
 FROM python:3-slim
 
-WORKDIR /root
+RUN useradd --create-home --shell /bin/bash cyverse
+USER cyverse
+WORKDIR /home/cyverse
 
 RUN mkdir config templates schemas
 COPY config config/
 COPY templates templates/
 COPY schemas schemas/
 
-VOLUME [ "/root/config", "/root/templates", "/root/schemas" ]
+VOLUME [ "/home/cyverse/config", "/home/cyverse/templates", "/home/cyverse/schemas" ]

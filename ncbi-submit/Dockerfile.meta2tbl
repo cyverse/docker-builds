@@ -1,13 +1,15 @@
 FROM python:3-slim
 
-WORKDIR /root
+RUN useradd --create-home --shell /bin/bash cyverse
+USER cyverse
+WORKDIR /home/cyverse
 
 RUN set -x \
     && pip install genshi
 
 COPY metadata_client.py meta2tbl.py ./
 
-VOLUME [ "/root/config" ]
+VOLUME [ "/home/cyverse/config" ]
 
-ENTRYPOINT [ "python", "/root/meta2tbl.py" ]
+ENTRYPOINT [ "python", "/home/cyverse/meta2tbl.py" ]
 CMD [ "--help" ]

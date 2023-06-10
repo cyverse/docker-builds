@@ -1,4 +1,4 @@
-base_script_dir = "/root/"
+base_script_dir = "/home/cyverse/"
 templates_dir = base_script_dir + "templates"
 schemas_dir = base_script_dir + "schemas/"
 private_key_path = base_script_dir + ".ssh/id_rsa_ncbi"
