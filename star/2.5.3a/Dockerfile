@@ -5,13 +5,15 @@ LABEL description="This image is used for running the STAR RNA-seq alignment too
 
 ARG STAR_VERSION=2.5.3a
 
-# perl runs the wrapper script; gzip feeds STAR's --readFilesCommand;
+# perl runs the wrapper script and libreadonly-perl supplies the Readonly
+# module it uses for constants; gzip feeds STAR's --readFilesCommand;
 # libgomp1 and zlib1g are STAR's runtime dependencies.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
         gzip \
         libgomp1 \
+        libreadonly-perl \
         perl \
         wget \
         zlib1g \

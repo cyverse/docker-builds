@@ -12,85 +12,139 @@
 use strict;
 use warnings;
 
+use English        qw(-no_match_vars);
 use File::Basename qw(basename);
-use File::Copy qw(move);
-use File::Path qw(make_path);
+use File::Copy     qw(move);
+use File::Path     qw(make_path);
 use File::Spec;
 use Getopt::Long qw(:config no_ignore_case no_auto_abbrev pass_through);
+use Readonly;
 
-use constant {
-    THREADS   => 4,
-    INDEX_DIR => 'index',
-    OUT_DIR   => 'output',
-    BAM_DIR   => 'bam_output',
-};
+our $VERSION = '1.0.0';
 
-my (@file_query, @file_query2, $user_database_path, $user_annotation_path, $file_type);
+Readonly my $THREADS   => 4;
+Readonly my $INDEX_DIR => 'index';
+Readonly my $OUT_DIR   => 'output';
+Readonly my $BAM_DIR   => 'bam_output';
 
-GetOptions(
-    "file_query=s"      => \@file_query,
-    "file_query2=s"     => \@file_query2,
-    "user_database=s"   => \$user_database_path,
-    "user_annotation=s" => \$user_annotation_path,
-    "file_type=s"       => \$file_type,
-) or die "Error: unable to parse the command line\n";
+# Field layout of a wait status, as returned in $CHILD_ERROR; see perlvar.
+Readonly my $EXEC_FAILED     => -1;
+Readonly my $SIGNAL_MASK     => 127;
+Readonly my $EXIT_CODE_SHIFT => 8;
 
-# Whatever Getopt::Long left behind is handed straight to STAR.
-my @star_args = @ARGV;
+exit main();
 
-my $format = validate_arguments();
+# Owns every value the run depends on and hands each subroutine exactly what
+# it needs, so that nothing below reaches outside its own scope for input.
+sub main {
+    my $option = parse_command_line();
+    my $format = validate_arguments($option);
 
-my @annotation_args = defined $user_annotation_path
-    ? ('--sjdbGTFfile', $user_annotation_path)
-    : ();
+    my @annotation_args = annotation_args( $option->{user_annotation} );
 
-build_index();
+    build_index(
+        {   database        => $option->{user_database},
+            annotation_args => \@annotation_args,
+        }
+    );
 
-make_path(OUT_DIR, BAM_DIR);
+    make_path( $OUT_DIR, $BAM_DIR );
 
-for my $i (0 .. $#file_query) {
-    align($file_query[$i], ($format eq 'PE' ? $file_query2[$i] : undef));
+    my @queries = @{ $option->{file_query} };
+    my @mates   = @{ $option->{file_query2} };
+
+    for my $index ( 0 .. $#queries ) {
+        align(
+            {   read_file       => $queries[$index],
+                mate_file       => $format eq 'PE' ? $mates[$index] : undef,
+                annotation_args => \@annotation_args,
+                star_args       => $option->{star_args},
+            }
+        );
+    }
+
+    return 0;
 }
 
-exit 0;
+sub parse_command_line {
+    my %option = (
+        file_query      => [],
+        file_query2     => [],
+        user_database   => undef,
+        user_annotation => undef,
+        file_type       => undef,
+    );
+
+    GetOptions(
+        'file_query=s'      => $option{file_query},
+        'file_query2=s'     => $option{file_query2},
+        'user_database=s'   => \$option{user_database},
+        'user_annotation=s' => \$option{user_annotation},
+        'file_type=s'       => \$option{file_type},
+    ) or die "Error: unable to parse the command line\n";
+
+    # Whatever Getopt::Long left behind is handed straight to STAR.
+    $option{star_args} = [@ARGV];
+
+    return \%option;
+}
 
 # Checks every input up front and returns the normalized file type, so that a
 # bad invocation fails before STAR spends an hour building an index.
 sub validate_arguments {
-    @file_query
-        or die "Error: no FASTQ files were supplied\n";
+    my ($option) = @_;
 
-    defined $user_database_path && length $user_database_path
-        or die "Error: no reference genome was supplied\n";
+    my @queries = @{ $option->{file_query} };
+    my @mates   = @{ $option->{file_query2} };
 
-    -f $user_database_path
-        or die "Error: the reference genome $user_database_path does not exist\n";
-
-    looks_like_fasta($user_database_path)
-        or die "Error: the reference genome $user_database_path is not a FASTA file\n";
-
-    if (defined $user_annotation_path) {
-        -f $user_annotation_path
-            or die "Error: the annotation $user_annotation_path does not exist\n";
+    if ( !@queries ) {
+        die "Error: no FASTQ files were supplied\n";
     }
 
-    for my $query_file (@file_query, @file_query2) {
-        -f $query_file
-            or die "Error: the FASTQ file $query_file does not exist\n";
+    my $database = $option->{user_database};
+    if ( !defined $database || $database eq q{} ) {
+        die "Error: no reference genome was supplied\n";
+    }
+    if ( !-f $database ) {
+        die "Error: the reference genome $database does not exist\n";
+    }
+    if ( !looks_like_fasta($database) ) {
+        die "Error: the reference genome $database is not a FASTA file\n";
     }
 
-    defined $file_type
-        or die "Error: no file type was supplied; expected SE or PE\n";
+    my $annotation = $option->{user_annotation};
+    if ( defined $annotation && !-f $annotation ) {
+        die "Error: the annotation $annotation does not exist\n";
+    }
+
+    for my $query_file ( @queries, @mates ) {
+        if ( !-f $query_file ) {
+            die "Error: the FASTQ file $query_file does not exist\n";
+        }
+    }
+
+    return normalize_file_type( $option->{file_type}, \@queries, \@mates );
+}
+
+sub normalize_file_type {
+    my ( $file_type, $queries, $mates ) = @_;
+
+    if ( !defined $file_type ) {
+        die "Error: no file type was supplied; expected SE or PE\n";
+    }
 
     my $normalized = uc $file_type;
-    $normalized eq 'SE' || $normalized eq 'PE'
-        or die "Error: unrecognized file type '$file_type'; expected SE or PE\n";
+    if ( $normalized ne 'SE' && $normalized ne 'PE' ) {
+        die "Error: unrecognized file type '$file_type'; expected SE or PE\n";
+    }
 
-    if ($normalized eq 'PE' || @file_query2) {
-        @file_query && @file_query2
-            or die "Error: at least one file for each paired end is required\n";
-        @file_query == @file_query2
-            or die "Error: unequal number of files for paired ends\n";
+    if ( $normalized eq 'PE' || @{$mates} ) {
+        if ( !@{$queries} || !@{$mates} ) {
+            die "Error: at least one file for each paired end is required\n";
+        }
+        if ( @{$queries} != @{$mates} ) {
+            die "Error: unequal number of files for paired ends\n";
+        }
     }
 
     return $normalized;
@@ -101,103 +155,138 @@ sub validate_arguments {
 sub looks_like_fasta {
     my ($path) = @_;
 
-    open my $fh, '<', $path
-        or die "Error: cannot read $path: $!\n";
+    my $first_line = q{};
 
-    while (my $line = <$fh>) {
-        next if $line =~ /^\s*$/;
-        close $fh;
-        return $line =~ /^>/;
+    open my $fh, '<', $path
+        or die "Error: cannot read $path: $OS_ERROR\n";
+    while ( my $line = <$fh> ) {
+        next if $line =~ /\A \s* \z/xms;
+        $first_line = $line;
+        last;
+    }
+    close $fh
+        or die "Error: cannot close $path: $OS_ERROR\n";
+
+    return $first_line =~ /\A > /xms ? 1 : 0;
+}
+
+# Returns the STAR flags that name the annotation, or an empty list when the
+# run has none, so that callers can interpolate the result unconditionally.
+sub annotation_args {
+    my ($annotation) = @_;
+
+    if ( !defined $annotation ) {
+        return;
     }
 
-    close $fh;
-    return 0;
+    return ( '--sjdbGTFfile', $annotation );
 }
 
 sub build_index {
-    my $name = basename($user_database_path, qw(.fa .fas .fasta .fna));
+    my ($arg) = @_;
+
+    my $database        = $arg->{database};
+    my $annotation_args = $arg->{annotation_args};
+
+    my $name = basename( $database, qw(.fa .fas .fasta .fna) );
     report("STAR-indexing $name");
 
-    make_path(INDEX_DIR);
+    make_path($INDEX_DIR);
 
-    run(
-        'STAR',
-        '--runThreadN',        THREADS,
-        '--runMode',           'genomeGenerate',
-        '--genomeDir',         INDEX_DIR,
-        '--genomeFastaFiles',  $user_database_path,
-        @annotation_args,
+    run('STAR',
+        '--runThreadN'       => $THREADS,
+        '--runMode'          => 'genomeGenerate',
+        '--genomeDir'        => $INDEX_DIR,
+        '--genomeFastaFiles' => $database,
+        @{$annotation_args},
     );
 
-    print defined $user_annotation_path
-        ? "index with_annotation\n"
-        : "index without_annotation\n";
+    my $state
+        = @{$annotation_args} ? 'with_annotation' : 'without_annotation';
+    print {*STDOUT} "index $state\n"
+        or die "Error: cannot write to standard output: $OS_ERROR\n";
+
+    return;
 }
 
 sub align {
-    my ($query_file, $second_file) = @_;
+    my ($arg) = @_;
 
-    my $basename = basename($query_file);
-    $basename =~ s/\.\S+$//;
+    my $read_file = $arg->{read_file};
+    my $mate_file = $arg->{mate_file};
 
-    my @read_files = ($query_file);
-    push @read_files, $second_file if defined $second_file;
+    my $prefix = basename($read_file);
+    $prefix =~ s/[.] \S+ \z//xms;
+
+    my @read_files = ($read_file);
+    if ( defined $mate_file ) {
+        push @read_files, $mate_file;
+    }
 
     my @align_command = (
         'STAR',
-        @annotation_args,
-        @star_args,
-        '--runThreadN',        THREADS,
-        '--genomeDir',         INDEX_DIR,
-        '--outReadsUnmapped',  'Fastx',
-        '--outFileNamePrefix', "$basename.",
-        '--readFilesIn',       @read_files,
-        '--readFilesCommand',  'gunzip', '-c',
+        @{ $arg->{annotation_args} },
+        @{ $arg->{star_args} },
+        '--runThreadN'        => $THREADS,
+        '--genomeDir'         => $INDEX_DIR,
+        '--outReadsUnmapped'  => 'Fastx',
+        '--outFileNamePrefix' => "$prefix.",
+        '--readFilesIn'       => @read_files,
+        '--readFilesCommand'  => 'gunzip',
+        '-c',
     );
 
     report("Executing: @align_command");
     run(@align_command);
 
-    collect_results($basename);
+    collect_results($prefix);
+
+    return;
 }
 
 # STAR writes its output into the working directory, so sort that directory by
 # hand instead of handing shell globs to mv.
 sub collect_results {
-    my ($basename) = @_;
+    my ($prefix) = @_;
 
-    my $sample_dir = File::Spec->catdir(OUT_DIR, $basename);
+    my $sample_dir = File::Spec->catdir( $OUT_DIR, $prefix );
     make_path($sample_dir);
 
-    opendir my $dh, '.'
-        or die "Error: cannot read the working directory: $!\n";
-    my @entries = grep { $_ ne '.' && $_ ne '..' } readdir $dh;
-    closedir $dh;
+    opendir my $dh, q{.}
+        or die "Error: cannot read the working directory: $OS_ERROR\n";
+    my @entries = grep { $_ ne q{.} && $_ ne q{..} } readdir $dh;
+    closedir $dh
+        or die "Error: cannot close the working directory: $OS_ERROR\n";
 
-    my %reserved = map { $_ => 1 } (INDEX_DIR, OUT_DIR, BAM_DIR);
+    my %is_reserved = map { $_ => 1 } ( $INDEX_DIR, $OUT_DIR, $BAM_DIR );
 
     for my $entry (@entries) {
-        next if $reserved{$entry};
+        next if $is_reserved{$entry};
 
-        my $destination = destination_for($entry, $basename, $sample_dir);
-        next unless defined $destination;
+        my $destination = destination_for( $entry, $prefix, $sample_dir );
+        next if !defined $destination;
 
-        move($entry, File::Spec->catfile($destination, $entry))
-            or warn "Warning: could not move $entry into $destination: $!\n";
+        move( $entry, File::Spec->catfile( $destination, $entry ) )
+            or warn
+            "Warning: could not move $entry into $destination: $OS_ERROR\n";
     }
+
+    return;
 }
 
 sub destination_for {
-    my ($entry, $basename, $sample_dir) = @_;
+    my ( $entry, $prefix, $sample_dir ) = @_;
 
-    return $sample_dir
-        if $entry =~ /^Log/
-        || $entry =~ /STARgenome$/
-        || $entry =~ /^\Q$basename\E.*out$/
-        || $entry =~ /tab$/
-        || $entry =~ /Unmapped/;
+    if (   $entry =~ /\A Log/xms
+        || $entry =~ /STARgenome \z/xms
+        || $entry =~ /\A \Q$prefix\E .* out \z/xms
+        || $entry =~ /tab \z/xms
+        || $entry =~ /Unmapped/xms )
+    {
+        return $sample_dir;
+    }
 
-    return BAM_DIR if $entry =~ /bam$/;
+    return $BAM_DIR if $entry =~ /bam \z/xms;
 
     return;
 }
@@ -207,20 +296,33 @@ sub destination_for {
 sub run {
     my @command = @_;
 
-    return if system(@command) == 0;
+    if ( system(@command) != 0 ) {
+        die "Error: @command failed: " . describe_exit($CHILD_ERROR) . "\n";
+    }
 
-    die "Error: @command failed: " . describe_exit($?) . "\n";
+    return;
 }
 
 sub describe_exit {
     my ($status) = @_;
 
-    return "could not be executed: $!" if $status == -1;
-    return 'killed by signal ' . ($status & 127) if $status & 127;
-    return 'exit status ' . ($status >> 8);
+    if ( $status == $EXEC_FAILED ) {
+        return "could not be executed: $OS_ERROR";
+    }
+
+    my $signal = $status & $SIGNAL_MASK;
+    if ($signal) {
+        return "killed by signal $signal";
+    }
+
+    return 'exit status ' . ( $status >> $EXIT_CODE_SHIFT );
 }
 
 sub report {
     my ($message) = @_;
-    print STDERR "$message\n";
+
+    print {*STDERR} "$message\n"
+        or die "Error: cannot write to standard error: $OS_ERROR\n";
+
+    return;
 }
