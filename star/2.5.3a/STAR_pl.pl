@@ -138,13 +138,22 @@ sub normalize_file_type {
         die "Error: unrecognized file type '$file_type'; expected SE or PE\n";
     }
 
-    if ( $normalized eq 'PE' || @{$mates} ) {
-        if ( !@{$queries} || !@{$mates} ) {
-            die "Error: at least one file for each paired end is required\n";
+    # Aligning single-end would quietly discard the second end, so refuse
+    # the combination rather than returning half an answer.
+    if ( $normalized eq 'SE' ) {
+        if ( @{$mates} ) {
+            die 'Error: --file_query2 was supplied but the file type is SE; '
+                . "use --file_type PE to align these files as paired ends\n";
         }
-        if ( @{$queries} != @{$mates} ) {
-            die "Error: unequal number of files for paired ends\n";
-        }
+
+        return $normalized;
+    }
+
+    if ( !@{$mates} ) {
+        die "Error: at least one file for each paired end is required\n";
+    }
+    if ( @{$queries} != @{$mates} ) {
+        die "Error: unequal number of files for paired ends\n";
     }
 
     return $normalized;
