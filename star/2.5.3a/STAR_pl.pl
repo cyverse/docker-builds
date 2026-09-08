@@ -286,7 +286,8 @@ sub destination_for {
         return $sample_dir;
     }
 
-    return $BAM_DIR if $entry =~ /bam \z/xms;
+    # STAR writes SAM unless --outSAMtype asks for BAM, so collect both.
+    return $BAM_DIR if $entry =~ /[.] (?: bam | sam ) \z/xms;
 
     return;
 }
