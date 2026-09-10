@@ -35,8 +35,8 @@ WORKDIR /work-dir
 
 ENTRYPOINT ["STAR_pl.pl"]
 
-# Build
-# docker build -t cyverse/star:2.5.3a .
+# Build (for linux/amd64; see the justfile)
+# just build cyverse/star:2.5.3a
 # Test run
 # docker run --rm -v $(pwd):/work-dir -w /work-dir cyverse/star:2.5.3a \
 #     --file_query reads_1.fastq.gz --user_database genome.fasta \
