@@ -38,7 +38,7 @@ exit main();
 # it needs, so that nothing below reaches outside its own scope for input.
 sub main {
     my $option = parse_command_line();
-    my $format = validate_arguments($option);
+    validate_arguments($option);
 
     my @annotation_args = annotation_args( $option->{user_annotation} );
 
@@ -52,11 +52,12 @@ sub main {
 
     my @queries = @{ $option->{file_query} };
     my @mates   = @{ $option->{file_query2} };
+    my $paired  = is_paired_end( $option->{file_type} );
 
     for my $index ( 0 .. $#queries ) {
         align(
             {   read_file       => $queries[$index],
-                mate_file       => $format eq 'PE' ? $mates[$index] : undef,
+                mate_file       => $paired ? $mates[$index] : undef,
                 annotation_args => \@annotation_args,
                 star_args       => $option->{star_args},
             }
@@ -89,8 +90,9 @@ sub parse_command_line {
     return \%option;
 }
 
-# Checks every input up front and returns the normalized file type, so that a
-# bad invocation fails before STAR spends an hour building an index.
+# Checks every input up front, so that a bad invocation fails before STAR
+# spends an hour building an index. Reports problems by dying; the arguments
+# themselves are left exactly as the user gave them.
 sub validate_arguments {
     my ($option) = @_;
 
@@ -123,30 +125,32 @@ sub validate_arguments {
         }
     }
 
-    return normalize_file_type( $option->{file_type}, \@queries, \@mates );
+    validate_file_type( $option->{file_type}, \@queries, \@mates );
+
+    return;
 }
 
-sub normalize_file_type {
+sub validate_file_type {
     my ( $file_type, $queries, $mates ) = @_;
 
     if ( !defined $file_type ) {
         die "Error: no file type was supplied; expected SE or PE\n";
     }
 
-    my $normalized = uc $file_type;
-    if ( $normalized ne 'SE' && $normalized ne 'PE' ) {
+    my $type = uc $file_type;
+    if ( $type ne 'SE' && $type ne 'PE' ) {
         die "Error: unrecognized file type '$file_type'; expected SE or PE\n";
     }
 
     # Aligning single-end would quietly discard the second end, so refuse
     # the combination rather than returning half an answer.
-    if ( $normalized eq 'SE' ) {
+    if ( $type eq 'SE' ) {
         if ( @{$mates} ) {
             die 'Error: --file_query2 was supplied but the file type is SE; '
                 . "use --file_type PE to align these files as paired ends\n";
         }
 
-        return $normalized;
+        return;
     }
 
     if ( !@{$mates} ) {
@@ -156,7 +160,15 @@ sub normalize_file_type {
         die "Error: unequal number of files for paired ends\n";
     }
 
-    return $normalized;
+    return;
+}
+
+# The file type is accepted in any case, so normalize it here, at the point
+# where it decides the shape of the STAR command.
+sub is_paired_end {
+    my ($file_type) = @_;
+
+    return ( uc $file_type ) eq 'PE';
 }
 
 # Reads only as far as the first non-blank line rather than shelling out to
