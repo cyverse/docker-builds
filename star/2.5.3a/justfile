@@ -1,3 +1,6 @@
 # Builds the image for linux/amd64, e.g. `just build cyverse/star:2.5.3a`.
 build tag:
     docker build --platform linux/amd64 --tag {{ quote(tag) }} .
+
+push tag:
+    docker push {{ quote(tag) }}
