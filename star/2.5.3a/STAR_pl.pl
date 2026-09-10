@@ -34,8 +34,7 @@ Readonly my $EXIT_CODE_SHIFT => 8;
 
 exit main();
 
-# Owns every value the run depends on and hands each subroutine exactly what
-# it needs, so that nothing below reaches outside its own scope for input.
+# Parses the command line and orchestrates the calls to STAR.
 sub main {
     my $option = parse_command_line();
     validate_arguments($option);
@@ -67,6 +66,7 @@ sub main {
     return 0;
 }
 
+# Parses the command line.
 sub parse_command_line {
     my %option = (
         file_query      => [],
@@ -90,9 +90,8 @@ sub parse_command_line {
     return \%option;
 }
 
-# Checks every input up front, so that a bad invocation fails before STAR
-# spends an hour building an index. Reports problems by dying; the arguments
-# themselves are left exactly as the user gave them.
+# Validates the command-line options in order to provide useful error messages
+# in cases where the analysis would fail.
 sub validate_arguments {
     my ($option) = @_;
 
@@ -130,6 +129,8 @@ sub validate_arguments {
     return;
 }
 
+# Verifies that the file type argument is recognized and compatible with the
+# input files that were provided.
 sub validate_file_type {
     my ( $file_type, $queries, $mates ) = @_;
 
@@ -142,8 +143,6 @@ sub validate_file_type {
         die "Error: unrecognized file type '$file_type'; expected SE or PE\n";
     }
 
-    # Aligning single-end would quietly discard the second end, so refuse
-    # the combination rather than returning half an answer.
     if ( $type eq 'SE' ) {
         if ( @{$mates} ) {
             die 'Error: --file_query2 was supplied but the file type is SE; '
@@ -163,16 +162,14 @@ sub validate_file_type {
     return;
 }
 
-# The file type is accepted in any case, so normalize it here, at the point
-# where it decides the shape of the STAR command.
+# Returns true if the user requested a paired-end alignment.
 sub is_paired_end {
     my ($file_type) = @_;
 
     return ( uc $file_type ) eq 'PE';
 }
 
-# Reads only as far as the first non-blank line rather than shelling out to
-# grep, which would interpret the path as part of a shell command.
+# Returns true if the file appears to be a FASTA file.
 sub looks_like_fasta {
     my ($path) = @_;
 
@@ -191,8 +188,8 @@ sub looks_like_fasta {
     return $first_line =~ /\A > /xms ? 1 : 0;
 }
 
-# Returns the STAR flags that name the annotation, or an empty list when the
-# run has none, so that callers can interpolate the result unconditionally.
+# Returns the STAR command-line option for the annotation if the user provided
+# an annotation file.
 sub annotation_args {
     my ($annotation) = @_;
 
@@ -203,6 +200,7 @@ sub annotation_args {
     return ( '--sjdbGTFfile', $annotation );
 }
 
+# Calls STAR in order to build the index.
 sub build_index {
     my ($arg) = @_;
 
@@ -230,6 +228,8 @@ sub build_index {
     return;
 }
 
+# Calls STAR in order to perform the alignment then moves output files into
+# per-sample and alignment destination directories.
 sub align {
     my ($arg) = @_;
 
@@ -265,8 +265,7 @@ sub align {
     return;
 }
 
-# STAR writes its output into the working directory, so sort that directory by
-# hand instead of handing shell globs to mv.
+# Moves output files from STAR into per-sample and alignment directories.
 sub collect_results {
     my ($prefix) = @_;
 
@@ -295,6 +294,8 @@ sub collect_results {
     return;
 }
 
+# Returns the destination for a file or returns `undef` if the file shouldn't
+# be moved.
 sub destination_for {
     my ( $entry, $prefix, $sample_dir ) = @_;
 
@@ -307,14 +308,12 @@ sub destination_for {
         return $sample_dir;
     }
 
-    # STAR writes SAM unless --outSAMtype asks for BAM, so collect both.
     return $BAM_DIR if $entry =~ /[.] (?: bam | sam ) \z/xms;
 
     return;
 }
 
-# Runs a command as an argument list, so no part of it is interpreted by a
-# shell, and stops on failure instead of pressing on with missing output.
+# Runs a command as a subprocess, exiting if the command fails.
 sub run {
     my @command = @_;
 
@@ -325,6 +324,7 @@ sub run {
     return;
 }
 
+# Returns a description of a wait status.
 sub describe_exit {
     my ($status) = @_;
 
@@ -340,6 +340,7 @@ sub describe_exit {
     return 'exit status ' . ( $status >> $EXIT_CODE_SHIFT );
 }
 
+# Prints a message to stderr, exiting if the write fails.
 sub report {
     my ($message) = @_;
 
