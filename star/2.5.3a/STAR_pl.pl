@@ -7,6 +7,11 @@
 # Per-sample logs and auxiliary files are collected under output/<basename>/
 # and the alignments under bam_output/.
 #
+# STAR's memory use is capped at the memory the job has, less a margin for
+# everything else running in the container. That figure comes from
+# --memory_limit (in GiB) if it is given, and otherwise from the container's
+# own memory limit.
+#
 # Any arguments not consumed below are passed through to STAR verbatim.
 
 use strict;
@@ -18,6 +23,7 @@ use File::Copy     qw(move);
 use File::Path     qw(make_path);
 use File::Spec;
 use Getopt::Long qw(:config no_ignore_case no_auto_abbrev pass_through);
+use List::Util   qw(any min sum0);
 use Readonly;
 
 our $VERSION = '1.0.0';
@@ -26,6 +32,17 @@ Readonly my $THREADS   => 4;
 Readonly my $INDEX_DIR => 'index';
 Readonly my $OUT_DIR   => 'output';
 Readonly my $BAM_DIR   => 'bam_output';
+
+# Units of memory, and how much of the job's memory is kept back for the
+# processes in the container other than STAR.
+Readonly my $BYTES_PER_KIB   => 1024;
+Readonly my $BYTES_PER_GIB   => $BYTES_PER_KIB**3;
+Readonly my $MEMORY_HEADROOM => $BYTES_PER_GIB;
+
+# Where Linux reports the cgroups of a process and the memory of the machine.
+Readonly my $PROC_CGROUP  => '/proc/self/cgroup';
+Readonly my $PROC_MEMINFO => '/proc/meminfo';
+Readonly my $CGROUP_ROOT  => '/sys/fs/cgroup';
 
 # Field layout of a wait status, as returned in $CHILD_ERROR; see perlvar.
 Readonly my $EXEC_FAILED     => -1;
@@ -39,13 +56,16 @@ sub main {
     my $option = parse_command_line();
     validate_arguments($option);
 
+    my $star_memory     = memory_for_star( $option->{memory_limit} );
     my @annotation_args = annotation_args( $option->{user_annotation} );
 
     build_index(
         {   database        => $option->{user_database},
             annotation_args => \@annotation_args,
+            memory          => $star_memory,
         }
     );
+    check_index_fits($star_memory);
 
     make_path( $OUT_DIR, $BAM_DIR );
 
@@ -59,6 +79,7 @@ sub main {
                 mate_file       => $paired ? $mates[$index] : undef,
                 annotation_args => \@annotation_args,
                 star_args       => $option->{star_args},
+                memory          => $star_memory,
             }
         );
     }
@@ -74,6 +95,7 @@ sub parse_command_line {
         user_database   => undef,
         user_annotation => undef,
         file_type       => undef,
+        memory_limit    => undef,
     );
 
     GetOptions(
@@ -82,6 +104,7 @@ sub parse_command_line {
         'user_database=s'   => \$option{user_database},
         'user_annotation=s' => \$option{user_annotation},
         'file_type=s'       => \$option{file_type},
+        'memory_limit=s'    => \$option{memory_limit},
     ) or die "Error: unable to parse the command line\n";
 
     # Whatever Getopt::Long left behind is handed straight to STAR.
@@ -126,6 +149,12 @@ sub validate_arguments {
 
     validate_file_type( $option->{file_type}, \@queries, \@mates );
 
+    my $memory_limit = $option->{memory_limit};
+    if ( defined $memory_limit && !is_positive_number($memory_limit) ) {
+        die "Error: invalid memory limit '$memory_limit'; "
+            . "expected a number of GiB such as 16 or 7.5\n";
+    }
+
     return;
 }
 
@@ -160,6 +189,13 @@ sub validate_file_type {
     }
 
     return;
+}
+
+# Returns true if the value is a plain decimal number greater than zero.
+sub is_positive_number {
+    my ($value) = @_;
+
+    return $value =~ /\A \d+ (?: [.] \d+ )? \z/xms && $value > 0;
 }
 
 # Returns true if the user requested a paired-end alignment.
@@ -200,12 +236,172 @@ sub annotation_args {
     return ( '--sjdbGTFfile', $annotation );
 }
 
+# Returns the number of bytes of memory that STAR may use: the memory the job
+# has, less the headroom kept for everything else in the container.
+sub memory_for_star {
+    my ($requested_gib) = @_;
+
+    my ( $memory, $source ) = memory_available($requested_gib);
+
+    my $star_memory = $memory - $MEMORY_HEADROOM;
+    if ( $star_memory <= 0 ) {
+        die 'Error: the job has '
+            . gib($memory)
+            . ' of memory, which leaves nothing for STAR after keeping '
+            . gib($MEMORY_HEADROOM)
+            . " for other processes\n";
+    }
+
+    report(   'Memory available to the job: '
+            . gib($memory)
+            . " ($source); STAR may use "
+            . gib($star_memory) );
+
+    return $star_memory;
+}
+
+# Returns the memory the job has, in bytes, along with a description of where
+# the figure came from.
+sub memory_available {
+    my ($requested_gib) = @_;
+
+    my $limit = container_memory_limit();
+
+    if ( defined $requested_gib ) {
+        my $requested = int( $requested_gib * $BYTES_PER_GIB );
+        if ( defined $limit && $requested > $limit ) {
+            warn
+                "Warning: --memory_limit $requested_gib GiB is more than the "
+                . 'container memory limit of '
+                . gib($limit)
+                . "; using the container limit instead\n";
+            return ( $limit, 'container memory limit' );
+        }
+
+        return ( $requested, '--memory_limit' );
+    }
+
+    if ( defined $limit ) {
+        return ( $limit, 'container memory limit' );
+    }
+
+    my $available = meminfo_bytes('MemAvailable');
+    if ( defined $available ) {
+        return ( $available, 'memory currently available on the host' );
+    }
+
+    die 'Error: cannot determine how much memory this job has; '
+        . "please specify --memory_limit\n";
+}
+
+# Returns the memory limit, in bytes, that the cgroups of this process impose,
+# or undef if they impose none.
+sub container_memory_limit {
+    my @limits = map { read_limit($_) } cgroup_limit_files();
+
+    # A limit of at least the size of the machine constrains nothing. This is
+    # also how cgroup v1 reports an unlimited cgroup.
+    my $total = meminfo_bytes('MemTotal');
+    if ( defined $total ) {
+        @limits = grep { $_ < $total } @limits;
+    }
+
+    if ( !@limits ) {
+        return;
+    }
+
+    return min(@limits);
+}
+
+# Returns the paths of the memory limit files for the cgroups of this process
+# and all of their ancestors, under both cgroup v2 and cgroup v1. A parent
+# cgroup can impose a tighter limit than the process's own, so every level
+# counts, and levels that do not exist in this container are skipped later.
+sub cgroup_limit_files {
+    open my $fh, '<', $PROC_CGROUP
+        or return;
+    my @memberships = <$fh>;
+    close $fh
+        or die "Error: cannot close $PROC_CGROUP: $OS_ERROR\n";
+
+    my @files;
+    for my $membership (@memberships) {
+        my ( $hierarchy, $controllers, $path )
+            = $membership =~ /\A ([^:]*) : ([^:]*) : (.*?) \s* \z/xms;
+        next if !defined $path;
+
+        my ( $base, $file );
+        if ( $hierarchy eq '0' && $controllers eq q{} ) {
+            ( $base, $file ) = ( $CGROUP_ROOT, 'memory.max' );
+        }
+        elsif ( any { $_ eq 'memory' } split /,/xms, $controllers ) {
+            ( $base, $file )
+                = ( "$CGROUP_ROOT/memory", 'memory.limit_in_bytes' );
+        }
+        else {
+            next;
+        }
+
+        my @parts = grep { $_ ne q{} } split m{/}xms, $path;
+        for my $depth ( reverse 0 .. scalar @parts ) {
+            my @ancestor = @parts[ 0 .. $depth - 1 ];
+            push @files, File::Spec->catfile( $base, @ancestor, $file );
+        }
+    }
+
+    return @files;
+}
+
+# Returns the limit in a cgroup memory limit file, in bytes, or nothing if the
+# file does not exist or does not hold a number.
+sub read_limit {
+    my ($file) = @_;
+
+    open my $fh, '<', $file
+        or return;
+    my $value = <$fh>;
+    close $fh
+        or die "Error: cannot close $file: $OS_ERROR\n";
+
+    if ( !defined $value ) {
+        return;
+    }
+
+    my ($limit) = $value =~ /\A (\d+) \s* \z/xms;
+    if ( !defined $limit ) {
+        return;
+    }
+
+    return $limit;
+}
+
+# Returns a field of /proc/meminfo in bytes, or undef if it is unavailable.
+sub meminfo_bytes {
+    my ($field) = @_;
+
+    open my $fh, '<', $PROC_MEMINFO
+        or return;
+    my @lines = <$fh>;
+    close $fh
+        or die "Error: cannot close $PROC_MEMINFO: $OS_ERROR\n";
+
+    for my $line (@lines) {
+        my ($kib) = $line =~ /\A \Q$field\E : \s+ (\d+) \s+ kB/xms;
+        if ( defined $kib ) {
+            return $kib * $BYTES_PER_KIB;
+        }
+    }
+
+    return;
+}
+
 # Calls STAR in order to build the index.
 sub build_index {
     my ($arg) = @_;
 
     my $database        = $arg->{database};
     my $annotation_args = $arg->{annotation_args};
+    my $memory          = $arg->{memory};
 
     my $name = basename( $database, qw(.fa .fas .fasta .fna) );
     report("STAR-indexing $name");
@@ -213,10 +409,11 @@ sub build_index {
     make_path($INDEX_DIR);
 
     run('STAR',
-        '--runThreadN'       => $THREADS,
-        '--runMode'          => 'genomeGenerate',
-        '--genomeDir'        => $INDEX_DIR,
-        '--genomeFastaFiles' => $database,
+        '--runThreadN'             => $THREADS,
+        '--runMode'                => 'genomeGenerate',
+        '--genomeDir'              => $INDEX_DIR,
+        '--genomeFastaFiles'       => $database,
+        '--limitGenomeGenerateRAM' => $memory,
         @{$annotation_args},
     );
 
@@ -224,6 +421,28 @@ sub build_index {
         = @{$annotation_args} ? 'with_annotation' : 'without_annotation';
     print {*STDOUT} "index $state\n"
         or die "Error: cannot write to standard output: $OS_ERROR\n";
+
+    return;
+}
+
+# Stops the run if the index is too large for the memory STAR may use. Every
+# alignment loads the whole index, so this is the least it will need.
+sub check_index_fits {
+    my ($star_memory) = @_;
+
+    my $index_size
+        = sum0 map { -s File::Spec->catfile( $INDEX_DIR, $_ ) || 0 }
+        qw(Genome SA SAi);
+
+    if ( $index_size > $star_memory ) {
+        die 'Error: the genome index is '
+            . gib($index_size)
+            . ', which will not fit in the '
+            . gib($star_memory)
+            . ' that STAR may use; the job needs more than '
+            . gib( $index_size + $MEMORY_HEADROOM )
+            . " of memory\n";
+    }
 
     return;
 }
@@ -244,6 +463,16 @@ sub align {
         push @read_files, $mate_file;
     }
 
+    # STAR rejects an option given twice, so a sort limit passed through by
+    # the user takes precedence over the one the wrapper would add. STAR also
+    # accepts the value after an equals sign or a space in the same argument.
+    my @memory_args = ( '--limitBAMsortRAM' => $arg->{memory} );
+    if ( any {/\A --limitBAMsortRAM (?: [=\s] | \z )/xms}
+        @{ $arg->{star_args} } )
+    {
+        @memory_args = ();
+    }
+
     my @align_command = (
         'STAR',
         @{ $arg->{annotation_args} },
@@ -252,8 +481,9 @@ sub align {
         '--genomeDir'         => $INDEX_DIR,
         '--outReadsUnmapped'  => 'Fastx',
         '--outFileNamePrefix' => "$prefix.",
-        '--readFilesIn'       => @read_files,
-        '--readFilesCommand'  => 'gunzip',
+        @memory_args,
+        '--readFilesIn'      => @read_files,
+        '--readFilesCommand' => 'gunzip',
         '-c',
     );
 
@@ -338,6 +568,13 @@ sub describe_exit {
     }
 
     return 'exit status ' . ( $status >> $EXIT_CODE_SHIFT );
+}
+
+# Formats a number of bytes as GiB.
+sub gib {
+    my ($bytes) = @_;
+
+    return sprintf '%.2f GiB', $bytes / $BYTES_PER_GIB;
 }
 
 # Prints a message to stderr, exiting if the write fails.
