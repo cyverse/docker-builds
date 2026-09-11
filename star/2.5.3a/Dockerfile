@@ -1,16 +1,43 @@
-# STAR 
-# VERSION              2.5.3.a
-#
+FROM ubuntu:22.04
 
-FROM      ubuntu:14.04.3 
-MAINTAINER Kapeel Chougule <kchougul@cshl.edu>
-LABEL Description="This image is used for running STAR RNA seq alignemnt tool version 2.5.3.a"
+LABEL maintainer="Kapeel Chougule <kchougul@cshl.edu>"
+LABEL description="This image is used for running the STAR RNA-seq alignment tool version 2.5.3a"
 
-RUN apt-get update && apt-get install -y build-essential wget git curl unzip zlib1g-dev
-ADD STAR_pl.pl /usr/bin/ 
-RUN [ "chmod", "+x", "/usr/bin/STAR_pl.pl" ]
-RUN wget https://github.com/alexdobin/STAR/archive/2.5.3a.tar.gz
-RUN tar zxvf 2.5.3a.tar.gz
-RUN cp /STAR-2.5.3a/bin/Linux_x86_64/STAR /usr/bin/
+ARG STAR_VERSION=2.5.3a
+
+# perl runs the wrapper script and libreadonly-perl supplies the Readonly
+# module it uses for constants; gzip feeds STAR's --readFilesCommand;
+# libgomp1 and zlib1g are STAR's runtime dependencies.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gzip \
+        libgomp1 \
+        libreadonly-perl \
+        perl \
+        wget \
+        zlib1g \
+    && rm -rf /var/lib/apt/lists/*
+
+# Extract only the precompiled binary, so the source tree does not
+# end up as a layer in the image.
+RUN wget -q -O /tmp/STAR.tar.gz \
+        "https://github.com/alexdobin/STAR/archive/refs/tags/${STAR_VERSION}.tar.gz" \
+    && tar -xzf /tmp/STAR.tar.gz -C /tmp \
+        "STAR-${STAR_VERSION}/bin/Linux_x86_64/STAR" \
+    && install -m 0755 "/tmp/STAR-${STAR_VERSION}/bin/Linux_x86_64/STAR" /usr/local/bin/STAR \
+    && rm -rf /tmp/STAR.tar.gz "/tmp/STAR-${STAR_VERSION}"
+
+COPY STAR_pl.pl /usr/local/bin/STAR_pl.pl
+RUN chmod +x /usr/local/bin/STAR_pl.pl
+
+WORKDIR /work-dir
 
 ENTRYPOINT ["STAR_pl.pl"]
+
+# Build (for linux/amd64; see the justfile)
+# just build harbor.cyerse.org/legacy/star:2.5.3a
+# Test run
+# docker run --rm -v $(pwd):/work-dir -w /work-dir harbor.cyverse.org/legacy/star:2.5.3a \
+#     --file_query reads_1.fastq.gz --user_database genome.fasta \
+#     --user_annotation genes.gtf --file_type SE
